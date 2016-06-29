@@ -72,6 +72,36 @@ var roles = {
             roles.moveTo(creep, target);
         }
     },
+    towerRepair: function(tower) {
+        var target = Game.getObjectById(Memory.tower.targetId);
+        if(target == null) {
+            target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    var max = structure.hitsMax * 0.9;
+                    if(structure.structureType == STRUCTURE_WALL) {
+                        max = structure.hitsMax < wallsMax * 0.9 ? structure.hitsMax : wallsMax * 0.9;
+                    } else if (structure.structureType != STRUCTURE_ROAD && !structure.my) {
+                        return false;
+                    }
+                    return structure.hits < max;
+                }
+            });
+            if(target != null) {
+                Memory.tower.targetId = target.id;
+            }
+        }
+        if(target != null) {
+            var max = target.hitsMax;
+            if(target.structureType == STRUCTURE_WALL) {
+                max = target.hitsMax < wallsMax ? target.hitsMax : wallsMax;
+            }
+            if(target.hits >= max) {
+                delete Memory.tower.targetId;
+            } else {
+                tower.repair(target)
+            }
+        }
+    }
     runRepairer: function(creep) {
         var target = Game.getObjectById(creep.memory.targetId);
         if(target == null) {

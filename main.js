@@ -22,6 +22,14 @@ module.exports.loop = function () {
             }
         }
     }
+    var tower = Game.getObjectById('57710cfff2ced3fd4686ff05');
+    if(tower) {
+        roles.towerRepair(tower);
+        // var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        // if(closestHostile) {
+            // tower.attack(closestHostile);
+        // }
+    }
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
         roles.runCreep(creep);
