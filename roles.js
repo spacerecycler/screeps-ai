@@ -47,15 +47,20 @@ var roles = {
     },
     /** @param {Creep} creep **/
     runHarvester: function(creep) {
-        var targets = creep.room.find(FIND_MY_STRUCTURES, {
+        var target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
             filter: (structure) => { return (structure.structureType == STRUCTURE_EXTENSION
-                || structure.structureType == STRUCTURE_SPAWN
-                || structure.structureType == STRUCTURE_TOWER)
+                || structure.structureType == STRUCTURE_SPAWN)
                 && structure.energy < structure.energyCapacity;
             }
         });
-        if(targets.length > 0) {
-            var target = targets[0];
+        if(target == null) {
+            target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                filter: (structure) => { return structure.structureType == STRUCTURE_TOWER
+                    && structure.energy < structure.energyCapacity;
+                }
+            });
+        }
+        if(target != null) {
             if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 roles.moveTo(creep, target);
             }
