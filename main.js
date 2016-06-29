@@ -17,6 +17,7 @@ module.exports.loop = function () {
             var result = Game.spawns.Spawn1.createCreep(body, null, {role: name});
             if(_.isString(result)) {
                 console.log('Spawning new ' + name + ': ' + result);
+                break;
             } else {
                 console.log('Spawn error: ' + result)
             }
