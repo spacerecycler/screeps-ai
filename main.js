@@ -9,14 +9,9 @@ module.exports.loop = function () {
     }
     for(var name in expected) {
         var roleCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == name);
-        var body = [];
-        switch(name) {
-            case 'harvester':
-                body = [WORK,WORK,CARRY,MOVE];
-                break;
-            default:
-                body = [WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE];
-                break;
+        var body = [WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE];
+        if(name == 'harvester' && roleCreeps.length == 0) {
+            body = [WORK,WORK,CARRY,MOVE];
         }
         if(roleCreeps.length < expected[name] && Game.spawns.Spawn1.canCreateCreep(body) == OK) {
             var result = Game.spawns.Spawn1.createCreep(body, null, {role: name});
