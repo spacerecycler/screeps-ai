@@ -101,7 +101,7 @@ var roles = {
                 tower.repair(target)
             }
         }
-    }
+    },
     runRepairer: function(creep) {
         var target = Game.getObjectById(creep.memory.targetId);
         if(target == null) {
