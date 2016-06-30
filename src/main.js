@@ -7,7 +7,7 @@ var main = {
         main.clearMem();
         main.spawnCreeps(room);
         main.runTower();
-        main.runcreeps();
+        main.runCreeps();
     },
     /** Clear unused memory **/
     clearMem: function() {
