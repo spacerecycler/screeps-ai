@@ -78,7 +78,10 @@ var roles = {
         }
     },
     towerRepair: function(tower) {
-        Memory.tower[tower.id] = {};
+        if(Memory.tower[tower.id] == null) {
+            Memory.tower[tower.id] = {};
+            console.log("creating tower in mem");
+        }
         var target = Game.getObjectById(Memory.tower[tower.id].targetId);
         if(target == null) {
             target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
