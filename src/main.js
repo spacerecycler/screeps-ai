@@ -1,11 +1,10 @@
 var roles = require('roles');
-var expected = {harvester: 3, upgrader: 1, builder: 2, repairer: 1};
+var expected = {harvester: 2, upgrader: 1, builder: 2, repairer: 1};
 var main = {
     /** Main loop function for screeps **/
     loop: function() {
-        var room = Game.rooms.W24N3;
         main.clearMem();
-        main.spawnCreeps(room);
+        main.spawnCreeps();
         main.runTower();
         main.runCreeps();
     },
@@ -21,11 +20,11 @@ var main = {
         }
     },
     /** Spawn creeps that are missing **/
-    spawnCreeps: function(room) {
+    spawnCreeps: function() {
         for(var name in expected) {
             var roleCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == name);
             if(roleCreeps.length < expected[name]) {
-                var body = main.chooseBody(room, name, roleCreeps.length);
+                var body = main.chooseBody(Game.spawns.Spawn1.room, name, roleCreeps.length);
                 if(Game.spawns.Spawn1.canCreateCreep(body) == OK) {
                     var result = Game.spawns.Spawn1.createCreep(body, null, {role: name});
                     if(_.isString(result)) {
