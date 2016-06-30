@@ -15,9 +15,6 @@ var main = {
                 delete Memory.creeps[name];
             }
         }
-        if(Memory.tower == null) {
-            Memory.tower = {};
-        }
     },
     /** Spawn creeps that are missing **/
     spawnCreeps: function() {
