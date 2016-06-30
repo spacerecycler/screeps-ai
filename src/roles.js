@@ -83,7 +83,7 @@ var roles = {
             target = pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
                     var max = structure.hitsMax * 0.9;
-                    if(structure.structureType == STRUCTURE_WALL) {
+                    if(structure.structureType == STRUCTURE_WALL || structure.structureType == STRUCTURE_RAMPART) {
                         max = structure.hitsMax < wallsMax * 0.9 ? structure.hitsMax : wallsMax * 0.9;
                     } else if (structure.structureType != STRUCTURE_ROAD && !structure.my) {
                         return false;
@@ -97,7 +97,7 @@ var roles = {
         }
         if(target != null) {
             var max = target.hitsMax;
-            if(target.structureType == STRUCTURE_WALL) {
+            if(target.structureType == STRUCTURE_WALL || target.structureType == STRUCTURE_RAMPART) {
                 max = target.hitsMax < wallsMax ? target.hitsMax : wallsMax;
             }
             if(target.hits >= max) {
