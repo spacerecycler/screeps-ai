@@ -22,6 +22,9 @@ var main = {
     /** Spawn creeps that are missing **/
     spawnCreeps: function() {
         for(var name in expected) {
+            if(name == 'builder' && Game.constructionSites.length == 0) {
+                continue;
+            }
             var roleCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == name);
             if(roleCreeps.length < expected[name]) {
                 var body = main.chooseBody(Game.spawns.Spawn1.room, name, roleCreeps.length);
