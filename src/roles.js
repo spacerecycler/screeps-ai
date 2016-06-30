@@ -101,7 +101,7 @@ var roles = {
                 max = target.hitsMax < wallsMax ? target.hitsMax : wallsMax;
             }
             if(target.hits >= max) {
-                delete Memory.tower[tower.id].targetId;
+                delete mem.targetId;
             } else {
                 repairFn(target);
             }
