@@ -77,14 +77,10 @@ var roles = {
             roles.moveTo(creep, target);
         }
     },
-    towerRepair: function(tower) {
-        if(Memory.tower[tower.id] == null) {
-            Memory.tower[tower.id] = {};
-            console.log("creating tower in mem");
-        }
-        var target = Game.getObjectById(Memory.tower[tower.id].targetId);
+    doRepair: function(pos, mem, repairFn) {
+        var target = Game.getObjectById(mem.targetId);
         if(target == null) {
-            target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+            target = pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
                     var max = structure.hitsMax * 0.9;
                     if(structure.structureType == STRUCTURE_WALL) {
@@ -96,7 +92,7 @@ var roles = {
                 }
             });
             if(target != null) {
-                Memory.tower[tower.id].targetId = target.id;
+                mem.targetId = target.id;
             }
         }
         if(target != null) {
@@ -107,41 +103,26 @@ var roles = {
             if(target.hits >= max) {
                 delete Memory.tower[tower.id].targetId;
             } else {
-                tower.repair(target)
+                repairFn(target);
             }
         }
+        return target;
+    },
+    towerRepair: function(tower) {
+        if(Memory.tower[tower.id] == null) {
+            Memory.tower[tower.id] = {};
+        }
+        roles.doRepair(tower.pos, Memory.tower[tower.id], function(target) {
+            tower.repair(target);
+        });
     },
     runRepairer: function(creep) {
-        var target = Game.getObjectById(creep.memory.targetId);
+        var target = roles.doRepair(creep.pos, creep.memory, function(target) {
+            if(creep.repair(target) == ERR_NOT_IN_RANGE) {
+                roles.moveTo(creep, target);
+            }
+        });
         if(target == null) {
-            target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    var max = structure.hitsMax * 0.9;
-                    if(structure.structureType == STRUCTURE_WALL) {
-                        max = structure.hitsMax < wallsMax * 0.9 ? structure.hitsMax : wallsMax * 0.9;
-                    } else if (structure.structureType != STRUCTURE_ROAD && !structure.my) {
-                        return false;
-                    }
-                    return structure.hits < max;
-                }
-            });
-            if(target != null) {
-                creep.memory.targetId = target.id;
-            }
-        }
-        if(target != null) {
-            var max = target.hitsMax;
-            if(target.structureType == STRUCTURE_WALL) {
-                max = target.hitsMax < wallsMax ? target.hitsMax : wallsMax;
-            }
-            if(target.hits >= max) {
-                delete creep.memory.targetId;
-            } else {
-                if(creep.repair(target) == ERR_NOT_IN_RANGE) {
-                    roles.moveTo(creep, target);
-                }
-            }
-        } else {
             if(!creep.pos.inRangeTo(Game.flags.Idle, 1)) {
                 roles.moveTo(creep, Game.flags.Idle);
             }
