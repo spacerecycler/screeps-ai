@@ -1,5 +1,5 @@
 var roles = require('roles');
-var expected = {harvester: 2, upgrader: 1, builder: 1, repairer: 1};
+var expected = {harvester: 2, upgrader: 1, builder: 1, repairer: 0};
 var main = {
     /** Main loop function for screeps **/
     loop: function() {
