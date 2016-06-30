@@ -25,7 +25,7 @@ var roles = {
     },
     /** @param {Creep} creep **/
     runBuilder: function(creep) {
-        var target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {filter: (target) => {return target.structureType == STRUCTURE_WALL;}});
+        var target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {filter: (target) => {return target.structureType == STRUCTURE_WALL || target.structureType == STRUCTURE_RAMPART;}});
         if(target == null) {
             target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {filter: (target) => {return target.structureType == STRUCTURE_ROAD;}});
         }
