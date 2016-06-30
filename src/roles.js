@@ -78,7 +78,7 @@ var roles = {
         }
     },
     towerRepair: function(tower) {
-        var target = Game.getObjectById(Memory.towerTargetId);
+        var target = Game.getObjectById(Memory.tower[tower.id].targetId);
         if(target == null) {
             target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
@@ -92,7 +92,7 @@ var roles = {
                 }
             });
             if(target != null) {
-                Memory.towerTargetId = target.id;
+                Memory.tower[tower.id].targetId = target.id;
             }
         }
         if(target != null) {
@@ -101,7 +101,7 @@ var roles = {
                 max = target.hitsMax < wallsMax ? target.hitsMax : wallsMax;
             }
             if(target.hits >= max) {
-                delete Memory.towerTargetId;
+                delete Memory.tower[tower.id].targetId;
             } else {
                 tower.repair(target)
             }
