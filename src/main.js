@@ -3,8 +3,9 @@ var expected = {harvester: 3, upgrader: 1, builder: 2, repairer: 1};
 var main = {
     /** Main loop function for screeps **/
     loop: function() {
+        var room = Game.rooms.W24N3;
         main.clearMem();
-        main.spawnCreeps();
+        main.spawnCreeps(room);
         main.runTower();
         main.runcreeps();
     },
@@ -17,7 +18,7 @@ var main = {
         }
     },
     /** Spawn creeps that are missing **/
-    spawnCreeps: function() {
+    spawnCreeps: function(room) {
         for(var name in expected) {
             var roleCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == name);
             if(roleCreeps.length < expected[name]) {
