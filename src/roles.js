@@ -220,6 +220,7 @@ var roles = {
         }
         if(!creep.memory.working && creep.carry.energy == creep.carryCapacity) {
             creep.memory.working = true;
+            delete creep.memory.energyTarget;
         }
         return creep.memory.working;
     },
