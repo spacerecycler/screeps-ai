@@ -20,13 +20,12 @@ var main = {
     /** Spawn creeps that are missing **/
     spawnCreeps: function() {
         for(var name in expected) {
-            if(name == 'builder' && Game.constructionSites.length == 0) {
-                console.log("builder no construction");
+            if(name === 'builder' && _.size(Game.constructionSites) === 0) {
                 continue;
             }
             var roleCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == name);
-            if(roleCreeps.length < expected[name]) {
-                var body = main.chooseBody(Game.spawns.Spawn1.room, name, roleCreeps.length);
+            if(_.size(roleCreeps) < expected[name]) {
+                var body = main.chooseBody(Game.spawns.Spawn1.room, name, _.size(roleCreeps));
                 if(Game.spawns.Spawn1.canCreateCreep(body) == OK) {
                     var result = Game.spawns.Spawn1.createCreep(body, null, {role: name});
                     if(_.isString(result)) {
