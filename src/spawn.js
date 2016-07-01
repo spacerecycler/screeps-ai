@@ -19,11 +19,11 @@ var s = {
         }
     },
     spawnHarvester: function() {
-        for(var i in c.rooms) {
-            var room = c.rooms[i];
+        var spawned = false;
+        _.forEach(c.rooms, (room) =>{
             var count = 0;
             if(Game.rooms[room] == null) {
-                continue;
+                return true;
             }
             if(Game.rooms[room].energyCapacityAvailable > 0) {
                 count++;
@@ -33,11 +33,12 @@ var s = {
             }
             if(count > 0) {
                 if(s.doSpawnCreep('harvester', count, room)) {
-                    return true;
+                    spawned = true;
+                    return false;
                 }
             }
-        }
-        return false;
+        });
+        return spawned;
     },
     spawnUpgrader: function() {
         return s.doSpawnCreep('upgrader', 1, Game.spawns[c.mainSpawn].room.name);
@@ -49,18 +50,19 @@ var s = {
         return false;
     },
     spawnRepairer: function() {
-        for(var i in c.rooms) {
-            var room = c.rooms[i];
+        var spawned = false;
+        _.forEach(c.rooms, (room) =>{
             if(Game.rooms[room] == null) {
-                continue;
+                return true;
             }
             if(_.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})) == 0) {
                 if(s.doSpawnCreep('repairer', 1, room)) {
-                    return true;
+                    spawned = true;
+                    return false;
                 }
             }
-        }
-        return false;
+        });
+        return spawned;
     },
     spawnCapturer: function() {
         return s.doSpawnCreep('capturer', 1, c.expansion);

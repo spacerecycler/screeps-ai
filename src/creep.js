@@ -1,31 +1,38 @@
 var _ = require('lodash');
-var c = require('config');
-var roles = {
+var sh = require('shared');
+var cr = {
+    /** Run creeps **/
+    runCreeps: function() {
+        for(var name in Game.creeps) {
+            var creep = Game.creeps[name];
+            cr.runCreep(creep);
+        }
+    },
     /** @param {Creep} creep **/
     runCreep: function(creep) {
         if(creep.memory.role == 'capturer') {
-            roles.runCapturer(creep);
+            cr.runCapturer(creep);
             return;
         }
-        if(roles.isCreepWorking(creep)) {
+        if(cr.isCreepWorking(creep)) {
             switch (creep.memory.role) {
                 case 'harvester':
-                    roles.runHarvester(creep);
+                    cr.runHarvester(creep);
                     break;
                 case 'upgrader':
-                    roles.runUpgrader(creep);
+                    cr.runUpgrader(creep);
                     break;
                 case 'builder':
-                    roles.runBuilder(creep);
+                    cr.runBuilder(creep);
                     break;
                 case 'repairer':
-                    roles.runRepairer(creep);
+                    cr.runRepairer(creep);
                     break;
                 default:
                     break;
             }
         } else {
-            roles.fillEnergy(creep);
+            cr.fillEnergy(creep);
         }
     },
     /** @param {Creep} creep **/
@@ -65,10 +72,10 @@ var roles = {
         }
         if(target != null) {
             if(creep.build(target) == ERR_NOT_IN_RANGE) {
-                roles.moveTo(creep, target);
+                cr.moveTo(creep, target);
             }
         } else {
-            roles.idle(creep);
+            cr.idle(creep);
         }
     },
     /** @param {Creep} creep **/
@@ -104,10 +111,10 @@ var roles = {
             }
             if(target != null) {
                 if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    roles.moveTo(creep, target);
+                    cr.moveTo(creep, target);
                 }
             } else {
-                roles.idle(creep);
+                cr.idle(creep);
             }
         }
     },
@@ -115,49 +122,8 @@ var roles = {
     runUpgrader: function(creep) {
         var target = creep.room.controller;
         if(creep.upgradeController(target) == ERR_NOT_IN_RANGE) {
-            roles.moveTo(creep, target);
+            cr.moveTo(creep, target);
         }
-    },
-    doRepair: function(pos, mem, repairFn) {
-        var target = Game.getObjectById(mem.targetId);
-        // logic below to only repair things when they are 90% damaged
-        // also cap hitpoints for walls since they have so many
-        if(target == null) {
-            target = pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    var max = structure.hitsMax * 0.9;
-                    if(structure.structureType == STRUCTURE_WALL || structure.structureType == STRUCTURE_RAMPART) {
-                        max = structure.hitsMax < c.wallsMax * 0.9 ? structure.hitsMax : c.wallsMax * 0.9;
-                    } else if (structure.structureType != STRUCTURE_ROAD && !structure.my) {
-                        return false;
-                    }
-                    return structure.hits < max;
-                }
-            });
-            if(target != null) {
-                mem.targetId = target.id;
-            }
-        }
-        if(target != null) {
-            var max = target.hitsMax;
-            if(target.structureType == STRUCTURE_WALL || target.structureType == STRUCTURE_RAMPART) {
-                max = target.hitsMax < c.wallsMax ? target.hitsMax : c.wallsMax;
-            }
-            if(target.hits >= max) {
-                delete mem.targetId;
-            } else {
-                repairFn(target);
-            }
-        }
-        return target;
-    },
-    towerRepair: function(tower) {
-        if(Memory.tower[tower.id] == null) {
-            Memory.tower[tower.id] = {};
-        }
-        roles.doRepair(tower.pos, Memory.tower[tower.id], function(target) {
-            tower.repair(target);
-        });
     },
     runRepairer: function(creep) {
         if(creep.room.name != creep.memory.room) {
@@ -172,13 +138,13 @@ var roles = {
             if(creep.memory.exitDir != null) {
                 delete creep.memory.exitDir;
             }
-            var target = roles.doRepair(creep.pos, creep.memory, function(target) {
+            var target = sh.doRepair(creep.pos, creep.memory, function(target) {
                 if(creep.repair(target) == ERR_NOT_IN_RANGE) {
-                    roles.moveTo(creep, target);
+                    cr.moveTo(creep, target);
                 }
             });
             if(target == null) {
-                roles.idle(creep);
+                cr.idle(creep);
             }
         }
     },
@@ -203,7 +169,7 @@ var roles = {
     idle: function(creep) {
         var flag = creep.pos.findClosestByRange(FIND_FLAGS, {filter: (flag) => flag.memory.type == 'idle'});
         if(!creep.pos.inRangeTo(flag, 1)) {
-            roles.moveTo(creep, flag);
+            cr.moveTo(creep, flag);
         }
     },
     /** @param {Creep} creep **/
@@ -233,11 +199,11 @@ var roles = {
             creep.memory.energyTarget = target.id;
         }
         if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
-            roles.moveTo(creep, target);
+            cr.moveTo(creep, target);
         }
     },
     moveTo: function(creep, target) {
         creep.moveTo(target, {reusePath: 3});
     }
 };
-module.exports = roles;
+module.exports = cr;
