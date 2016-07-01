@@ -179,7 +179,10 @@ var roles = {
             var exit = creep.pos.findClosestByRange(exitDir);
             console.log(exit);
             creep.moveTo(exit);
-            return;
+        } else {
+            if(creep.reserveController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(creep.room.controller);
+            }
         }
     },
     /** @param {Creep} creep **/
