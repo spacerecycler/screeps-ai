@@ -67,11 +67,17 @@ var main = {
         return false;
     },
     spawnRepairer: function() {
-        _.forEach(rooms, (room) => {
-            if(Game.rooms[room] != null && _.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})) == 0) {
-                return main.doSpawnCreep('repairer', 1, room);
+        for(var i in rooms) {
+            var room = rooms[i];
+            if(Game.rooms[room] == null) {
+                continue;
             }
-        });
+            if(_.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})) == 0) {
+                if(main.doSpawnCreep('repairer', 1, room)) {
+                    return true;
+                }
+            }
+        }
         return false;
     },
     spawnCapturer: function() {
