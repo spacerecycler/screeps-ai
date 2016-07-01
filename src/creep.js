@@ -3,37 +3,31 @@ var sh = require('shared');
 var cr = {
     /** Run creeps **/
     runCreeps: function() {
-        for(var name in Game.creeps) {
-            var creep = Game.creeps[name];
-            cr.runCreep(creep);
-        }
-    },
-    /** @param {Creep} creep **/
-    runCreep: function(creep) {
-        if(creep.memory.role == 'capturer') {
-            cr.runCapturer(creep);
-            return;
-        }
-        if(cr.isCreepWorking(creep)) {
-            switch (creep.memory.role) {
-                case 'harvester':
-                    cr.runHarvester(creep);
-                    break;
-                case 'upgrader':
-                    cr.runUpgrader(creep);
-                    break;
-                case 'builder':
-                    cr.runBuilder(creep);
-                    break;
-                case 'repairer':
-                    cr.runRepairer(creep);
-                    break;
-                default:
-                    break;
+        _.forEach(Game.creeps, (name, creep) => {
+            if(name == 'builder' || cr.ensureRoom(creep)) {
+                if(creep.carryCapacity == 0 || cr.isCreepWorking(creep)) {
+                    switch (creep.memory.role) {
+                        case 'harvester':
+                            cr.runHarvester(creep);
+                            break;
+                        case 'upgrader':
+                            cr.runUpgrader(creep);
+                            break;
+                        case 'builder':
+                            cr.runBuilder(creep);
+                            break;
+                        case 'repairer':
+                            cr.runRepairer(creep);
+                            break;
+                        case 'capturer':
+                            cr.runCapturer(creep);
+                            break;
+                    }
+                } else {
+                    cr.fillEnergy(creep);
+                }
             }
-        } else {
-            cr.fillEnergy(creep);
-        }
+        });
     },
     /** @param {Creep} creep **/
     runBuilder: function(creep) {
@@ -81,41 +75,28 @@ var cr = {
     /** @param {Creep} creep **/
     runHarvester: function(creep) {
         // put energy first into extensions and spawns
-        if(creep.room.name != creep.memory.room) {
-            var exitDir = creep.memory.exitDir;
-            if(exitDir == null) {
-                exitDir = creep.room.findExitTo(creep.memory.room);
-                creep.memory.exitDir = exitDir;
+        var target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_EXTENSION
+                    || structure.structureType == STRUCTURE_SPAWN)
+                    && structure.energy < structure.energyCapacity;
             }
-            var exit = creep.pos.findClosestByRange(exitDir);
-            creep.moveTo(exit);
-        } else {
-            if(creep.memory.exitDir != null) {
-                delete creep.memory.exitDir;
-            }
-            var target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+        });
+        // then towers
+        if(target == null) {
+            target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_EXTENSION
-                        || structure.structureType == STRUCTURE_SPAWN)
+                    return structure.structureType == STRUCTURE_TOWER
                         && structure.energy < structure.energyCapacity;
                 }
             });
-            // then towers
-            if(target == null) {
-                target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                    filter: (structure) => {
-                        return structure.structureType == STRUCTURE_TOWER
-                            && structure.energy < structure.energyCapacity;
-                    }
-                });
+        }
+        if(target != null) {
+            if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                cr.moveTo(creep, target);
             }
-            if(target != null) {
-                if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    cr.moveTo(creep, target);
-                }
-            } else {
-                cr.idle(creep);
-            }
+        } else {
+            cr.idle(creep);
         }
     },
     /** @param {Creep} creep **/
@@ -126,29 +107,21 @@ var cr = {
         }
     },
     runRepairer: function(creep) {
-        if(creep.room.name != creep.memory.room) {
-            var exitDir = creep.memory.exitDir;
-            if(exitDir == null) {
-                exitDir = creep.room.findExitTo(creep.memory.room);
-                creep.memory.exitDir = exitDir;
+        var target = sh.doRepair(creep.pos, creep.memory, function(target) {
+            if(creep.repair(target) == ERR_NOT_IN_RANGE) {
+                cr.moveTo(creep, target);
             }
-            var exit = creep.pos.findClosestByRange(exitDir);
-            creep.moveTo(exit);
-        } else {
-            if(creep.memory.exitDir != null) {
-                delete creep.memory.exitDir;
-            }
-            var target = sh.doRepair(creep.pos, creep.memory, function(target) {
-                if(creep.repair(target) == ERR_NOT_IN_RANGE) {
-                    cr.moveTo(creep, target);
-                }
-            });
-            if(target == null) {
-                cr.idle(creep);
-            }
+        });
+        if(target == null) {
+            cr.idle(creep);
         }
     },
     runCapturer: function(creep) {
+        if(creep.reserveController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(creep.room.controller);
+        }
+    },
+    ensureRoom: function(creep) {
         if(creep.room.name != creep.memory.room) {
             var exitDir = creep.memory.exitDir;
             if(exitDir == null) {
@@ -157,13 +130,12 @@ var cr = {
             }
             var exit = creep.pos.findClosestByRange(exitDir);
             creep.moveTo(exit);
+            return false;
         } else {
             if(creep.memory.exitDir != null) {
                 delete creep.memory.exitDir;
             }
-            if(creep.reserveController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller);
-            }
+            return true;
         }
     },
     idle: function(creep) {
