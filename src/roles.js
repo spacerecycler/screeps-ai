@@ -69,8 +69,8 @@ var roles = {
     /** @param {Creep} creep **/
     runHarvester: function(creep) {
         // put energy first into extensions and spawns
-        if(creep.room.name != creep.memory.assignedRoom) {
-            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.assignedRoom]);
+        if(creep.room.name != creep.memory.room) {
+            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.room]);
             var exit = creep.pos.findClosestByRange(exitDir);
             console.log(exit);
             creep.moveTo(exit);
@@ -151,8 +151,8 @@ var roles = {
         });
     },
     runRepairer: function(creep) {
-        if(creep.room.name != creep.memory.assignedRoom) {
-            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.assignedRoom]);
+        if(creep.room.name != creep.memory.room) {
+            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.room]);
             var exit = creep.pos.findClosestByRange(exitDir);
             console.log(exit);
             creep.moveTo(exit);
