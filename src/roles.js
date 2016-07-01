@@ -33,7 +33,7 @@ var roles = {
         // prioritize walls and ramparts first
         var target = Game.getObjectById(creep.memory.targetId);
         if(target == null) {
-            target = creep.pos.findClosestByRange(_.values(Game.constructionSites), {
+            target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
                 filter: (target) => {
                     return target.structureType == STRUCTURE_WALL
                         || target.structureType == STRUCTURE_RAMPART;
@@ -42,7 +42,7 @@ var roles = {
         }
         // then roads
         if(target == null) {
-            target = creep.pos.findClosestByRange(_.values(Game.constructionSites), {
+            target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
                 filter: (target) => {
                     return target.structureType == STRUCTURE_ROAD;
                 }
@@ -50,7 +50,7 @@ var roles = {
         }
         // then towers
         if(target == null) {
-            target = creep.pos.findClosestByRange(_.values(Game.constructionSites), {
+            target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
                 filter: (target) => {
                     return target.structureType == STRUCTURE_TOWER;
                 }
@@ -58,7 +58,10 @@ var roles = {
         }
         // then all other sites
         if(target == null) {
-            target = creep.pos.findClosestByRange(_.values(Game.constructionSites));
+            target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
+        }
+        if(target == null && _.size(Game.constructionSites) > 0) {
+            target = _.values(Game.constructionSites)[0];
         }
         if(target != null) {
             if(creep.build(target) == ERR_NOT_IN_RANGE) {
