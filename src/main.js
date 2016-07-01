@@ -37,7 +37,6 @@ var main = {
         for(var i in rooms) {
             var room = rooms[i];
             var count = 0;
-            console.log("room: " + room + " energy: " + Game.rooms[room]);
             if(Game.rooms[room] == null) {
                 continue;
             }
