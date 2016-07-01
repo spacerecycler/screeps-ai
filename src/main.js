@@ -30,10 +30,10 @@ var main = {
             spawning = main.spawnBuilder();
         }
         if(!spawning) {
-            spawning = main.spawnRepairer();
+            // spawning = main.spawnRepairer();
         }
         if(!spawning) {
-            spawning = main.spawnCapturer();
+            // spawning = main.spawnCapturer();
         }
     },
     spawnHarvester: function() {
