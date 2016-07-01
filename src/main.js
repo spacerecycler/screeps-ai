@@ -34,9 +34,13 @@ var main = {
         }
     },
     spawnHarvester: function() {
-        _.forEach(rooms, (room) => {
+        for(var i in rooms) {
+            var room = rooms[i];
             var count = 0;
             console.log("room: " + room + " energy: " + Game.rooms[room]);
+            if(Game.rooms[room] == null) {
+                continue;
+            }
             if(Game.rooms[room].energyCapacityAvailable > 0) {
                 count++;
             }
@@ -48,7 +52,7 @@ var main = {
                     return true;
                 }
             }
-        });
+        }
         return false;
     },
     spawnUpgrader: function() {
