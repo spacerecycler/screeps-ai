@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var roles = require('roles');
 var expected = {harvester: 2, upgrader: 1, builder: 1}; // repairer: 1
 var main = {
@@ -20,6 +21,7 @@ var main = {
     spawnCreeps: function() {
         for(var name in expected) {
             if(name == 'builder' && Game.constructionSites.length == 0) {
+                console.log("builder no construction");
                 continue;
             }
             var roleCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == name);

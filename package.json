@@ -1,0 +1,11 @@
+{
+    "name": "screeps-ai",
+    "version": "0.0.1",
+    "description": "Screeps AI implementation",
+    "homepage": "https://github.com/spacerecycler/screeps-ai",
+    "license": "Unlicense",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/spacerecycler/screeps-ai.git"
+    }
+}
