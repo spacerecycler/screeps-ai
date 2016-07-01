@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var wallsMax = 25000;
+var c = require('config');
 var roles = {
     /** @param {Creep} creep **/
     runCreep: function(creep) {
@@ -127,7 +127,7 @@ var roles = {
                 filter: (structure) => {
                     var max = structure.hitsMax * 0.9;
                     if(structure.structureType == STRUCTURE_WALL || structure.structureType == STRUCTURE_RAMPART) {
-                        max = structure.hitsMax < wallsMax * 0.9 ? structure.hitsMax : wallsMax * 0.9;
+                        max = structure.hitsMax < c.wallsMax * 0.9 ? structure.hitsMax : c.wallsMax * 0.9;
                     } else if (structure.structureType != STRUCTURE_ROAD && !structure.my) {
                         return false;
                     }
@@ -141,7 +141,7 @@ var roles = {
         if(target != null) {
             var max = target.hitsMax;
             if(target.structureType == STRUCTURE_WALL || target.structureType == STRUCTURE_RAMPART) {
-                max = target.hitsMax < wallsMax ? target.hitsMax : wallsMax;
+                max = target.hitsMax < c.wallsMax ? target.hitsMax : c.wallsMax;
             }
             if(target.hits >= max) {
                 delete mem.targetId;
