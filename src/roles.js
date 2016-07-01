@@ -211,7 +211,7 @@ var roles = {
         // work until we have no more energy
         if(creep.memory.working && creep.carry.energy == 0) {
             creep.memory.working = false;
-            var target = creep.pos.findClosestByPath(FIND_SOURCES);
+            var target = creep.pos.findClosestByRange(FIND_SOURCES);
             if(target == null) {
                 console.log("can't find target " + creep.name)
             } else {
@@ -228,7 +228,7 @@ var roles = {
         // most creeps must harvest
         var target = Game.getObjectById(creep.memory.energyTarget);
         if(target == null) {
-            target = creep.pos.findClosestByPath(FIND_SOURCES);
+            target = creep.pos.findClosestByRange(FIND_SOURCES);
             creep.memory.energyTarget = target.id;
         }
         if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
