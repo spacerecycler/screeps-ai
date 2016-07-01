@@ -67,7 +67,7 @@ var main = {
         return false;
     },
     doSpawnCreep: function(name, expected, assignedRoom) {
-        var roleCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == name && creep.memory.room == assignedRoom);
+        var roleCreeps = _.filter(Game.creeps, (creep) => {return creep.memory.role == name && creep.memory.room == assignedRoom;});
         if(_.size(roleCreeps) < expected) {
             var body = main.chooseBody(mainSpawn.room, name, _.size(roleCreeps));
             if(mainSpawn.canCreateCreep(body) == OK) {
