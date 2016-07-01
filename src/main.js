@@ -117,14 +117,14 @@ var main = {
     runTowers: function() {
         _.forEach(rooms, (room) => {
             if(Game.rooms[room] != null) {
-            var towers = Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})
-            _.forEach(towers, (tower) => {
-                roles.towerRepair(tower);
-                // var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-                // if(closestHostile) {
-                //     tower.attack(closestHostile);
-                // }
-            });
+                var towers = Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})
+                _.forEach(towers, (tower) => {
+                    roles.towerRepair(tower);
+                    // var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+                    // if(closestHostile) {
+                    //     tower.attack(closestHostile);
+                    // }
+                });
             }
         });
     },
