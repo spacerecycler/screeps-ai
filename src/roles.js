@@ -212,7 +212,11 @@ var roles = {
         if(creep.memory.working && creep.carry.energy == 0) {
             creep.memory.working = false;
             var target = creep.pos.findClosestByPath(FIND_SOURCES);
-            creep.memory.energyTarget = target.id;
+            if(target == null) {
+                console.log("can't find target " + creep.name)
+            } else {
+                creep.memory.energyTarget = target.id;
+            }
         }
         if(!creep.memory.working && creep.carry.energy == creep.carryCapacity) {
             creep.memory.working = true;
