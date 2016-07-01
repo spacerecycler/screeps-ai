@@ -1,6 +1,8 @@
 var _ = require('lodash');
 var roles = require('roles');
 var expected = {harvester: 2, upgrader: 1, builder: 1}; // repairer: 1
+var mainSpawn = Game.spawns.Spawn1;
+var expansion = Game.rooms.W24N2;
 var main = {
     /** Main loop function for screeps **/
     loop: function() {
@@ -20,14 +22,14 @@ var main = {
     /** Spawn creeps that are missing **/
     spawnCreeps: function() {
         for(var name in expected) {
-            if(name === 'builder' && _.size(Game.constructionSites) === 0) {
+            if(name == 'builder' && _.size(Game.constructionSites) == 0) {
                 continue;
             }
             var roleCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == name);
             if(_.size(roleCreeps) < expected[name]) {
-                var body = main.chooseBody(Game.spawns.Spawn1.room, name, _.size(roleCreeps));
-                if(Game.spawns.Spawn1.canCreateCreep(body) == OK) {
-                    var result = Game.spawns.Spawn1.createCreep(body, null, {role: name});
+                var body = main.chooseBody(mainSpawn.room, name, _.size(roleCreeps));
+                if(mainSpawn.canCreateCreep(body) == OK) {
+                    var result = mainSpawn.createCreep(body, null, {role: name});
                     if(_.isString(result)) {
                         console.log('Spawning new ' + name + ': ' + result);
                         break;
@@ -69,7 +71,7 @@ var main = {
     /** Run towers **/
     runTower: function() {
         var tower = Game.getObjectById('57710cfff2ced3fd4686ff05');
-        if(tower) {
+        if(tower != null) {
             roles.towerRepair(tower);
             // var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
             // if(closestHostile) {
