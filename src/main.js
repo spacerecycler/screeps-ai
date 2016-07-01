@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var roles = require('roles');
-var mainSpawn = Game.spawns.Spawn1;
+var mainSpawn = 'Spawn1';
 var rooms = ['W24N3','W24N2'];
 var expansion = 'W24N2';
 var main = {
@@ -58,11 +58,11 @@ var main = {
         return false;
     },
     spawnUpgrader: function() {
-        return main.doSpawnCreep('upgrader', 1, mainSpawn.room.name);
+        return main.doSpawnCreep('upgrader', 1, Game.spawns[mainSpawn].room.name);
     },
     spawnBuilder: function() {
         if(_.size(Game.constructionSites) > 0) {
-            return main.doSpawnCreep('builder', 1, mainSpawn.room.name);
+            return main.doSpawnCreep('builder', 1, Game.spawns[mainSpawn].room.name);
         }
         return false;
     },
@@ -86,9 +86,9 @@ var main = {
     doSpawnCreep: function(name, expected, assignedRoom) {
         var roleCreeps = _.filter(Game.creeps, (creep) => {return creep.memory.role == name && creep.memory.room == assignedRoom;});
         if(_.size(roleCreeps) < expected) {
-            var body = main.chooseBody(mainSpawn.room, name, _.size(roleCreeps));
-            if(mainSpawn.canCreateCreep(body) == OK) {
-                var result = mainSpawn.createCreep(body, null, {
+            var body = main.chooseBody(Game.spawns[mainSpawn].room, name, _.size(roleCreeps));
+            if(Game.spawns[mainSpawn].canCreateCreep(body) == OK) {
+                var result = Game.spawns[mainSpawn].createCreep(body, null, {
                     role: name,
                     room: assignedRoom
                 });
