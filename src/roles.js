@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var wallsMax = 25000;
 var roles = {
     /** @param {Creep} creep **/
@@ -26,15 +27,18 @@ var roles = {
     /** @param {Creep} creep **/
     runBuilder: function(creep) {
         // prioritize walls and ramparts first
-        var target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
-            filter: (target) => {
-                return target.structureType == STRUCTURE_WALL
-                    || target.structureType == STRUCTURE_RAMPART;
-            }
-        });
+        var target = Game.getObjectById(creep.memory.targetId);
+        if(target == null) {
+            target = creep.pos.findClosestByRange(_.values(Game.constructionSites), {
+                filter: (target) => {
+                    return target.structureType == STRUCTURE_WALL
+                        || target.structureType == STRUCTURE_RAMPART;
+                }
+            });
+        }
         // then roads
         if(target == null) {
-            target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
+            target = creep.pos.findClosestByRange(_.values(Game.constructionSites), {
                 filter: (target) => {
                     return target.structureType == STRUCTURE_ROAD;
                 }
@@ -42,7 +46,7 @@ var roles = {
         }
         // then towers
         if(target == null) {
-            target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
+            target = creep.pos.findClosestByRange(_.values(Game.constructionSites), {
                 filter: (target) => {
                     return target.structureType == STRUCTURE_TOWER;
                 }
@@ -50,7 +54,7 @@ var roles = {
         }
         // then all other sites
         if(target == null) {
-            target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
+            target = creep.pos.findClosestByRange(_.values(Game.constructionSites));
         }
         if(target != null) {
             if(creep.build(target) == ERR_NOT_IN_RANGE) {
@@ -65,6 +69,13 @@ var roles = {
     /** @param {Creep} creep **/
     runHarvester: function(creep) {
         // put energy first into extensions and spawns
+        if(creep.room.name != creep.memory.assignedRoom) {
+            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.assignedRoom]);
+            var exit = creep.pos.findClosestByRange(exitDir);
+            console.log(exit);
+            creep.moveTo(exit);
+            return;
+        }
         var target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_EXTENSION
@@ -140,6 +151,13 @@ var roles = {
         });
     },
     runRepairer: function(creep) {
+        if(creep.room.name != creep.memory.assignedRoom) {
+            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.assignedRoom]);
+            var exit = creep.pos.findClosestByRange(exitDir);
+            console.log(exit);
+            creep.moveTo(exit);
+            return;
+        }
         var target = roles.doRepair(creep.pos, creep.memory, function(target) {
             if(creep.repair(target) == ERR_NOT_IN_RANGE) {
                 roles.moveTo(creep, target);
@@ -156,6 +174,8 @@ var roles = {
         // work until we have no more energy
         if(creep.memory.working && creep.carry.energy == 0) {
             creep.memory.working = false;
+            var target = creep.pos.findClosestByPath(FIND_SOURCES);
+            creep.memory.energyTarget = target.id;
         }
         if(!creep.memory.working && creep.carry.energy == creep.carryCapacity) {
             creep.memory.working = true;
@@ -163,10 +183,9 @@ var roles = {
         return creep.memory.working;
     },
     /** @param {Creep} creep **/
-    goHarvest: function(creep) {
+    fillEnergy: function(creep) {
         // most creeps must harvest
-        var targets = creep.room.find(FIND_SOURCES);
-        var target = targets[0];
+        var target = Game.getObjectById(creep.memory.energyTarget);
         if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
             roles.moveTo(creep, target);
         }

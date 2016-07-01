@@ -49,7 +49,7 @@ var main = {
         return false;
     },
     spawnUpgrader: function() {
-        return main.doSpawnCreep('upgrader', 1, mainSpawn);
+        return main.doSpawnCreep('upgrader', 1, mainSpawn.room.name);
     },
     spawnBuilder: function() {
         if(_.size(Game.constructionSites) > 0) {
