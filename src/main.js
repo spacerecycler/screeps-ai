@@ -62,7 +62,7 @@ var main = {
     },
     spawnBuilder: function() {
         if(_.size(Game.constructionSites) > 0) {
-            return main.doSpawnCreep('builder', 1, null);
+            return main.doSpawnCreep('builder', 1, mainSpawn.room.name);
         }
         return false;
     },
