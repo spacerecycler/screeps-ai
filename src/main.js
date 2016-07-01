@@ -2,7 +2,7 @@ var _ = require('lodash');
 var roles = require('roles');
 var mainSpawn = Game.spawns.Spawn1;
 var rooms = ['W24N3','W24N2'];
-var expansion = Game.rooms.W24N2;
+var expansion = 'W24N2';
 var main = {
     /** Main loop function for screeps **/
     loop: function() {
@@ -36,7 +36,7 @@ var main = {
     spawnHarvester: function() {
         _.forEach(rooms, (room) => {
             var count = 0;
-            console.log("room: " + room + " energy: " + Game.rooms[room].energyCapacityAvailable);
+            console.log("room: " + room + " energy: " + Game.rooms[room]);
             if(Game.rooms[room].energyCapacityAvailable > 0) {
                 count++;
             }
