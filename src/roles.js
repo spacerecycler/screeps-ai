@@ -186,6 +186,10 @@ var roles = {
     fillEnergy: function(creep) {
         // most creeps must harvest
         var target = Game.getObjectById(creep.memory.energyTarget);
+        if(target == null) {
+            target = creep.pos.findClosestByPath(FIND_SOURCES);
+            creep.memory.energyTarget = target.id;
+        }
         if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
             roles.moveTo(creep, target);
         }
