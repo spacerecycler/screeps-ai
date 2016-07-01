@@ -3,7 +3,7 @@ var sh = require('shared');
 var cr = {
     /** Run creeps **/
     runCreeps: function() {
-        _.forEach(Game.creeps, (name, creep) => {
+        _.forEach(Game.creeps, (creep, name) => {
             if(name == 'builder' || cr.ensureRoom(creep)) {
                 if(creep.carryCapacity == 0 || cr.isCreepWorking(creep)) {
                     switch (creep.memory.role) {
