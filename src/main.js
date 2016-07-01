@@ -44,7 +44,9 @@ var main = {
                 count++;
             }
             if(count > 0) {
-                return main.doSpawnCreep('harvester', count, room);
+                if(main.doSpawnCreep('harvester', count, room)) {
+                    return true;
+                }
             }
         });
         return false;
