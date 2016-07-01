@@ -68,9 +68,7 @@ var roles = {
                 roles.moveTo(creep, target);
             }
         } else {
-            if(!creep.pos.inRangeTo(Game.flags.Idle, 1)) {
-                roles.moveTo(creep, Game.flags.Idle);
-            }
+            roles.idle(creep);
         }
     },
     /** @param {Creep} creep **/
@@ -109,9 +107,7 @@ var roles = {
                     roles.moveTo(creep, target);
                 }
             } else {
-                if(!creep.pos.inRangeTo(Game.flags.Idle, 1)) {
-                    roles.moveTo(creep, Game.flags.Idle);
-                }
+                roles.idle(creep);
             }
         }
     },
@@ -182,9 +178,7 @@ var roles = {
                 }
             });
             if(target == null) {
-                if(!creep.pos.inRangeTo(Game.flags.Idle, 1)) {
-                    roles.moveTo(creep, Game.flags.Idle);
-                }
+                roles.idle(creep);
             }
         }
     },
@@ -204,6 +198,12 @@ var roles = {
             if(creep.reserveController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller);
             }
+        }
+    },
+    idle: function(creep) {
+        var flag = creep.pos.findClosestByRange(FIND_FLAGS, {filter: (flag) => flag.memory.type == 'idle'});
+        if(!creep.pos.inRangeTo(flag, 1)) {
+            roles.moveTo(creep, flag);
         }
     },
     /** @param {Creep} creep **/
