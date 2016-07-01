@@ -34,8 +34,9 @@ var main = {
         }
     },
     spawnHarvester: function() {
-        for(var room in rooms) {
+        _.forEach(rooms, (room) => {
             var count = 0;
+            console.log("room: " + room + " energy: " + Game.rooms[room].energyCapacityAvailable);
             if(Game.rooms[room].energyCapacityAvailable > 0) {
                 count++;
             }
@@ -45,7 +46,7 @@ var main = {
             if(count > 0) {
                 return main.doSpawnCreep('harvester', count, room);
             }
-        }
+        });
         return false;
     },
     spawnUpgrader: function() {
@@ -58,11 +59,11 @@ var main = {
         return false;
     },
     spawnRepairer: function() {
-        for(var room in rooms) {
-            if(_.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})) == 0) {
+        _.forEach(rooms, (room) => {
+            if(Game.rooms[room] != null && _.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})) == 0) {
                 return main.doSpawnCreep('repairer', 1, room);
             }
-        }
+        });
         return false;
     },
     doSpawnCreep: function(name, expected, assignedRoom) {
@@ -114,16 +115,18 @@ var main = {
     },
     /** Run towers **/
     runTowers: function() {
-        for(var room in rooms) {
+        _.forEach(rooms, (room) => {
+            if(Game.rooms[room] != null) {
             var towers = Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})
-            for(var tower in towers) {
+            _.forEach(towers, (tower) => {
                 roles.towerRepair(tower);
                 // var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
                 // if(closestHostile) {
                 //     tower.attack(closestHostile);
                 // }
+            });
             }
-        }
+        });
     },
     /** Run creeps **/
     runCreeps: function() {

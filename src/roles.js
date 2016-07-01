@@ -21,7 +21,7 @@ var roles = {
                     break;
             }
         } else {
-            roles.goHarvest(creep);
+            roles.fillEnergy(creep);
         }
     },
     /** @param {Creep} creep **/
