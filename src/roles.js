@@ -3,6 +3,10 @@ var wallsMax = 25000;
 var roles = {
     /** @param {Creep} creep **/
     runCreep: function(creep) {
+        if(creep.memory.role == 'capturer') {
+            roles.runCapturer(creep);
+            return;
+        }
         if(roles.isCreepWorking(creep)) {
             switch (creep.memory.role) {
                 case 'harvester':
@@ -70,7 +74,7 @@ var roles = {
     runHarvester: function(creep) {
         // put energy first into extensions and spawns
         if(creep.room.name != creep.memory.room) {
-            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.room]);
+            var exitDir = creep.room.findExitTo(creep.memory.room);
             var exit = creep.pos.findClosestByRange(exitDir);
             console.log(exit);
             creep.moveTo(exit);
@@ -152,7 +156,7 @@ var roles = {
     },
     runRepairer: function(creep) {
         if(creep.room.name != creep.memory.room) {
-            var exitDir = creep.room.findExitTo(Game.rooms[creep.memory.room]);
+            var exitDir = creep.room.findExitTo(creep.memory.room);
             var exit = creep.pos.findClosestByRange(exitDir);
             console.log(exit);
             creep.moveTo(exit);
@@ -167,6 +171,15 @@ var roles = {
             if(!creep.pos.inRangeTo(Game.flags.Idle, 1)) {
                 roles.moveTo(creep, Game.flags.Idle);
             }
+        }
+    },
+    runCapturer: function(creep) {
+        if(creep.room.name != creep.memory.room) {
+            var exitDir = creep.room.findExitTo(creep.memory.room);
+            var exit = creep.pos.findClosestByRange(exitDir);
+            console.log(exit);
+            creep.moveTo(exit);
+            return;
         }
     },
     /** @param {Creep} creep **/

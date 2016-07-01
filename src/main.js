@@ -32,6 +32,9 @@ var main = {
         if(!spawning) {
             spawning = main.spawnRepairer();
         }
+        if(!spawning) {
+            spawning = main.spawnCapturer();
+        }
     },
     spawnHarvester: function() {
         for(var i in rooms) {
@@ -71,6 +74,9 @@ var main = {
         });
         return false;
     },
+    spawnCapturer: function() {
+        return main.doSpawnCreep('capturer', 1, expansion);
+    },
     doSpawnCreep: function(name, expected, assignedRoom) {
         var roleCreeps = _.filter(Game.creeps, (creep) => {return creep.memory.role == name && creep.memory.room == assignedRoom;});
         if(_.size(roleCreeps) < expected) {
@@ -94,6 +100,9 @@ var main = {
         var body = [WORK,WORK,CARRY,MOVE];
         if(role == 'harvester' && count == 0) {
             return body;
+        }
+        if(role == 'capturer') {
+            return [CLAIM,MOVE,MOVE,TOUGH];
         }
         if(room.energyCapacityAvailable >= 350) {
             body.push(MOVE);
