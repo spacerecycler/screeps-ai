@@ -109,6 +109,15 @@ var cr = {
                     && structure.store[RESOURCE_ENERGY] < structure.storeCapacity;
             }
         });
+        if(target == null) {
+            target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_EXTENSION
+                        || structure.structureType == STRUCTURE_SPAWN)
+                        && structure.energy < structure.energyCapacity;
+                }
+            });
+        }
         if(target != null) {
             if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 cr.moveTo(creep, target);
