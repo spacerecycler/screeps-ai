@@ -19,7 +19,7 @@ var s = {
             spawning = s.spawnRepairer();
         }
         if(!spawning) {
-            // spawning = s.spawnCapturer();
+            spawning = s.spawnCapturer();
         }
     },
     spawnHarvester: function() {

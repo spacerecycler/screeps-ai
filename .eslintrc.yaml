@@ -10,7 +10,9 @@
         semi: error
         no-extra-semi: error
         no-extra-parens: error
-        valid-jsdoc: warn
+        valid-jsdoc:
+            - warn
+            - requireReturn: false
         consistent-return: error
         curly: error
         indent:
