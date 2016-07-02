@@ -72,7 +72,17 @@ var s = {
         return spawned;
     },
     spawnCapturer: function() {
-        return s.doSpawnCreep(sh.CREEP_CAPTURER, 2, c.expansion);
+        if(Game.rooms[c.expansion].reservation.ticksToEnd < 500) {
+            Game.rooms[c.expansion].memory.needReserve = true;
+        }
+        if(Game.rooms[c.expansion].reservation.ticksToEnd > 1500) {
+            Game.rooms[c.expansion].memory.needReserve = false;
+        }
+        var count = 1;
+        if(Game.rooms[c.expansion].memory.needReserve) {
+            count = 2;
+        }
+        return s.doSpawnCreep(sh.CREEP_CAPTURER, count, c.expansion);
     },
     spawnFiller: function() {
         var spawned = false;
