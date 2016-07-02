@@ -3,7 +3,7 @@ var sh = require('shared');
 var cr = {
     /** Run creeps **/
     runCreeps: function() {
-        _.forEach(Game.creeps, (creep, name) => {
+        _.forEach(Game.creeps, (creep) => {
             if(creep.memory.role == sh.CREEP_BUILDER || cr.ensureRoom(creep)) {
                 if(creep.carryCapacity == 0 || cr.isCreepWorking(creep)) {
                     switch (creep.memory.role) {
@@ -37,32 +37,19 @@ var cr = {
         // prioritize walls and ramparts first
         var target = Game.getObjectById(creep.memory.targetId);
         if(target == null) {
-            target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
-                filter: (target) => {
-                    return target.structureType == STRUCTURE_WALL
-                        || target.structureType == STRUCTURE_RAMPART;
-                }
-            });
+            target = sh.findConstructionSite(creep, [STRUCTURE_WALL, STRUCTURE_RAMPART]);
         }
         // then roads
         if(target == null) {
-            target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
-                filter: (target) => {
-                    return target.structureType == STRUCTURE_ROAD;
-                }
-            });
+            target = sh.findConstructionSite(creep, [STRUCTURE_ROAD]);
         }
         // then towers
         if(target == null) {
-            target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
-                filter: (target) => {
-                    return target.structureType == STRUCTURE_TOWER;
-                }
-            });
+            target = sh.findConstructionSite(creep, [STRUCTURE_TOWER]);
         }
         // then all other sites
         if(target == null) {
-            target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
+            target = sh.findConstructionSite(creep);
         }
         if(target == null && _.size(Game.constructionSites) > 0) {
             target = _.values(Game.constructionSites)[0];
@@ -78,21 +65,10 @@ var cr = {
     },
     runFiller: function(creep) {
         // put energy first into extensions and spawns
-        var target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_EXTENSION
-                    || structure.structureType == STRUCTURE_SPAWN)
-                    && structure.energy < structure.energyCapacity;
-            }
-        });
+        var target = sh.findFillTarget(creep, [STRUCTURE_EXTENSION, STRUCTURE_SPAWN]);
         // then towers
         if(target == null) {
-            target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (structure) => {
-                    return structure.structureType == STRUCTURE_TOWER
-                        && structure.energy < structure.energyCapacity;
-                }
-            });
+            target = sh.findFillTarget(creep, [STRUCTURE_TOWER]);
         }
         if(target != null) {
             if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -111,13 +87,7 @@ var cr = {
             }
         });
         if(target == null) {
-            target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_EXTENSION
-                        || structure.structureType == STRUCTURE_SPAWN)
-                        && structure.energy < structure.energyCapacity;
-                }
-            });
+            target = sh.findFillTarget(creep, [STRUCTURE_EXTENSION, STRUCTURE_SPAWN]);
         }
         if(target != null) {
             if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {

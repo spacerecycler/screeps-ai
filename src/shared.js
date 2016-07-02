@@ -39,6 +39,25 @@ var sh = {
             }
         }
         return target;
+    },
+    findConstructionSite: function(creep, types) {
+        if(types == null) {
+            return creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
+        } else {
+            return creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
+                filter: (target) => {
+                    return _.includes(types, target.structureType);
+                }
+            });
+        }
+    },
+    findFillTarget: function(creep, types) {
+        return creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+            filter: (target) => {
+                return _.includes(types, target.structureType)
+                    && target.energy < target.energyCapacity;
+            }
+        });
     }
 };
 module.exports = sh;
