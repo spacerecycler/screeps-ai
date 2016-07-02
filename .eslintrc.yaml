@@ -7,6 +7,36 @@
     rules:
         no-undef: warn
         no-console: off
+        semi: error
+        no-extra-semi: error
+        no-extra-parens: error
+        valid-jsdoc: warn
+        consistent-return: error
+        curly: error
+        indent:
+            - error
+            - 4
+            - SwitchCase: 1
     globals:
         Memory: false
         Game: false
+        RESOURCE_ENERGY: false
+        FIND_MY_CONSTRUCTION_SITES: false
+        FIND_MY_STRUCTURES: false
+        FIND_STRUCTURES: false
+        FIND_FLAGS: false
+        FIND_SOURCES: false
+        STRUCTURE_WALL: false
+        STRUCTURE_RAMPART: false
+        STRUCTURE_ROAD: false
+        STRUCTURE_TOWER: false
+        STRUCTURE_EXTENSION: false
+        STRUCTURE_SPAWN: false
+        STRUCTURE_CONTAINER: false
+        ERR_NOT_IN_RANGE: false
+        OK: false
+        WORK: false
+        CARRY: false
+        MOVE: false
+        CLAIM: false
+        TOUGH: false

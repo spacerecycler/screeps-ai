@@ -8,7 +8,7 @@ var t = {
             if(Game.rooms[room] == null) {
                 return true;
             }
-            var towers = Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})
+            var towers = Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}});
             _.forEach(towers, (tower) => {
                 t.towerRepair(tower);
                 // var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
@@ -16,6 +16,7 @@ var t = {
                 //     tower.attack(closestHostile);
                 // }
             });
+            return true;
         });
     },
     towerRepair: function(tower) {

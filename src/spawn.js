@@ -34,6 +34,7 @@ var s = {
                     return false;
                 }
             }
+            return true;
         });
         return spawned;
     },
@@ -58,6 +59,7 @@ var s = {
                     return false;
                 }
             }
+            return true;
         });
         return spawned;
     },
@@ -83,6 +85,7 @@ var s = {
                     return false;
                 }
             }
+            return true;
         });
         return spawned;
     },
@@ -99,7 +102,7 @@ var s = {
                     console.log('Spawning new ' + name + ': ' + result);
                     return true;
                 } else {
-                    console.log('Spawn error: ' + result)
+                    console.log('Spawn error: ' + result);
                 }
             }
         }
@@ -111,7 +114,15 @@ var s = {
             return body;
         }
         if(role == sh.CREEP_FILLER) {
-            return [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE];
+            if(count == 0) {
+                return [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE];
+            }
+            var div = Math.trunc(room.energyCapacityAvailable/100);
+            body = [];
+            for(var i = 0; i < div; i++) {
+                body.push(CARRY);
+                body.push(MOVE);
+            }
         }
         if(role == sh.CREEP_CAPTURER) {
             return [CLAIM,MOVE,MOVE,TOUGH];

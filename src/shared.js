@@ -40,5 +40,5 @@ var sh = {
         }
         return target;
     }
-}
+};
 module.exports = sh;
