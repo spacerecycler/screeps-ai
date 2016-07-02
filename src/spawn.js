@@ -25,13 +25,21 @@ var s = {
     spawnHarvester: function() {
         var spawned = false;
         _.forEach(c.rooms, (room) =>{
-            if(Game.rooms[room] == null) {
-                return true;
-            }
-            if(_.size(Game.rooms[room].find(FIND_STRUCTURES, {filter: (structure) => structure.structureType == STRUCTURE_CONTAINER})) > 0) {
-                if(s.doSpawnCreep(sh.CREEP_HARVESTER, 2, room)) {
-                    spawned = true;
-                    return false;
+            if(Game.rooms[room] != null) {
+                var containerCount = _.size(Game.rooms[room].find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return structure.structureType == STRUCTURE_CONTAINER;
+                    }
+                }));
+                if(containerCount > 0) {
+                    var count = 1;
+                    if(containerCount > 2) {
+                        count++;
+                    }
+                    if(s.doSpawnCreep(sh.CREEP_HARVESTER, count, room)) {
+                        spawned = true;
+                        return false;
+                    }
                 }
             }
             return true;
