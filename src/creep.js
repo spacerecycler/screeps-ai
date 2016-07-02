@@ -4,7 +4,7 @@ var cr = {
     /** Run creeps **/
     runCreeps: function() {
         _.forEach(Game.creeps, (creep, name) => {
-            if(name == sh.CREEP_BUILDER || cr.ensureRoom(creep)) {
+            if(creep.memory.role == sh.CREEP_BUILDER || cr.ensureRoom(creep)) {
                 if(creep.carryCapacity == 0 || cr.isCreepWorking(creep)) {
                     switch (creep.memory.role) {
                         case sh.CREEP_HARVESTER:
