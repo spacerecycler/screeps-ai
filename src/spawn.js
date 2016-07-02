@@ -1,10 +1,14 @@
 var _ = require('lodash');
 var c = require('config');
+var sh = require('shared');
 var s = {
     /** Spawn creeps that are missing **/
     spawnCreeps: function() {
         var spawning = false;
         spawning = s.spawnHarvester();
+        if(!spawning) {
+            spawning = s.spawnFiller();
+        }
         if(!spawning) {
             spawning = s.spawnUpgrader();
         }
@@ -12,13 +16,55 @@ var s = {
             spawning = s.spawnBuilder();
         }
         if(!spawning) {
-            // spawning = s.spawnRepairer();
+            spawning = s.spawnRepairer();
         }
         if(!spawning) {
             // spawning = s.spawnCapturer();
         }
     },
     spawnHarvester: function() {
+        var spawned = false;
+        _.forEach(c.rooms, (room) =>{
+            if(Game.rooms[room] == null) {
+                return true;
+            }
+            if(_.size(Game.rooms[room].find(FIND_STRUCTURES, {filter: (structure) => structure.structureType = STRUCTURE_CONTAINER})) > 0) {
+                if(s.doSpawnCreep(sh.CREEP_HARVESTER, 1, room)) {
+                    spawned = true;
+                    return false;
+                }
+            }
+        });
+        return spawned;
+    },
+    spawnUpgrader: function() {
+        return s.doSpawnCreep(sh.CREEP_UPGRADER, 1, Game.spawns[c.mainSpawn].room.name);
+    },
+    spawnBuilder: function() {
+        if(_.size(Game.constructionSites) > 0) {
+            return s.doSpawnCreep(sh.CREEP_BUILDER, 1, Game.spawns[c.mainSpawn].room.name);
+        }
+        return false;
+    },
+    spawnRepairer: function() {
+        var spawned = false;
+        _.forEach(c.rooms, (room) =>{
+            if(Game.rooms[room] == null) {
+                return true;
+            }
+            if(_.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})) == 0) {
+                if(s.doSpawnCreep(sh.CREEP_REPAIRER, 1, room)) {
+                    spawned = true;
+                    return false;
+                }
+            }
+        });
+        return spawned;
+    },
+    spawnCapturer: function() {
+        return s.doSpawnCreep(sh.CREEP_CAPTURER, 1, c.expansion);
+    },
+    spawnFiller: function() {
         var spawned = false;
         _.forEach(c.rooms, (room) =>{
             var count = 0;
@@ -32,40 +78,13 @@ var s = {
                 count++;
             }
             if(count > 0) {
-                if(s.doSpawnCreep('harvester', count, room)) {
+                if(s.doSpawnCreep(sh.CREEP_FILLER, count, room)) {
                     spawned = true;
                     return false;
                 }
             }
         });
         return spawned;
-    },
-    spawnUpgrader: function() {
-        return s.doSpawnCreep('upgrader', 1, Game.spawns[c.mainSpawn].room.name);
-    },
-    spawnBuilder: function() {
-        if(_.size(Game.constructionSites) > 0) {
-            return s.doSpawnCreep('builder', 1, Game.spawns[c.mainSpawn].room.name);
-        }
-        return false;
-    },
-    spawnRepairer: function() {
-        var spawned = false;
-        _.forEach(c.rooms, (room) =>{
-            if(Game.rooms[room] == null) {
-                return true;
-            }
-            if(_.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})) == 0) {
-                if(s.doSpawnCreep('repairer', 1, room)) {
-                    spawned = true;
-                    return false;
-                }
-            }
-        });
-        return spawned;
-    },
-    spawnCapturer: function() {
-        return s.doSpawnCreep('capturer', 1, c.expansion);
     },
     doSpawnCreep: function(name, expected, assignedRoom) {
         var roleCreeps = _.filter(Game.creeps, (creep) => {return creep.memory.role == name && creep.memory.room == assignedRoom;});
@@ -88,10 +107,10 @@ var s = {
     },
     chooseBody: function(room, role, count) {
         var body = [WORK,WORK,CARRY,MOVE];
-        if(role == 'harvester' && count == 0) {
+        if(role == sh.CREEP_HARVESTER && count == 0) {
             return body;
         }
-        if(role == 'capturer') {
+        if(role == sh.CREEP_CAPTURER) {
             return [CLAIM,MOVE,MOVE,TOUGH];
         }
         if(room.energyCapacityAvailable >= 350) {

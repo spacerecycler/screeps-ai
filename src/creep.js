@@ -4,24 +4,27 @@ var cr = {
     /** Run creeps **/
     runCreeps: function() {
         _.forEach(Game.creeps, (creep, name) => {
-            if(name == 'builder' || cr.ensureRoom(creep)) {
+            if(name == sh.CREEP_BUILDER || cr.ensureRoom(creep)) {
                 if(creep.carryCapacity == 0 || cr.isCreepWorking(creep)) {
                     switch (creep.memory.role) {
-                        case 'harvester':
+                        case sh.CREEP_HARVESTER:
                             cr.runHarvester(creep);
-                            break;
-                        case 'upgrader':
+                            return;
+                        case sh.CREEP_UPGRADER:
                             cr.runUpgrader(creep);
-                            break;
-                        case 'builder':
+                            return;
+                        case sh.CREEP_BUILDER:
                             cr.runBuilder(creep);
-                            break;
-                        case 'repairer':
+                            return;
+                        case sh.CREEP_REPAIRER:
                             cr.runRepairer(creep);
-                            break;
-                        case 'capturer':
+                            return;
+                        case sh.CREEP_CAPTURER:
                             cr.runCapturer(creep);
-                            break;
+                            return;
+                        case sh.CREEP_FILLER:
+                            cr.runFiller(creep);
+                            return;
                     }
                 } else {
                     cr.fillEnergy(creep);
@@ -72,8 +75,7 @@ var cr = {
             cr.idle(creep);
         }
     },
-    /** @param {Creep} creep **/
-    runHarvester: function(creep) {
+    runFiller: function(creep) {
         // put energy first into extensions and spawns
         var target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
             filter: (structure) => {
@@ -91,6 +93,22 @@ var cr = {
                 }
             });
         }
+        if(target != null) {
+            if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                cr.moveTo(creep, target);
+            }
+        } else {
+            cr.idle(creep);
+        }
+    },
+    /** @param {Creep} creep **/
+    runHarvester: function(creep) {
+        var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return structure.structureType = STRUCTURE_CONTAINER
+                    && structure.store.energy < structure.storeCapacity;
+            }
+        });
         if(target != null) {
             if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 cr.moveTo(creep, target);
@@ -167,11 +185,33 @@ var cr = {
         // most creeps must harvest
         var target = Game.getObjectById(creep.memory.energyTarget);
         if(target == null) {
-            target = creep.pos.findClosestByRange(FIND_SOURCES);
-            creep.memory.energyTarget = target.id;
+            if(creep.memory.role != sh.CREEP_HARVESTER) {
+                target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return structure.structureType == STRUCTURE_CONTAINER
+                            && structure.store.energy > 0;
+                    }
+                });
+                if(_.size(creep.room.find(FIND_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_CONTAINER;}})) == 0) {
+                    target = creep.pos.findClosestByRange(FIND_SOURCES);
+                }
+            } else {
+                target = creep.pos.findClosestByRange(FIND_SOURCES);
+            }
+            if(target != null) {
+                creep.memory.energyTarget = target.id;
+            }
         }
-        if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
-            cr.moveTo(creep, target);
+        if(target != null) {
+            if(target instanceof Source) {
+                if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
+                    cr.moveTo(creep, target);
+                }
+            } else if(target instanceof StructureContainer) {
+                if(target.transfer(creep, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    cr.moveTo(creep, target);
+                }
+            }
         }
     },
     moveTo: function(creep, target) {

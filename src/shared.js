@@ -1,6 +1,12 @@
 var _ = require('lodash');
 var c = require('config');
 var sh = {
+    CREEP_HARVESTER: 'harvester',
+    CREEP_UPGRADER: 'upgrader',
+    CREEP_BUILDER: 'builder',
+    CREEP_REPAIRER: 'repairer',
+    CREEP_CAPTURER: 'capturer',
+    CREEP_FILLER: 'filler',
     doRepair: function(pos, mem, repairFn) {
         var target = Game.getObjectById(mem.targetId);
         // logic below to only repair things when they are 90% damaged
