@@ -50,15 +50,14 @@ var s = {
     spawnRepairer: function() {
         var spawned = false;
         _.forEach(c.rooms, (room) =>{
-            if(Game.rooms[room] == null) {
-                console.log("room null " + room);
-                return true;
-            }
-            if(_.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})) == 0) {
-                if(s.doSpawnCreep(sh.CREEP_REPAIRER, 1, room)) {
-                    spawned = true;
-                    return false;
+            if(Game.rooms[room] != null) {
+                if(_.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})) > 0) {
+                    return true;
                 }
+            }
+            if(s.doSpawnCreep(sh.CREEP_REPAIRER, 1, room)) {
+                spawned = true;
+                return false;
             }
             return true;
         });
