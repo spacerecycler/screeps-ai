@@ -17,6 +17,9 @@ var m = {
                 delete Memory.creeps[name];
             }
         });
+        if(Memory.towers == null) {
+            Memory.towers = {};
+        }
         _.forEach(Memory.towers, (value, id) => {
             if(!Game.getObjectById(id)) {
                 delete Memory.towers[id];
