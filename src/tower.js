@@ -20,10 +20,10 @@ var t = {
         });
     },
     towerRepair: function(tower) {
-        if(Memory.tower[tower.id] == null) {
-            Memory.tower[tower.id] = {};
+        if(Memory.towers[tower.id] == null) {
+            Memory.towers[tower.id] = {};
         }
-        sh.doRepair(tower.pos, Memory.tower[tower.id], function(target) {
+        sh.doRepair(tower.pos, Memory.towers[tower.id], function(target) {
             tower.repair(target);
         });
     }

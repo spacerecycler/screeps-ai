@@ -13,14 +13,14 @@ var sh = {
         // also cap hitpoints for walls since they have so many
         if(target == null) {
             target = pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    var max = structure.hitsMax * 0.9;
-                    if(structure.structureType == STRUCTURE_WALL || structure.structureType == STRUCTURE_RAMPART) {
-                        max = structure.hitsMax < c.wallsMax * 0.9 ? structure.hitsMax : c.wallsMax * 0.9;
-                    } else if (structure.structureType != STRUCTURE_ROAD && !structure.my) {
+                filter: (target) => {
+                    var max = target.hitsMax * 0.9;
+                    if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART], target.structureType)) {
+                        max = target.hitsMax < c.wallsMax * 0.9 ? target.hitsMax : c.wallsMax * 0.9;
+                    } else if (!_.includes([STRUCTURE_ROAD,STRUCTURE_CONTAINER], target.structureType) && !target.my) {
                         return false;
                     }
-                    return structure.hits < max;
+                    return target.hits < max;
                 }
             });
             if(target != null) {
@@ -29,7 +29,7 @@ var sh = {
         }
         if(target != null) {
             var max = target.hitsMax;
-            if(target.structureType == STRUCTURE_WALL || target.structureType == STRUCTURE_RAMPART) {
+            if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART], target.structureType)) {
                 max = target.hitsMax < c.wallsMax ? target.hitsMax : c.wallsMax;
             }
             if(target.hits >= max) {
