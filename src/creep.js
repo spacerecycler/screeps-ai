@@ -211,8 +211,13 @@ var cr = {
                     cr.moveTo(creep, target);
                 }
             } else if(target instanceof StructureContainer) {
-                if(target.transfer(creep, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    cr.moveTo(creep, target);
+                switch(target.transfer(creep, RESOURCE_ENERGY)) {
+                    case ERR_NOT_IN_RANGE:
+                        cr.moveTo(creep, target);
+                        break;
+                    case ERR_NOT_ENOUGH_RESOURCES:
+                        delete creep.memory.energyTarget;
+                        break;
                 }
             }
         }
