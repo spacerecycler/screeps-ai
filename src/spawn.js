@@ -51,6 +51,7 @@ var s = {
         var spawned = false;
         _.forEach(c.rooms, (room) =>{
             if(Game.rooms[room] == null) {
+                console.log("room null " + room);
                 return true;
             }
             if(_.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})) == 0) {
