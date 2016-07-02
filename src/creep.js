@@ -167,12 +167,6 @@ var cr = {
         // work until we have no more energy
         if(creep.memory.working && creep.carry[RESOURCE_ENERGY] == 0) {
             creep.memory.working = false;
-            var target = creep.pos.findClosestByRange(FIND_SOURCES);
-            if(target == null) {
-                console.log("can't find target " + creep.name)
-            } else {
-                creep.memory.energyTarget = target.id;
-            }
         }
         if(!creep.memory.working && creep.carry[RESOURCE_ENERGY] == creep.carryCapacity) {
             creep.memory.working = true;
