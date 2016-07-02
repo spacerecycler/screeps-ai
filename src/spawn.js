@@ -72,10 +72,10 @@ var s = {
         return spawned;
     },
     spawnCapturer: function() {
-        if(Game.rooms[c.expansion].reservation.ticksToEnd < 500) {
+        if(Game.rooms[c.expansion].controller.reservation.ticksToEnd < 500) {
             Game.rooms[c.expansion].memory.needReserve = true;
         }
-        if(Game.rooms[c.expansion].reservation.ticksToEnd > 1500) {
+        if(Game.rooms[c.expansion].controller.reservation.ticksToEnd > 1500) {
             Game.rooms[c.expansion].memory.needReserve = false;
         }
         var count = 1;
