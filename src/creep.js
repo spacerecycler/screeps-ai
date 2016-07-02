@@ -68,6 +68,7 @@ var cr = {
             target = _.values(Game.constructionSites)[0];
         }
         if(target != null) {
+            creep.memory.targetId = target.id;
             if(creep.build(target) == ERR_NOT_IN_RANGE) {
                 cr.moveTo(creep, target);
             }
