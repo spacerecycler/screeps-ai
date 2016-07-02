@@ -64,7 +64,7 @@ var s = {
         return spawned;
     },
     spawnCapturer: function() {
-        return s.doSpawnCreep(sh.CREEP_CAPTURER, 1, c.expansion);
+        return s.doSpawnCreep(sh.CREEP_CAPTURER, 2, c.expansion);
     },
     spawnFiller: function() {
         var spawned = false;
@@ -126,7 +126,7 @@ var s = {
             return body;
         }
         if(role == sh.CREEP_CAPTURER) {
-            return [CLAIM,MOVE,MOVE,TOUGH];
+            return [CLAIM,MOVE,MOVE];
         }
         if(room.energyCapacityAvailable >= 350) {
             body.push(MOVE);
