@@ -12,12 +12,12 @@ var m = {
     },
     /** Clear unused memory **/
     clearMem: function() {
-        _.forEach(Memory.creeps, (name) => {
+        _.forEach(Memory.creeps, (value, name) => {
             if(!Game.creeps[name]) {
                 delete Memory.creeps[name];
             }
         });
-        _.forEach(Memory.towers, (id) => {
+        _.forEach(Memory.towers, (value, id) => {
             if(!Game.getObjectById(id)) {
                 delete Memory.towers[id];
             }
