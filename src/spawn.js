@@ -108,9 +108,10 @@ var s = {
         return spawned;
     },
     doSpawnCreep: function(name, expected, assignedRoom) {
-        var roleCreeps = _.filter(Game.creeps, (creep) => {return creep.memory.role == name && creep.memory.room == assignedRoom;});
-        if(_.size(roleCreeps) < expected) {
-            var body = s.chooseBody(Game.spawns[c.mainSpawn].room, name, _.size(roleCreeps));
+        var totalCreeps = _.filter(Game.creeps, (creep) => {return creep.memory.role == name;});
+        var roomCreeps = _.filter(Game.creeps, (creep) => {return creep.memory.role == name && creep.memory.room == assignedRoom;});
+        if(_.size(roomCreeps) < expected) {
+            var body = s.chooseBody(Game.spawns[c.mainSpawn].room, name, _.size(totalCreeps));
             if(Game.spawns[c.mainSpawn].canCreateCreep(body) == OK) {
                 var result = Game.spawns[c.mainSpawn].createCreep(body, null, {
                     role: name,
@@ -126,13 +127,13 @@ var s = {
         }
         return false;
     },
-    chooseBody: function(room, role, count) {
+    chooseBody: function(room, role, totalCount) {
         var body = [WORK,WORK,CARRY,MOVE];
-        if(role == sh.CREEP_HARVESTER && count == 0) {
+        if(role == sh.CREEP_HARVESTER && totalCount == 0) {
             return body;
         }
         if(role == sh.CREEP_FILLER) {
-            if(count == 0) {
+            if(totalCount == 0) {
                 return [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE];
             }
             var div = Math.trunc(room.energyCapacityAvailable/100);
