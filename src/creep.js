@@ -106,7 +106,7 @@ var cr = {
         var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType = STRUCTURE_CONTAINER
-                    && structure.store.energy < structure.storeCapacity;
+                    && structure.store[RESOURCE_ENERGY] < structure.storeCapacity;
             }
         });
         if(target != null) {
@@ -165,7 +165,7 @@ var cr = {
     /** @param {Creep} creep **/
     isCreepWorking: function(creep) {
         // work until we have no more energy
-        if(creep.memory.working && creep.carry.energy == 0) {
+        if(creep.memory.working && creep.carry[RESOURCE_ENERGY] == 0) {
             creep.memory.working = false;
             var target = creep.pos.findClosestByRange(FIND_SOURCES);
             if(target == null) {
@@ -174,7 +174,7 @@ var cr = {
                 creep.memory.energyTarget = target.id;
             }
         }
-        if(!creep.memory.working && creep.carry.energy == creep.carryCapacity) {
+        if(!creep.memory.working && creep.carry[RESOURCE_ENERGY] == creep.carryCapacity) {
             creep.memory.working = true;
             delete creep.memory.energyTarget;
         }
@@ -189,7 +189,7 @@ var cr = {
                 target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return structure.structureType == STRUCTURE_CONTAINER
-                            && structure.store.energy > 0;
+                            && structure.store[RESOURCE_ENERGY] > 0;
                     }
                 });
                 if(_.size(creep.room.find(FIND_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_CONTAINER;}})) == 0) {
