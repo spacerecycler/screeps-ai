@@ -123,6 +123,7 @@ var s = {
                 body.push(CARRY);
                 body.push(MOVE);
             }
+            return body;
         }
         if(role == sh.CREEP_CAPTURER) {
             return [CLAIM,MOVE,MOVE,TOUGH];
