@@ -107,7 +107,7 @@ var s = {
     },
     chooseBody: function(room, role, count) {
         var body = [WORK,WORK,CARRY,MOVE];
-        if(role == sh.CREEP_HARVESTER && count == 0) {
+        if((role == sh.CREEP_HARVESTER || role == sh.CREEP_FILLER) && count == 0) {
             return body;
         }
         if(role == sh.CREEP_CAPTURER) {
