@@ -28,7 +28,7 @@ var s = {
             if(Game.rooms[room] == null) {
                 return true;
             }
-            if(_.size(Game.rooms[room].find(FIND_STRUCTURES, {filter: (structure) => structure.structureType = STRUCTURE_CONTAINER})) > 0) {
+            if(_.size(Game.rooms[room].find(FIND_STRUCTURES, {filter: (structure) => structure.structureType == STRUCTURE_CONTAINER})) > 0) {
                 if(s.doSpawnCreep(sh.CREEP_HARVESTER, 2, room)) {
                     spawned = true;
                     return false;
