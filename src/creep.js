@@ -4,7 +4,9 @@ var cr = {
     /** Run creeps **/
     runCreeps: function() {
         _.forEach(Game.creeps, (creep) => {
-            if(creep.memory.role == sh.CREEP_BUILDER || cr.ensureRoom(creep)) {
+            if(creep.memory.role == sh.CREEP_BUILDER
+                || creep.memory.role == sh.CREEP_TRANSPORTER
+                || cr.ensureRoom(creep)) {
                 if(creep.carryCapacity == 0 || cr.isCreepWorking(creep)) {
                     switch (creep.memory.role) {
                         case sh.CREEP_HARVESTER:
@@ -25,9 +27,15 @@ var cr = {
                         case sh.CREEP_FILLER:
                             cr.runFiller(creep);
                             return;
+                        case sh.CREEP_TRANSPORTER:
+                            cr.runTransporter(creep);
+                            return;
                     }
                 } else {
-                    cr.fillEnergy(creep);
+                    if(creep.memory.role != sh.CREEP_TRANSPORTER
+                        || cr.ensureRoom(creep)) {
+                        cr.fillEnergy(creep);
+                    }
                 }
             }
         });
@@ -70,6 +78,29 @@ var cr = {
             }
         } else {
             cr.idle(creep);
+        }
+    },
+    runTransporter: function(creep) {
+        var target = Game.getObjectById(creep.memory.targetId);
+        if(target == null) {
+            var targets = _.filter(Game.structures, (target) => {
+                return target.room.memory.type == sh.ROOM_HOME
+                    && _.includes([STRUCTURE_CONTAINER], target.structureType)
+                    && target.store[RESOURCE_ENERGY] < target.storeCapacity;
+            });
+            if(_.size(targets > 0)) {
+                target = targets[0];
+                creep.memory.targetId = target.id;
+            }
+        }
+        if(target != null) {
+            if(target.store[RESOURCE_ENERGY] == target.storeCapacity) {
+                delete creep.memory.targetId;
+            } else {
+                if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    cr.moveTo(creep, target);
+                }
+            }
         }
     },
     /** @param {Creep} creep **/
