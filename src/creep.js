@@ -69,7 +69,10 @@ var cr = {
         }
     },
     runFiller: function(creep) {
-        var target = sh.findFillTarget(creep, [STRUCTURE_EXTENSION, STRUCTURE_SPAWN]);
+        var target = sh.findFillTarget(creep, [STRUCTURE_EXTENSION]);
+        if(target == null) {
+            target = sh.findFillTarget(creep, [STRUCTURE_SPAWN]);
+        }
         if(target == null) {
             target = sh.findFillTarget(creep, [STRUCTURE_TOWER]);
         }
@@ -113,7 +116,10 @@ var cr = {
     runHarvester: function(creep) {
         var target = sh.findNotFullContainer(creep);
         if(target == null) {
-            target = sh.findFillTarget(creep, [STRUCTURE_EXTENSION, STRUCTURE_SPAWN]);
+            target = sh.findFillTarget(creep, [STRUCTURE_EXTENSION]);
+        }
+        if(target == null) {
+            target = sh.findFillTarget(creep, [STRUCTURE_SPAWN]);
         }
         if(target != null) {
             if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
