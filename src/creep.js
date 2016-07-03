@@ -85,8 +85,8 @@ var cr = {
         var target = Game.getObjectById(creep.memory.targetId);
         if(target == null) {
             var targets = flatMap(Memory.rooms, (mem, room) =>{
-                if(Game.room[room] != null && mem.type == sh.ROOM_HOME) {
-                    return Game.room[room].find(STRUCTURE_CONTAINER, {
+                if(Game.rooms[room] != null && mem.type == sh.ROOM_HOME) {
+                    return Game.rooms[room].find(STRUCTURE_CONTAINER, {
                         filter: (target) => target.store[RESOURCE_ENERGY] < target.storeCapacity
                     });
                 }
