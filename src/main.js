@@ -21,7 +21,7 @@ var m = {
             if(Game.rooms[room] == null) {
                 return;
             }
-            Game.room[room].run();
+            Game.rooms[room].run();
         });
         _.forEach(Game.creeps, (creep) => {
             creep.run();
