@@ -142,7 +142,7 @@ var cr = {
     },
     runCapturer: function(creep) {
         if(creep.reserveController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(creep.room.controller);
+            cr.moveTo(creep, creep.room.controller);
         }
     },
     ensureRoom: function(creep) {
@@ -153,7 +153,7 @@ var cr = {
                 creep.memory.exitDir = exitDir;
             }
             var exit = creep.pos.findClosestByRange(exitDir);
-            creep.moveTo(exit);
+            cr.moveTo(creep, exit);
             return false;
         } else {
             if(creep.memory.exitDir != null) {
