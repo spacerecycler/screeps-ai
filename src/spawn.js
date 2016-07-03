@@ -4,15 +4,18 @@ var s = {
     /** Spawn creeps that are missing **/
     spawnCreep: function() {
         var spawned = false;
-        var homeRooms = _.filter(Memory.rooms, (mem) => mem.type == sh.ROOM_HOME);
-        _.forEach(homeRooms, (mem, room) => {
-            spawned = s.trySpawnCreep(room, mem);
-            return !spawned;
+        _.forEach(Memory.rooms, (mem, room) => {
+            if(mem.type == sh.ROOM_HOME) {
+                console.log("mem: " + mem + " room: " + room);
+                spawned = s.trySpawnCreep(room, mem);
+                return !spawned;
+            }
         });
-        var notHomeRooms = _.filter(Memory.rooms, (mem) => mem.type != sh.ROOM_HOME);
-        _.forEach(notHomeRooms, (mem, room) => {
-            spawned = s.trySpawnCreep(room, mem);
-            return !spawned;
+        _.forEach(Memory.rooms, (mem, room) => {
+            if(mem.type != sh.ROOM_HOME) {
+                spawned = s.trySpawnCreep(room, mem);
+                return !spawned;
+            }
         });
     },
     trySpawnCreep: function(room, mem) {
