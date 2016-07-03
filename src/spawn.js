@@ -3,18 +3,18 @@ var sh = require('shared');
 var s = {
     /** Spawn creeps that are missing **/
     spawnCreep: function() {
-        var spawned = false;
+        var spawnedOrMissing = false;
         _.forEach(Memory.rooms, (mem, room) => {
             if(mem.type == sh.ROOM_HOME) {
-                spawned = s.trySpawnCreep(room, mem);
-                return !spawned;
+                spawnedOrMissing = s.trySpawnCreep(room, mem);
+                return !spawnedOrMissing;
             }
         });
-        if(!spawned) {
+        if(!spawnedOrMissing) {
             _.forEach(Memory.rooms, (mem, room) => {
                 if(mem.type != sh.ROOM_HOME) {
-                    spawned = s.trySpawnCreep(room, mem);
-                    return !spawned;
+                    spawnedOrMissing = s.trySpawnCreep(room, mem);
+                    return !spawnedOrMissing;
                 }
             });
         }
@@ -78,7 +78,7 @@ var s = {
         return expected;
     },
     doSpawnCreep: function(room, expected) {
-        var spawned = false;
+        var spawnedOrMissing = false;
         _.forEach(expected, (count, role) => {
             var roomCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == room);
             if(_.size(roomCreeps) < count) {
@@ -90,15 +90,18 @@ var s = {
                     });
                     if(_.isString(result)) {
                         console.log('Spawning new ' + role + ' for ' + room + ': ' + result);
-                        spawned = true;
+                        spawnedOrMissing = true;
                         return false;
                     } else {
                         console.log('Spawn error: ' + result);
                     }
+                } else {
+                    spawnedOrMissing = true;
+                    return false;
                 }
             }
         });
-        return spawned;
+        return spawnedOrMissing;
     },
     chooseBody: function(role) {
         var totalCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role);
