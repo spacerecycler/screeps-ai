@@ -34,20 +34,16 @@ var cr = {
     },
     /** @param {Creep} creep **/
     runBuilder: function(creep) {
-        // prioritize walls and ramparts first
         var target = Game.getObjectById(creep.memory.targetId);
         if(target == null) {
             target = sh.findConstructionSite(creep, [STRUCTURE_WALL, STRUCTURE_RAMPART]);
         }
-        // then roads
         if(target == null) {
             target = sh.findConstructionSite(creep, [STRUCTURE_ROAD]);
         }
-        // then towers
         if(target == null) {
             target = sh.findConstructionSite(creep, [STRUCTURE_TOWER]);
         }
-        // then all other sites
         if(target == null) {
             target = sh.findConstructionSite(creep);
         }
@@ -64,9 +60,7 @@ var cr = {
         }
     },
     runFiller: function(creep) {
-        // put energy first into extensions and spawns
         var target = sh.findFillTarget(creep, [STRUCTURE_EXTENSION, STRUCTURE_SPAWN]);
-        // then towers
         if(target == null) {
             target = sh.findFillTarget(creep, [STRUCTURE_TOWER]);
         }
@@ -81,9 +75,9 @@ var cr = {
     /** @param {Creep} creep **/
     runHarvester: function(creep) {
         var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return structure.structureType == STRUCTURE_CONTAINER
-                    && structure.store[RESOURCE_ENERGY] < structure.storeCapacity;
+            filter: (target) => {
+                return target.structureType == STRUCTURE_CONTAINER
+                    && target.store[RESOURCE_ENERGY] < target.storeCapacity;
             }
         });
         if(target == null) {
@@ -137,7 +131,7 @@ var cr = {
         }
     },
     idle: function(creep) {
-        var flag = creep.pos.findClosestByRange(FIND_FLAGS, {filter: (flag) => flag.memory.type == 'idle'});
+        var flag = creep.pos.findClosestByRange(FIND_FLAGS, {filter: (flag) => flag.memory.type == sh.FLAG_IDLE});
         if(!creep.pos.inRangeTo(flag, 1)) {
             cr.moveTo(creep, flag);
         }
@@ -161,12 +155,12 @@ var cr = {
         if(target == null) {
             if(creep.memory.role != sh.CREEP_HARVESTER) {
                 target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return structure.structureType == STRUCTURE_CONTAINER
-                            && structure.store[RESOURCE_ENERGY] > 0;
+                    filter: (target) => {
+                        return target.structureType == STRUCTURE_CONTAINER
+                            && target.store[RESOURCE_ENERGY] > 0;
                     }
                 });
-                if(_.size(creep.room.find(FIND_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_CONTAINER;}})) == 0) {
+                if(_.size(creep.room.find(FIND_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_CONTAINER})) == 0) {
                     target = creep.pos.findClosestByRange(FIND_SOURCES);
                 }
             } else {

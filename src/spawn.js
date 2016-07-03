@@ -24,30 +24,39 @@ var s = {
     },
     spawnHarvester: function() {
         var spawned = false;
-        _.forEach(c.rooms, (room) =>{
+        _.forEach(Memory.rooms, (mem, room) =>{
             if(Game.rooms[room] != null) {
                 var containerCount = _.size(Game.rooms[room].find(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return structure.structureType == STRUCTURE_CONTAINER;
-                    }
-                }));
+                    filter: (target) => target.structureType == STRUCTURE_CONTAINER}));
                 if(containerCount > 0) {
-                    var count = 1;
-                    if(containerCount > 2) {
-                        count++;
-                    }
-                    if(s.doSpawnCreep(sh.CREEP_HARVESTER, count, room)) {
+                    if(s.doSpawnCreep(sh.CREEP_HARVESTER, Math.min(containerCount, mem.maxHarvesters), room)) {
                         spawned = true;
                         return false;
                     }
+                } else {
+                    var structureCount = _.size(Game.rooms[room].find(FIND_MY_STRUCTURES));
+                    if(structureCount > 0) {
+                        if(s.doSpawnCreep(sh.CREEP_HARVESTER, 2, room)) {
+                            spawned = true;
+                            return false;
+                        }
+                    }
                 }
             }
-            return true;
         });
         return spawned;
     },
     spawnUpgrader: function() {
-        return s.doSpawnCreep(sh.CREEP_UPGRADER, 1, Game.spawns[c.mainSpawn].room.name);
+        var spawned = false;
+        _.forEach(Memory.rooms, (mem, room) =>{
+            if(mem.type == sh.ROOM_HOME) {
+                if(s.doSpawnCreep(sh.CREEP_UPGRADER, 1, room)) {
+                    spawned = true;
+                    return false;
+                }
+            }
+        });
+        return spawned;
     },
     spawnBuilder: function() {
         if(_.size(Game.constructionSites) > 0) {
@@ -59,34 +68,42 @@ var s = {
         var spawned = false;
         _.forEach(c.rooms, (room) =>{
             if(Game.rooms[room] != null) {
-                if(_.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_TOWER;}})) > 0) {
-                    return true;
+                if(_.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_TOWER})) > 0) {
+                    return;
                 }
             }
             if(s.doSpawnCreep(sh.CREEP_REPAIRER, 1, room)) {
                 spawned = true;
                 return false;
             }
-            return true;
         });
         return spawned;
     },
     spawnCapturer: function() {
-        if(Game.rooms[c.expansion].controller.reservation.ticksToEnd < 500) {
-            Game.rooms[c.expansion].memory.needReserve = true;
-        }
-        if(Game.rooms[c.expansion].controller.reservation.ticksToEnd > 1500) {
-            Game.rooms[c.expansion].memory.needReserve = false;
-        }
-        var count = 1;
-        if(Game.rooms[c.expansion].memory.needReserve) {
-            count = 2;
-        }
-        return s.doSpawnCreep(sh.CREEP_CAPTURER, count, c.expansion);
+        var spawned = false;
+        _.forEach(Memory.rooms, (mem, room) =>{
+            if(mem.type == sh.ROOM_EXPANSION) {
+                if(Game.rooms[room].controller.reservation.ticksToEnd < 500) {
+                    mem.needReserve = true;
+                }
+                if(Game.rooms[room].controller.reservation.ticksToEnd > 1500) {
+                    mem.needReserve = false;
+                }
+                var count = 1;
+                if(mem.needReserve) {
+                    count = 2;
+                }
+                if(s.doSpawnCreep(sh.CREEP_CAPTURER, count, c.expansion)) {
+                    spawned = true;
+                    return false;
+                }
+            }
+        });
+        return spawned;
     },
     spawnFiller: function() {
         var spawned = false;
-        _.forEach(c.rooms, (room) =>{
+        _.forEach(Memory.rooms, (mem, room) =>{
             var count = 0;
             if(Game.rooms[room] == null) {
                 return true;
@@ -107,18 +124,18 @@ var s = {
         });
         return spawned;
     },
-    doSpawnCreep: function(name, expected, assignedRoom) {
-        var totalCreeps = _.filter(Game.creeps, (creep) => {return creep.memory.role == name;});
-        var roomCreeps = _.filter(Game.creeps, (creep) => {return creep.memory.role == name && creep.memory.room == assignedRoom;});
+    doSpawnCreep: function(role, expected, room) {
+        var totalCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role);
+        var roomCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == room);
         if(_.size(roomCreeps) < expected) {
-            var body = s.chooseBody(Game.spawns[c.mainSpawn].room, name, _.size(totalCreeps));
+            var body = s.chooseBody(role, _.size(totalCreeps), Game.spawns[c.mainSpawn].room.energyCapacityAvailable);
             if(Game.spawns[c.mainSpawn].canCreateCreep(body) == OK) {
                 var result = Game.spawns[c.mainSpawn].createCreep(body, null, {
-                    role: name,
-                    room: assignedRoom
+                    role: role,
+                    room: room
                 });
                 if(_.isString(result)) {
-                    console.log('Spawning new ' + name + ': ' + result);
+                    console.log('Spawning new ' + role + ': ' + result);
                     return true;
                 } else {
                     console.log('Spawn error: ' + result);
@@ -127,46 +144,36 @@ var s = {
         }
         return false;
     },
-    chooseBody: function(room, role, totalCount) {
-        var body = [WORK,WORK,CARRY,MOVE];
-        if(role == sh.CREEP_HARVESTER && totalCount == 0) {
-            return body;
-        }
-        if(role == sh.CREEP_FILLER) {
-            if(totalCount == 0) {
-                return [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE];
-            }
-            var div = Math.trunc(room.energyCapacityAvailable/100);
-            body = [];
-            for(var i = 0; i < div; i++) {
-                body.push(CARRY);
-                body.push(MOVE);
-            }
-            return body;
-        }
+    chooseBody: function(role, totalCreeps, energyCapAvail) {
+        var body = [];
         if(role == sh.CREEP_CAPTURER) {
             return [CLAIM,MOVE,MOVE];
         }
-        if(room.energyCapacityAvailable >= 350) {
-            body.push(MOVE);
+        if(role == sh.CREEP_FILLER) {
+            if(totalCreeps == 0) {
+                return [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE];
+            }
+            var div = Math.trunc(energyCapAvail/100);
+            _.times(div, () => {
+                body.push(CARRY);
+                body.push(MOVE);
+            });
+            return body;
         }
-        if(room.energyCapacityAvailable >= 450) {
-            body.push(WORK);
+        if(role == sh.CREEP_HARVESTER && totalCreeps == 0) {
+            return [WORK,WORK,CARRY,MOVE];
         }
-        if(room.energyCapacityAvailable >= 550) {
-            body.push(WORK);
-        }
-        if(room.energyCapacityAvailable >= 600) {
+        var parts50 = energyCapAvail/50;
+        // number of 50 cost parts * 5/8 /2 = num work parts
+        var numWorkParts = Math.ceil(parts50*5 /16);
+        var remainingParts = parts50 - numWorkParts*2;
+        _.times(numWorkParts, () => body.push(WORK));
+        _.times(Math.trunc(remainingParts/2), () => {
             body.push(CARRY);
-        }
-        if(room.energyCapacityAvailable >= 700) {
-            body.push(WORK);
-        }
-        if(room.energyCapacityAvailable >= 750) {
             body.push(MOVE);
-        }
-        if(room.energyCapacityAvailable >= 800) {
-            body.push(CARRY);
+        });
+        if(remainingParts%2 > 0) {
+            body.push(MOVE);
         }
         return body;
     }
