@@ -24,7 +24,7 @@ StructureSpawn.prototype.trySpawnCreep = function(room, mem) {
 StructureSpawn.prototype.getExpectedCreeps = function(room, mem) {
     var expected = {};
     if(Game.rooms[room] != null) {
-        var containerCount = sh.getContainerCount(Game.rooms[room]);
+        var containerCount = Game.rooms[room].getContainerCount();
         if(containerCount > 0) {
             expected[sh.CREEP_HARVESTER] = Math.min(containerCount, mem.maxHarvesters);
             if(mem.type == sh.ROOM_EXPANSION) {
