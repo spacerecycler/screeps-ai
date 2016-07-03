@@ -85,7 +85,7 @@ var sh = {
             filter: (target) => target.structureType == STRUCTURE_CONTAINER}));
     },
     getTowerCount: function(room) {
-        return _.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {
+        return _.size(room.find(FIND_MY_STRUCTURES, {
             filter: (target) => target.structureType == STRUCTURE_TOWER}));
     }
 };
