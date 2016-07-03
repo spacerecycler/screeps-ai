@@ -10,12 +10,14 @@ var s = {
                 return !spawned;
             }
         });
-        _.forEach(Memory.rooms, (mem, room) => {
-            if(mem.type != sh.ROOM_HOME) {
-                spawned = s.trySpawnCreep(room, mem);
-                return !spawned;
-            }
-        });
+        if(!spawned) {
+            _.forEach(Memory.rooms, (mem, room) => {
+                if(mem.type != sh.ROOM_HOME) {
+                    spawned = s.trySpawnCreep(room, mem);
+                    return !spawned;
+                }
+            });
+        }
     },
     trySpawnCreep: function(room, mem) {
         var expected = s.getExpectedCreeps(room, mem);
