@@ -84,7 +84,9 @@ var s = {
         var spawned = false;
         _.forEach(Memory.rooms, (mem, room) =>{
             if(mem.type == sh.ROOM_EXPANSION) {
-                if(Game.rooms[room].controller.reservation == null) {
+                if(Game.rooms[room] == null
+                    || Game.rooms[room].controller == null
+                    || Game.rooms[room].controller.reservation == null) {
                     mem.needReserve = true;
                 } else {
                     if(Game.rooms[room].controller.reservation.ticksToEnd < sh.reservationMin) {
