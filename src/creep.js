@@ -212,6 +212,8 @@ var cr = {
                         break;
                 }
             }
+        } else {
+            cr.idle(creep);
         }
     },
     moveTo: function(creep, target) {
