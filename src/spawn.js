@@ -52,24 +52,30 @@ var s = {
             if(sh.getTowerCount(Game.rooms[room]) == 0) {
                 expected[sh.CREEP_REPAIRER] = 1;
             }
-            if(Game.rooms[room].controller == null || Game.rooms[room].controller.reservation == null) {
-                mem.needReserve = true;
-            } else {
-                if(Game.rooms[room].controller.reservation.ticksToEnd < sh.reservationMin) {
+            if(mem.type == sh.ROOM_EXPANSION) {
+                if(Game.rooms[room].controller == null || Game.rooms[room].controller.reservation == null) {
                     mem.needReserve = true;
-                }
-                if(Game.rooms[room].controller.reservation.ticksToEnd > sh.reservationMax) {
-                    mem.needReserve = false;
+                } else {
+                    if(Game.rooms[room].controller.reservation.ticksToEnd < sh.reservationMin) {
+                        mem.needReserve = true;
+                    }
+                    if(Game.rooms[room].controller.reservation.ticksToEnd > sh.reservationMax) {
+                        mem.needReserve = false;
+                    }
                 }
             }
         } else {
             expected[sh.CREEP_REPAIRER] = 1;
-            mem.needReserve = true;
+            if(mem.type == sh.ROOM_EXPANSION) {
+                mem.needReserve = true;
+            }
         }
-        if(mem.needReserve) {
-            expected[sh.CREEP_CAPTURER] = 2;
-        } else {
-            expected[sh.CREEP_CAPTURER] = 1;
+        if(mem.type == sh.ROOM_EXPANSION) {
+            if(mem.needReserve) {
+                expected[sh.CREEP_CAPTURER] = 2;
+            } else {
+                expected[sh.CREEP_CAPTURER] = 1;
+            }
         }
         return expected;
     },
