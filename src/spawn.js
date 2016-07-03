@@ -6,7 +6,6 @@ var s = {
         var spawned = false;
         _.forEach(Memory.rooms, (mem, room) => {
             if(mem.type == sh.ROOM_HOME) {
-                console.log("mem: " + mem + " room: " + room);
                 spawned = s.trySpawnCreep(room, mem);
                 return !spawned;
             }
@@ -21,7 +20,7 @@ var s = {
     trySpawnCreep: function(room, mem) {
         var expected = s.getExpectedCreeps(room, mem);
         _.forEach(expected, (count, role) => {
-            console.log("role: " + role + " count: " + count);
+            console.log("room: " + room + " role: " + role + " count: " + count);
         });
         return s.doSpawnCreep(room, expected);
     },
