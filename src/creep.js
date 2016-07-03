@@ -187,7 +187,12 @@ Creep.prototype.fillEnergy = function() {
                 target = this.pos.findClosestByRange(FIND_SOURCES);
             }
         } else {
-            target = this.pos.findClosestByRange(FIND_SOURCES);
+            if(this.memory.role == sh.CREEP_FILLER) {
+                target = this.pos.findClosestByRange(FIND_DROPPED_ENERGY);
+            }
+            if(target == null) {
+                target = this.pos.findClosestByRange(FIND_SOURCES);
+            }
         }
         if(target != null) {
             this.memory.energyTarget = target.id;

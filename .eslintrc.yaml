@@ -30,6 +30,7 @@
         FIND_STRUCTURES: false
         FIND_FLAGS: false
         FIND_SOURCES: false
+        FIND_DROPPED_ENERGY: false
         STRUCTURE_WALL: false
         STRUCTURE_RAMPART: false
         STRUCTURE_ROAD: false
