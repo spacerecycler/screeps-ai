@@ -212,6 +212,10 @@ Creep.prototype.fillEnergy = function() {
                     delete this.memory.energyTarget;
                     break;
             }
+        } else if(target instanceof Resource) {
+            if(this.pickup(target) == ERR_NOT_IN_RANGE) {
+                this.moveToS(target);
+            }
         }
     } else {
         this.idle();
