@@ -84,11 +84,15 @@ var s = {
         var spawned = false;
         _.forEach(Memory.rooms, (mem, room) =>{
             if(mem.type == sh.ROOM_EXPANSION) {
-                if(Game.rooms[room].controller.reservation.ticksToEnd < sh.reservationMin) {
+                if(Game.rooms[room].controller.reservation == null) {
                     mem.needReserve = true;
-                }
-                if(Game.rooms[room].controller.reservation.ticksToEnd > sh.reservationMax) {
-                    mem.needReserve = false;
+                } else {
+                    if(Game.rooms[room].controller.reservation.ticksToEnd < sh.reservationMin) {
+                        mem.needReserve = true;
+                    }
+                    if(Game.rooms[room].controller.reservation.ticksToEnd > sh.reservationMax) {
+                        mem.needReserve = false;
+                    }
                 }
                 var count = 1;
                 if(mem.needReserve) {
