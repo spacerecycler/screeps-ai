@@ -19,9 +19,6 @@ var s = {
     },
     trySpawnCreep: function(room, mem) {
         var expected = s.getExpectedCreeps(room, mem);
-        _.forEach(expected, (count, role) => {
-            console.log("room: " + room + " role: " + role + " count: " + count);
-        });
         return s.doSpawnCreep(room, expected);
     },
     getExpectedCreeps: function(room, mem) {
