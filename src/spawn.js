@@ -42,7 +42,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(room, mem) {
         if(mem.type == sh.ROOM_HOME) {
             expected[sh.CREEP_UPGRADER] = 1;
         }
-        if(room == Game.spawns[Memory.config.mainSpawn].room.name && _.size(Game.constructionSites) > 0) {
+        if(_.size(Game.rooms[room].findConstructionSites()) > 0) {
             expected[sh.CREEP_BUILDER] = 1;
         }
         if(Game.rooms[room].getTowerCount() == 0) {

@@ -17,3 +17,14 @@ Room.prototype.getTowerCount = function() {
     return _.size(this.find(FIND_MY_STRUCTURES, {
         filter: (target) => target.structureType == STRUCTURE_TOWER}));
 };
+Creep.prototype.findConstructionSites = function(types) {
+    if(types == null) {
+        return this.find(FIND_MY_CONSTRUCTION_SITES);
+    } else {
+        return this.find(FIND_MY_CONSTRUCTION_SITES, {
+            filter: (target) => {
+                return _.includes(types, target.structureType);
+            }
+        });
+    }
+};
