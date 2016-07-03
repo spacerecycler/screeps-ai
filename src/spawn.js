@@ -2,39 +2,22 @@ var _ = require('lodash');
 var sh = require('shared');
 var s = {
     /** Spawn creeps that are missing **/
-    spawnCreeps: function() {
-        var spawning = false;
-        spawning = s.spawnHarvester();
-        if(!spawning) {
-            spawning = s.spawnFiller();
-        }
-        if(!spawning) {
-            spawning = s.spawnTransporter();
-        }
-        if(!spawning) {
-            spawning = s.spawnUpgrader();
-        }
-        if(!spawning) {
-            spawning = s.spawnBuilder();
-        }
-        if(!spawning) {
-            spawning = s.spawnRepairer();
-        }
-        if(!spawning) {
-            spawning = s.spawnCapturer();
-        }
-    },
     spawnCreep: function() {
+        var spawned = false;
         var homeRooms = _.filter(Memory.rooms, (mem) => mem.type == sh.ROOM_HOME);
-        _.forEach(homeRoom, (mem, room) => {
-
+        _.forEach(homeRooms, (mem, room) => {
+            spawned = s.trySpawnCreep(room, mem);
+            return !spawned;
         });
         var notHomeRooms = _.filter(Memory.rooms, (mem) => mem.type != sh.ROOM_HOME);
+        _.forEach(notHomeRooms, (mem, room) => {
+            spawned = s.trySpawnCreep(room, mem);
+            return !spawned;
+        });
     },
     trySpawnCreep: function(room, mem) {
-        s.determineExpectedCreeps(room, mem);
-        s.checkHarvesters(room);
-        s.checkUpgrader
+        var expected = s.determineExpectedCreeps(room, mem);
+        return s.doSpawnCreep(room, expected);
     },
     determineExpectedCreeps: function(room, mem) {
         var expected = {};
@@ -83,27 +66,32 @@ var s = {
             expected[sh.CREEP_CAPTURER] = 1;
         }
     },
-    doSpawnCreep: function(role, expected, room) {
-        var totalCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role);
-        var roomCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == room);
-        if(_.size(roomCreeps) < expected) {
-            var body = s.chooseBody(role, _.size(totalCreeps), Game.spawns[Memory.config.mainSpawn].room.energyCapacityAvailable);
-            if(Game.spawns[Memory.config.mainSpawn].canCreateCreep(body) == OK) {
-                var result = Game.spawns[Memory.config.mainSpawn].createCreep(body, null, {
-                    role: role,
-                    room: room
-                });
-                if(_.isString(result)) {
-                    console.log('Spawning new ' + role + ': ' + result);
-                    return true;
-                } else {
-                    console.log('Spawn error: ' + result);
+    doSpawnCreep: function(room, expected) {
+        var spawned = false;
+        _.forEach(expected, (count, role) => {
+            var roomCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == room);
+            if(_.size(roomCreeps) < count) {
+                var body = s.chooseBody(role);
+                if(Game.spawns[Memory.config.mainSpawn].canCreateCreep(body) == OK) {
+                    var result = Game.spawns[Memory.config.mainSpawn].createCreep(body, null, {
+                        role: role,
+                        room: room
+                    });
+                    if(_.isString(result)) {
+                        console.log('Spawning new ' + role + ': ' + result);
+                        spawned = true;
+                        return false;
+                    } else {
+                        console.log('Spawn error: ' + result);
+                    }
                 }
             }
-        }
-        return false;
+        });
+        return spawned;
     },
-    chooseBody: function(role, totalCreeps, energyCapAvail) {
+    chooseBody: function(role) {
+        var totalCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role);
+        var energyCapAvail = Game.spawns[Memory.config.mainSpawn].room.energyCapacityAvailable;
         var body = [];
         if(role == sh.CREEP_CAPTURER) {
             return [CLAIM,MOVE,MOVE];
