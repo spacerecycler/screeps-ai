@@ -2,8 +2,7 @@ var _ = require('lodash');
 var sh = require('shared');
 var flatMap = _.compose(_.compact, _.flatten, _.map);
 Creep.prototype.run = function() {
-    if(this.memory.role == sh.CREEP_BUILDER
-        || this.memory.role == sh.CREEP_TRANSPORTER || this.ensureRoom()) {
+    if(this.memory.role == sh.CREEP_TRANSPORTER || this.ensureRoom()) {
         if(this.carryCapacity == 0 || this.isCreepWorking()) {
             switch (this.memory.role) {
                 case sh.CREEP_HARVESTER:
@@ -52,6 +51,7 @@ Creep.prototype.runBuilder = function() {
     }
     if(target == null && _.size(Game.constructionSites) > 0) {
         target = _.values(Game.constructionSites)[0];
+        this.memory.room = target.room.name;
     }
     if(target != null) {
         this.memory.targetId = target.id;
