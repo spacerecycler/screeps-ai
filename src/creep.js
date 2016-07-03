@@ -74,12 +74,7 @@ var cr = {
     },
     /** @param {Creep} creep **/
     runHarvester: function(creep) {
-        var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (target) => {
-                return target.structureType == STRUCTURE_CONTAINER
-                    && target.store[RESOURCE_ENERGY] < target.storeCapacity;
-            }
-        });
+        var target = sh.findNotFullContainer(creep);
         if(target == null) {
             target = sh.findFillTarget(creep, [STRUCTURE_EXTENSION, STRUCTURE_SPAWN]);
         }
@@ -154,13 +149,8 @@ var cr = {
         var target = Game.getObjectById(creep.memory.energyTarget);
         if(target == null) {
             if(creep.memory.role != sh.CREEP_HARVESTER) {
-                target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (target) => {
-                        return target.structureType == STRUCTURE_CONTAINER
-                            && target.store[RESOURCE_ENERGY] > 0;
-                    }
-                });
-                if(_.size(creep.room.find(FIND_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_CONTAINER})) == 0) {
+                target = sh.findNotEmptyContainer(creep);
+                if(sh.getContainerCount(creep.room) == 0) {
                     target = creep.pos.findClosestByRange(FIND_SOURCES);
                 }
             } else {

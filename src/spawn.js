@@ -25,8 +25,7 @@ var s = {
         var spawned = false;
         _.forEach(Memory.rooms, (mem, room) =>{
             if(Game.rooms[room] != null) {
-                var containerCount = _.size(Game.rooms[room].find(FIND_STRUCTURES, {
-                    filter: (target) => target.structureType == STRUCTURE_CONTAINER}));
+                var containerCount = sh.getContainerCount(Game.rooms[room]);
                 if(containerCount > 0) {
                     if(s.doSpawnCreep(sh.CREEP_HARVESTER, Math.min(containerCount, mem.maxHarvesters), room)) {
                         spawned = true;
@@ -67,7 +66,7 @@ var s = {
         var spawned = false;
         _.forEach(Memory.rooms, (mem, room) =>{
             if(Game.rooms[room] != null) {
-                if(_.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_TOWER})) > 0) {
+                if(sh.getTowerCount(Game.rooms[room]) > 0) {
                     return;
                 }
             }
@@ -82,10 +81,10 @@ var s = {
         var spawned = false;
         _.forEach(Memory.rooms, (mem, room) =>{
             if(mem.type == sh.ROOM_EXPANSION) {
-                if(Game.rooms[room].controller.reservation.ticksToEnd < 500) {
+                if(Game.rooms[room].controller.reservation.ticksToEnd < sh.reservationMin) {
                     mem.needReserve = true;
                 }
-                if(Game.rooms[room].controller.reservation.ticksToEnd > 1500) {
+                if(Game.rooms[room].controller.reservation.ticksToEnd > sh.reservationMax) {
                     mem.needReserve = false;
                 }
                 var count = 1;
@@ -103,23 +102,34 @@ var s = {
     spawnFiller: function() {
         var spawned = false;
         _.forEach(Memory.rooms, (mem, room) =>{
-            var count = 0;
             if(Game.rooms[room] == null) {
-                return true;
+                return;
             }
             if(Game.rooms[room].energyCapacityAvailable > 0) {
-                count++;
-            }
-            if(Game.rooms[room].energyCapacityAvailable > 400) {
-                count++;
-            }
-            if(count > 0) {
+                var count = Math.trunc(Game.rooms[room].energyCapacityAvailable/400) + 1;
                 if(s.doSpawnCreep(sh.CREEP_FILLER, count, room)) {
                     spawned = true;
                     return false;
                 }
             }
-            return true;
+        });
+        return spawned;
+    },
+    spawnTransporter: function() {
+        var spawned = false;
+        _.forEach(Memory.rooms, (mem, room) => {
+            if(Game.rooms[room] == null) {
+                return;
+            }
+            if(mem.type == sh.ROOM_EXPANSION) {
+                var containerCount = sh.getContainerCount(Game.rooms[room]);
+                if(containerCount > 0) {
+                    if(s.doSpawnCreep(sh.CREEP_TRANSPORTER, Math.min(containerCount, 2), room)) {
+                        spawned = true;
+                        return false;
+                    }
+                }
+            }
         });
         return spawned;
     },

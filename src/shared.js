@@ -6,9 +6,12 @@ var sh = {
     CREEP_REPAIRER: 'repairer',
     CREEP_CAPTURER: 'capturer',
     CREEP_FILLER: 'filler',
+    CREEP_TRANSPORTER: 'transporter',
     ROOM_HOME: 'home',
     ROOM_EXPANSION: 'expansion',
     FLAG_IDLE: 'idle',
+    reservationMin: 500,
+    reservationMax: 1500,
     doRepair: function(pos, mem, repairFn) {
         var target = Game.getObjectById(mem.targetId);
         // logic below to only repair things when they are 90% damaged
@@ -60,6 +63,30 @@ var sh = {
                     && target.energy < target.energyCapacity;
             }
         });
+    },
+    findNotFullContainer: function(creep) {
+        return creep.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: (target) => {
+                return target.structureType == STRUCTURE_CONTAINER
+                    && target.store[RESOURCE_ENERGY] < target.storeCapacity;
+            }
+        });
+    },
+    findNotEmptyContainer: function(creep) {
+        return creep.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: (target) => {
+                return target.structureType == STRUCTURE_CONTAINER
+                    && target.store[RESOURCE_ENERGY] > 0;
+            }
+        });
+    },
+    getContainerCount: function(room) {
+        return _.size(room.find(FIND_STRUCTURES, {
+            filter: (target) => target.structureType == STRUCTURE_CONTAINER}));
+    },
+    getTowerCount: function(room) {
+        return _.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {
+            filter: (target) => target.structureType == STRUCTURE_TOWER}));
     }
 };
 module.exports = sh;
