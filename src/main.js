@@ -16,7 +16,7 @@ var m = {
             return;
         }
         m.clearMem();
-        s.spawnCreeps();
+        s.spawnCreep();
         t.runTowers();
         cr.runCreeps();
     },
