@@ -78,7 +78,7 @@ var s = {
                         room: room
                     });
                     if(_.isString(result)) {
-                        console.log('Spawning new ' + role + ': ' + result);
+                        console.log('Spawning new ' + role + ' for ' + room + ': ' + result);
                         spawned = true;
                         return false;
                     } else {
