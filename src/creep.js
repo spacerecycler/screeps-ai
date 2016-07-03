@@ -182,17 +182,17 @@ Creep.prototype.fillEnergy = function() {
     var target = Game.getObjectById(this.memory.energyTarget);
     if(target == null) {
         if(this.memory.role != sh.CREEP_HARVESTER) {
-            target = this.findNotEmptyContainer();
-            if(this.room.getContainerCount() == 0) {
-                target = this.pos.findClosestByRange(FIND_SOURCES);
-            }
-        } else {
             if(this.memory.role == sh.CREEP_FILLER) {
                 target = this.pos.findClosestByRange(FIND_DROPPED_ENERGY);
             }
-            if(target == null) {
+            if(target == null && this.room.getContainerCount() == 0) {
                 target = this.pos.findClosestByRange(FIND_SOURCES);
             }
+            if(target == null) {
+                target = this.findNotEmptyContainer();
+            }
+        } else {
+            target = this.pos.findClosestByRange(FIND_SOURCES);
         }
         if(target != null) {
             this.memory.energyTarget = target.id;
