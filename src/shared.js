@@ -44,49 +44,6 @@ var sh = {
             }
         }
         return target;
-    },
-    findConstructionSite: function(creep, types) {
-        if(types == null) {
-            return creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
-        } else {
-            return creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
-                filter: (target) => {
-                    return _.includes(types, target.structureType);
-                }
-            });
-        }
-    },
-    findFillTarget: function(creep, types) {
-        return creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-            filter: (target) => {
-                return _.includes(types, target.structureType)
-                    && target.energy < target.energyCapacity;
-            }
-        });
-    },
-    findNotFullContainer: function(creep) {
-        return creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (target) => {
-                return target.structureType == STRUCTURE_CONTAINER
-                    && target.store[RESOURCE_ENERGY] < target.storeCapacity;
-            }
-        });
-    },
-    findNotEmptyContainer: function(creep) {
-        return creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (target) => {
-                return target.structureType == STRUCTURE_CONTAINER
-                    && target.store[RESOURCE_ENERGY] > 0;
-            }
-        });
-    },
-    getContainerCount: function(room) {
-        return _.size(room.find(FIND_STRUCTURES, {
-            filter: (target) => target.structureType == STRUCTURE_CONTAINER}));
-    },
-    getTowerCount: function(room) {
-        return _.size(room.find(FIND_MY_STRUCTURES, {
-            filter: (target) => target.structureType == STRUCTURE_TOWER}));
     }
 };
 module.exports = sh;

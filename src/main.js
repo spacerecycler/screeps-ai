@@ -1,7 +1,8 @@
 var _ = require('lodash');
-var s = require('spawn');
-var t = require('tower');
-var cr = require('creep');
+require('room');
+require('spawn');
+require('tower');
+require('creep');
 var m = {
     /** Main loop function for screeps **/
     loop: function() {
@@ -16,9 +17,15 @@ var m = {
             return;
         }
         m.clearMem();
-        s.spawnCreep();
-        t.runTowers();
-        cr.runCreeps();
+        _.forEach(Memory.rooms, (mem, room) => {
+            if(Game.rooms[room] == null) {
+                return;
+            }
+            Game.room[room].run();
+        });
+        _.forEach(Game.creeps, (creep) => {
+            creep.run();
+        });
     },
     /** Clear unused memory **/
     clearMem: function() {
