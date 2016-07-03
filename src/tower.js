@@ -11,7 +11,7 @@ Object.assign(StructureTower.prototype, {
         if(Memory.towers[this.id] == null) {
             Memory.towers[this.id] = {};
         }
-        this.doRepair(this.pos, Memory.towers[this.id], function(target) {
+        this.doRepair(this.pos, Memory.towers[this.id], (target) => {
             this.repair(target);
         });
     },
