@@ -3,7 +3,7 @@ StructureTower.prototype.doRepair = function() {
     if(Memory.towers[this.id] == null) {
         Memory.towers[this.id] = {};
     }
-    sh.doRepair(this.pos, Memory.towers[this.id], function(target) {
+    this.doRepair(this.pos, Memory.towers[this.id], function(target) {
         this.repair(target);
     });
 };
@@ -14,3 +14,4 @@ StructureTower.prototype.run = function() {
     //     tower.attack(closestHostile);
     // }
 };
+StructureTower.prototype.doRepair = sh.doRepair;

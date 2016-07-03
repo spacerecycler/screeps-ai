@@ -129,7 +129,7 @@ Creep.prototype.runUpgrader = function() {
     }
 };
 Creep.prototype.runRepairer = function() {
-    var target = sh.doRepair(this.pos, this.memory, function(target) {
+    var target = this.doRepair(this.pos, this.memory, function(target) {
         if(this.repair(target) == ERR_NOT_IN_RANGE) {
             this.moveToS(target);
         }
@@ -250,3 +250,4 @@ Creep.prototype.findNotEmptyContainer = function() {
         }
     });
 };
+Creep.prototype.doRepair = sh.doRepair;

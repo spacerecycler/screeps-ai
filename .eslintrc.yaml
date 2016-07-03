@@ -45,3 +45,9 @@
         MOVE: false
         CLAIM: false
         TOUGH: false
+        StructureTower: false
+        StructureSpawn: false
+        Creep: false
+        Room: false
+        Source: false
+        StructureContainer: false
