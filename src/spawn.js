@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var c = require('config');
 var sh = require('shared');
 var s = {
     /** Spawn creeps that are missing **/
@@ -60,13 +59,13 @@ var s = {
     },
     spawnBuilder: function() {
         if(_.size(Game.constructionSites) > 0) {
-            return s.doSpawnCreep(sh.CREEP_BUILDER, 1, Game.spawns[c.mainSpawn].room.name);
+            return s.doSpawnCreep(sh.CREEP_BUILDER, 1, Game.spawns[Memory.config.mainSpawn].room.name);
         }
         return false;
     },
     spawnRepairer: function() {
         var spawned = false;
-        _.forEach(c.rooms, (room) =>{
+        _.forEach(Memory.rooms, (mem, room) =>{
             if(Game.rooms[room] != null) {
                 if(_.size(Game.rooms[room].find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_TOWER})) > 0) {
                     return;
@@ -93,7 +92,7 @@ var s = {
                 if(mem.needReserve) {
                     count = 2;
                 }
-                if(s.doSpawnCreep(sh.CREEP_CAPTURER, count, c.expansion)) {
+                if(s.doSpawnCreep(sh.CREEP_CAPTURER, count, room)) {
                     spawned = true;
                     return false;
                 }
@@ -128,9 +127,9 @@ var s = {
         var totalCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role);
         var roomCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == room);
         if(_.size(roomCreeps) < expected) {
-            var body = s.chooseBody(role, _.size(totalCreeps), Game.spawns[c.mainSpawn].room.energyCapacityAvailable);
-            if(Game.spawns[c.mainSpawn].canCreateCreep(body) == OK) {
-                var result = Game.spawns[c.mainSpawn].createCreep(body, null, {
+            var body = s.chooseBody(role, _.size(totalCreeps), Game.spawns[Memory.config.mainSpawn].room.energyCapacityAvailable);
+            if(Game.spawns[Memory.config.mainSpawn].canCreateCreep(body) == OK) {
+                var result = Game.spawns[Memory.config.mainSpawn].createCreep(body, null, {
                     role: role,
                     room: room
                 });

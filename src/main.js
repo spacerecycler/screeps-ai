@@ -5,6 +5,16 @@ var cr = require('creep');
 var m = {
     /** Main loop function for screeps **/
     loop: function() {
+        if(Memory.config == null) {
+            Memory.config = {};
+        }
+        if(Memory.config.wallsMax == null) {
+            Memory.config.wallsMax = 5000;
+        }
+        if(Memory.config.mainSpawn == null) {
+            console.error("Please configure main spawn");
+            return;
+        }
         m.clearMem();
         s.spawnCreeps();
         t.runTowers();

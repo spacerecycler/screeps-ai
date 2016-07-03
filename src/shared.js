@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var c = require('config');
 var sh = {
     CREEP_HARVESTER: 'harvester',
     CREEP_UPGRADER: 'upgrader',
@@ -19,7 +18,7 @@ var sh = {
                 filter: (target) => {
                     var max = target.hitsMax * 0.9;
                     if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART], target.structureType)) {
-                        max = Math.min(target.hitsMax, c.wallsMax * 0.9);
+                        max = Math.min(target.hitsMax, Memory.config.wallsMax * 0.9);
                     } else if (!_.includes([STRUCTURE_ROAD,STRUCTURE_CONTAINER], target.structureType) && !target.my) {
                         return false;
                     }
@@ -33,7 +32,7 @@ var sh = {
         if(target != null) {
             var max = target.hitsMax;
             if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART], target.structureType)) {
-                max = Math.min(target.hitsMax, c.wallsMax);
+                max = Math.min(target.hitsMax, Memory.config.wallsMax);
             }
             if(target.hits >= max) {
                 delete mem.targetId;
