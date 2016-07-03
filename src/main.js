@@ -12,10 +12,6 @@ var m = {
         if(Memory.config.wallsMax == null) {
             Memory.config.wallsMax = 5000;
         }
-        if(Memory.config.mainSpawn == null) {
-            console.error("Please configure main spawn");
-            return;
-        }
         m.clearMem();
         _.forEach(Memory.rooms, (mem, room) => {
             if(Game.rooms[room] == null) {
