@@ -45,7 +45,7 @@ Creep.prototype.runBuilder = function() {
         target = this.findConstructionSite([STRUCTURE_ROAD]);
     }
     if(target == null) {
-        target = this.findConstructionSite([STRUCTURE_TOWER]);
+        target = this.findConstructionSite([STRUCTURE_TOWER, STRUCTURE_EXTENSION]);
     }
     if(target == null) {
         target = this.findConstructionSite();
