@@ -16,10 +16,13 @@ var s = {
         });
     },
     trySpawnCreep: function(room, mem) {
-        var expected = s.determineExpectedCreeps(room, mem);
+        var expected = s.getExpectedCreeps(room, mem);
+        _.forEach(expected, (count, role) => {
+            console.log("role: " + role + " count: " + count);
+        });
         return s.doSpawnCreep(room, expected);
     },
-    determineExpectedCreeps: function(room, mem) {
+    getExpectedCreeps: function(room, mem) {
         var expected = {};
         if(Game.rooms[room] != null) {
             var containerCount = sh.getContainerCount(Game.rooms[room]);
@@ -65,6 +68,7 @@ var s = {
         } else {
             expected[sh.CREEP_CAPTURER] = 1;
         }
+        return expected;
     },
     doSpawnCreep: function(room, expected) {
         var spawned = false;
