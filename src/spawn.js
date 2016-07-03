@@ -37,7 +37,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(room, mem) {
             }
         }
         if(Game.rooms[room].energyCapacityAvailable > 0) {
-            expected[sh.CREEP_FILLER] = Math.ceil(Game.rooms[room].energyCapacityAvailable/400);
+            expected[sh.CREEP_FILLER] = Math.ceil(Game.rooms[room].energyCapacityAvailable/500);
         }
         if(mem.type == sh.ROOM_HOME) {
             expected[sh.CREEP_UPGRADER] = 1;
