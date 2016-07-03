@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var sh = require('shared');
-var flatMap = _.compose(_.flatten, _.map);
+var flatMap = _.compose(_.compact, _.flatten, _.map);
 var cr = {
     /** Run creeps **/
     runCreeps: function() {
@@ -86,8 +86,11 @@ var cr = {
         if(target == null) {
             var targets = flatMap(Memory.rooms, (mem, room) =>{
                 if(Game.rooms[room] != null && mem.type == sh.ROOM_HOME) {
-                    return Game.rooms[room].find(STRUCTURE_CONTAINER, {
-                        filter: (target) => target.store[RESOURCE_ENERGY] < target.storeCapacity
+                    return Game.rooms[room].find(FIND_STRUCTURES, {
+                        filter: (target) => {
+                            return target.structureType == STRUCTURE_CONTAINER
+                                && target.store[RESOURCE_ENERGY] < target.storeCapacity;
+                        }
                     });
                 }
             });
