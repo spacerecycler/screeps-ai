@@ -9,6 +9,9 @@ var s = {
             spawning = s.spawnFiller();
         }
         if(!spawning) {
+            spawning = s.spawnTransporter();
+        }
+        if(!spawning) {
             spawning = s.spawnUpgrader();
         }
         if(!spawning) {
@@ -158,7 +161,7 @@ var s = {
         if(role == sh.CREEP_CAPTURER) {
             return [CLAIM,MOVE,MOVE];
         }
-        if(role == sh.CREEP_FILLER) {
+        if(role == sh.CREEP_FILLER || role == sh.CREEP_TRANSPORTER) {
             if(totalCreeps == 0) {
                 return [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE];
             }
