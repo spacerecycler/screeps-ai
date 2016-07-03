@@ -94,7 +94,7 @@ var cr = {
                     });
                 }
             });
-            if(_.size(targets > 0)) {
+            if(_.size(targets) > 0) {
                 target = targets[0];
                 creep.memory.targetId = target.id;
             }
