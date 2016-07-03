@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var sh = require('shared');
 var flatMap = _.compose(_.compact, _.flatten, _.map);
-Object.apply(Creep.prototype, {
+Creep.prototype = {
     run: function() {
         if(this.memory.role == sh.CREEP_BUILDER
             || this.memory.role == sh.CREEP_TRANSPORTER || this.ensureRoom()) {
@@ -252,4 +252,4 @@ Object.apply(Creep.prototype, {
         });
     },
     doRepair: sh.doRepair
-});
+};

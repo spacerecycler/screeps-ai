@@ -1,5 +1,5 @@
 var _ = require('lodash');
-Object.apply(Room.prototype, {
+Room.prototype = {
     run: function() {
         var spawns = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_SPAWN});
         _.forEach(spawns, (spawn) => {
@@ -18,4 +18,4 @@ Object.apply(Room.prototype, {
         return _.size(this.find(FIND_MY_STRUCTURES, {
             filter: (target) => target.structureType == STRUCTURE_TOWER}));
     }
-});
+};

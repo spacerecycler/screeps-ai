@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var sh = require('shared');
-Object.apply(StructureSpawn.prototype, {
+StructureSpawn.prototype = {
     run: function() {
         var spawnedOrMissing = false;
         _.forEach(Memory.rooms, (mem, room) => {
@@ -137,4 +137,4 @@ Object.apply(StructureSpawn.prototype, {
         }
         return body;
     }
-});
+};

@@ -1,5 +1,5 @@
 var sh = require('shared');
-Object.assign(StructureTower.prototype, {
+StructureTower.prototype = {
     run: function() {
         this.tryRepair();
         // var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
@@ -16,4 +16,4 @@ Object.assign(StructureTower.prototype, {
         });
     },
     doRepair: sh.doRepair
-});
+};
