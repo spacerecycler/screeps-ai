@@ -1,10 +1,10 @@
 var sh = require('shared');
 StructureTower.prototype.run = function() {
-    this.tryRepair();
     var closestHostile = this.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
     if(closestHostile) {
-        this.attack(closestHostile);
+        return this.attack(closestHostile);
     }
+    this.tryRepair();
 };
 StructureTower.prototype.tryRepair = function() {
     if(Memory.towers[this.id] == null) {
