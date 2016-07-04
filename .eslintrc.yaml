@@ -48,6 +48,8 @@
         MOVE: false
         CLAIM: false
         TOUGH: false
+        ATTACK: false
+        RANGED_ATTACK: false
         StructureTower: false
         StructureSpawn: false
         Creep: false

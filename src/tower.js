@@ -1,6 +1,18 @@
+var _ = require('lodash');
 var sh = require('shared');
 StructureTower.prototype.run = function() {
-    var closestHostile = this.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+    var closestHostile = this.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
+        filter: (target) => {
+            var hasAttack = false;
+            _.forEach(target.body, (part) => {
+                if(_.includes([RANGED_ATTACK,ATTACK], part.type)) {
+                    hasAttack = true;
+                    return false;
+                }
+            });
+            return hasAttack;
+        }
+    });
     if(closestHostile != null) {
         if(this.attack(closestHostile) == OK) {
             return;
