@@ -88,7 +88,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         Memory.rooms[name].needReserve = true;
     }
     if(Memory.rooms[name].needReserve != null) {
-        if(Math.trunc(room.energyCapacityAvailable/650) < 2 && Memory.rooms[name].needReserve) {
+        if(Math.trunc(this.room.energyCapacityAvailable/650) < 2 && Memory.rooms[name].needReserve) {
             expected[sh.CREEP_CAPTURER] = 2;
         } else {
             expected[sh.CREEP_CAPTURER] = 1;
@@ -129,7 +129,7 @@ StructureSpawn.prototype.chooseBody = function(role) {
         return body;
     }
     if(role == sh.CREEP_FILLER || role == sh.CREEP_TRANSPORTER) {
-        if(totalCreeps == 0) {
+        if(role == sh.CREEP_FILLER && totalCreeps == 0) {
             return [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE];
         }
         var div = Math.trunc(energyCapAvail/100);
