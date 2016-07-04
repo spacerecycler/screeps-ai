@@ -1,5 +1,6 @@
 var _ = require('lodash');
 require('room');
+require('room_pos');
 require('spawn');
 require('tower');
 require('creep');

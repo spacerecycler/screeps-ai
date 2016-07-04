@@ -10,22 +10,12 @@ var sh = {
     FLAG_IDLE: 'idle',
     reservationMin: 500,
     reservationMax: 1500,
-    doRepair: function(pos, mem, repairFn) {
+    doRepair: function(mem) {
         var target = Game.getObjectById(mem.targetId);
         // logic below to only repair things when they are 90% damaged
         // also cap hitpoints for walls since they have so many
         if(target == null) {
-            target = pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (target) => {
-                    var max = target.hitsMax * 0.9;
-                    if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART], target.structureType)) {
-                        max = Math.min(target.hitsMax, Memory.config.wallsMax * 0.9);
-                    } else if (!_.includes([STRUCTURE_ROAD,STRUCTURE_CONTAINER], target.structureType) && !target.my) {
-                        return false;
-                    }
-                    return target.hits < max;
-                }
-            });
+            target = this.pos.findNearestHurtStructure();
             if(target != null) {
                 mem.targetId = target.id;
             }
@@ -38,7 +28,7 @@ var sh = {
             if(target.hits >= max) {
                 delete mem.targetId;
             } else {
-                repairFn(target);
+                this.doRepair(target);
             }
         }
         return target;

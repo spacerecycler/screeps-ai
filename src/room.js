@@ -29,6 +29,21 @@ Room.prototype.isMine = function() {
         return false;
     }
 };
+Room.prototype.hasHostileAttacker = function() {
+    var targets = this.find(FIND_HOSTILE_CREEPS, {
+        filter: (target) => {
+            var hasAttack = false;
+            _.forEach(target.body, (part) => {
+                if(_.includes([RANGED_ATTACK,ATTACK], part.type)) {
+                    hasAttack = true;
+                    return false;
+                }
+            });
+            return hasAttack;
+        }
+    });
+    return _.size(targets) > 0;
+};
 Room.prototype.getContainerCount = function() {
     return _.size(this.find(FIND_STRUCTURES, {
         filter: (target) => target.structureType == STRUCTURE_CONTAINER}));
