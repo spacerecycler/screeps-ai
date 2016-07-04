@@ -29,6 +29,9 @@ var sh = {
                 delete mem.targetId;
             } else {
                 obj.doRepair(target);
+                if(target.hits >= max) {
+                    delete mem.targetId;
+                }
             }
         }
         return target;
