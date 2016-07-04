@@ -1,5 +1,18 @@
 var _ = require('lodash');
 Room.prototype.run = function() {
+    if(this.memory.maxHarvesters == null) {
+        var count = 0;
+        var sources = this.find(FIND_SOURCES);
+        _.forEach(sources, (source) => {
+            var tiles = this.lookForAtArea(LOOK_TERRAIN, source.y-1, source.x-1, source.y+1, source.x+1, true);
+            _.forEach(tiles, (tile) => {
+                if(tile.terrain != 'wall') {
+                    count++;
+                }
+            });
+        });
+        this.memory.maxHarvesters = count;
+    }
     var spawns = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_SPAWN});
     _.forEach(spawns, (spawn) => {
         spawn.run();
