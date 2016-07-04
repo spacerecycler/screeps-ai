@@ -122,7 +122,10 @@ StructureSpawn.prototype.chooseBody = function(role) {
     var energyCapAvail = this.room.energyCapacityAvailable;
     var body = [];
     if(role == sh.CREEP_CAPTURER) {
-        return [CLAIM,MOVE,MOVE];
+        _.times(Math.trunc(energyCapAvail/650), () => {
+            body.push(CLAIM);
+            body.push(MOVE);
+        });
     }
     if(role == sh.CREEP_FILLER || role == sh.CREEP_TRANSPORTER) {
         if(totalCreeps == 0) {
