@@ -15,9 +15,8 @@ StructureTower.prototype.run = function() {
     if(Memory.towers[this.id] == null) {
         Memory.towers[this.id] = {};
     }
-    this.tryRepair(this, Memory.towers[this.id]);
+    sh.tryRepair(this, Memory.towers[this.id]);
 };
 StructureTower.prototype.doRepair = function(target) {
     this.repair(target);
 };
-StructureTower.prototype.tryRepair = sh.tryRepair;
