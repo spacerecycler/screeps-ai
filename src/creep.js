@@ -129,7 +129,9 @@ Creep.prototype.runHarvester = function() {
         target = this.pos.findNearestFillTarget([STRUCTURE_SPAWN]);
     }
     if(target != null) {
-        if(this.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if(this.pos.isNearTo(target)) {
+            this.transfer(target, RESOURCE_ENERGY);
+        } else {
             this.moveToS(target);
         }
     } else {
@@ -172,7 +174,7 @@ Creep.prototype.ensureRoom = function() {
 };
 Creep.prototype.idle = function() {
     var flag = this.pos.findNearestIdleFlag();
-    if(!this.pos.inRangeTo(flag, 1)) {
+    if(!this.pos.isNearTo(flag)) {
         this.moveToS(flag);
     }
 };
