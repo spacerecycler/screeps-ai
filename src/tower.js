@@ -1,4 +1,8 @@
 var sh = require('shared');
+StructureTower.prototype.tryRepair = sh.tryRepair;
+StructureTower.prototype.doRepair = function(target) {
+    this.repair(target);
+};
 StructureTower.prototype.run = function() {
     var target = this.pos.findNearestAttacker();
     if(target != null) {
@@ -17,7 +21,3 @@ StructureTower.prototype.run = function() {
     }
     this.tryRepair(Memory.towers[this.id]);
 };
-StructureTower.prototype.doRepair = function(target) {
-    this.repair(target);
-};
-StructureTower.prototype.tryRepair = sh.tryRepair;
