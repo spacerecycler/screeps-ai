@@ -28,6 +28,9 @@ RoomPosition.prototype.findNearestHurtStructure = function() {
             } else if (!_.includes([STRUCTURE_ROAD,STRUCTURE_CONTAINER], target.structureType) && !target.my) {
                 return false;
             }
+            if(_.includes(Memory.config.blacklist, target.id)) {
+                return false;
+            }
             return target.hits < max;
         }
     });

@@ -19,6 +19,9 @@ var m = {
                 Memory.config.rooms.push(spawn.room.name);
             });
         }
+        if(Memory.config.blacklist == null) {
+            Memory.config.blacklist = [];
+        }
         m.clearMem();
         _.forEach(Memory.config.rooms, (name) => {
             var room = Game.rooms[name];
