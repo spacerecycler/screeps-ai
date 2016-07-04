@@ -88,11 +88,18 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         Memory.rooms[name].needReserve = true;
     }
     if(Memory.rooms[name].needReserve != null) {
-        if(Math.trunc(this.room.energyCapacityAvailable/650) < 2 && Memory.rooms[name].needReserve) {
-            expected[sh.CREEP_CAPTURER] = 2;
+        if(Math.trunc(this.room.energyCapacityAvailable/650) < 2) {
+            if(Memory.rooms[name].needReserve) {
+                expected[sh.CREEP_CAPTURER] = 2;
+            } else {
+                expected[sh.CREEP_CAPTURER] = 1;
+            }
         } else {
-            expected[sh.CREEP_CAPTURER] = 1;
+            if(Memory.rooms[name].needReserve) {
+                expected[sh.CREEP_CAPTURER] = 1;
+            }
         }
+
     }
     return expected;
 };

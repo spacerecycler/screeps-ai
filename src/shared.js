@@ -8,8 +8,8 @@ var sh = {
     CREEP_FILLER: 'filler',
     CREEP_TRANSPORTER: 'transporter',
     FLAG_IDLE: 'idle',
-    reservationMin: 500,
-    reservationMax: 1500,
+    reservationMin: 1000,
+    reservationMax: 2000,
     tryRepair: function(obj, mem) {
         var target = Game.getObjectById(mem.targetId);
         // logic below to only repair things when they are 90% damaged
