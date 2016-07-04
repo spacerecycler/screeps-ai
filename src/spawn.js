@@ -126,6 +126,7 @@ StructureSpawn.prototype.chooseBody = function(role) {
             body.push(CLAIM);
             body.push(MOVE);
         });
+        return body;
     }
     if(role == sh.CREEP_FILLER || role == sh.CREEP_TRANSPORTER) {
         if(totalCreeps == 0) {
