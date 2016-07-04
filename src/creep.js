@@ -147,6 +147,14 @@ Creep.prototype.runUpgrader = function() {
 Creep.prototype.runRepairer = function() {
     var target = sh.tryRepair(this, this.memory);
     if(target == null) {
+        target = _.head(_.filter(Memory.config.blacklist, (id) => {
+            return Game.getObjectById(id).room.name == this.room.name;
+        }));
+        if(target != null && this.dismantle(target) == ERR_NOT_IN_RANGE) {
+            this.moveToS(target);
+        }
+    }
+    if(target == null) {
         this.idle();
     }
 };

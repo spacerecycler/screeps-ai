@@ -22,6 +22,9 @@ var m = {
         if(Memory.config.blacklist == null) {
             Memory.config.blacklist = [];
         }
+        _.remove(Memory.config.blacklist, (id) => {
+            return Game.getObjectById(id) == null;
+        });
         m.clearMem();
         _.forEach(Memory.config.rooms, (name) => {
             var room = Game.rooms[name];
