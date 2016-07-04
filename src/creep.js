@@ -202,7 +202,7 @@ Creep.prototype.fillEnergy = function() {
     var target = Game.getObjectById(this.memory.energyTarget);
     if(target == null) {
         if(this.memory.role != sh.CREEP_HARVESTER) {
-            if(this.memory.role == sh.CREEP_FILLER && !this.room.hasHostileAttacker()) {
+            if(_.includes([sh.CREEP_FILLER,sh.CREEP_TRANSPORTER], this.memory.role) && !this.room.hasHostileAttacker()) {
                 target = this.pos.findClosestByRange(FIND_DROPPED_ENERGY);
             }
             if(target == null && this.room.isStorageNotEmpty()) {
