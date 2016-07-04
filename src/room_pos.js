@@ -58,7 +58,8 @@ RoomPosition.prototype.findNearestNotFullContainer = function() {
     return this.findClosestByRange(FIND_STRUCTURES, {
         filter: (target) => {
             return target.structureType == STRUCTURE_CONTAINER
-                && target.store[RESOURCE_ENERGY] < target.storeCapacity;
+                && target.store[RESOURCE_ENERGY] < target.storeCapacity
+                && !_.includes(Memory.config.blacklist, target.id);
         }
     });
 };
