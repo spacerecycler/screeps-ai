@@ -12,6 +12,12 @@ var m = {
         if(Memory.config.wallsMax == null) {
             Memory.config.wallsMax = 5000;
         }
+        if(Memory.config.rooms == null) {
+            Memory.config.rooms = [];
+            _.forEach(Game.spawns, (spawn) => {
+                Memory.config.rooms.push(spawn.room.name);
+            });
+        }
         m.clearMem();
         _.forEach(Memory.config.rooms, (name) => {
             var room = Game.rooms[name];
