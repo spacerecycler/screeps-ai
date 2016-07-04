@@ -143,7 +143,7 @@ Creep.prototype.runUpgrader = function() {
     }
 };
 Creep.prototype.runRepairer = function() {
-    var target = this.tryRepair(this.memory);
+    var target = sh.tryRepair(this, this.memory);
     if(target == null) {
         this.idle();
     }
@@ -242,4 +242,3 @@ Creep.prototype.doRepair = function(target) {
         this.moveToS(target);
     }
 };
-Creep.prototype.tryRepair = sh.tryRepair;

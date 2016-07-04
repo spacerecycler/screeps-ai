@@ -10,12 +10,12 @@ var sh = {
     FLAG_IDLE: 'idle',
     reservationMin: 500,
     reservationMax: 1500,
-    tryRepair: function(mem) {
+    tryRepair: function(obj, mem) {
         var target = Game.getObjectById(mem.targetId);
         // logic below to only repair things when they are 90% damaged
         // also cap hitpoints for walls since they have so many
         if(target == null) {
-            target = this.pos.findNearestHurtStructure();
+            target = obj.pos.findNearestHurtStructure();
             if(target != null) {
                 mem.targetId = target.id;
             }
@@ -28,7 +28,7 @@ var sh = {
             if(target.hits >= max) {
                 delete mem.targetId;
             } else {
-                this.doRepair(target);
+                obj.doRepair(target);
             }
         }
         return target;
