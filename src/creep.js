@@ -63,9 +63,6 @@ Creep.prototype.runBuilder = function() {
     }
 };
 Creep.prototype.runFiller = function() {
-    if(this.memory.energyTarget != null) {
-        delete this.memory.energyTarget;
-    }
     var target = this.findFillTarget([STRUCTURE_EXTENSION]);
     if(target == null) {
         target = this.findFillTarget([STRUCTURE_SPAWN]);
@@ -199,7 +196,7 @@ Creep.prototype.fillEnergy = function() {
             if(this.memory.role == sh.CREEP_FILLER) {
                 target = this.pos.findClosestByRange(FIND_DROPPED_ENERGY);
             }
-            if(this.room.isStorageNotEmpty()) {
+            if(target == null && this.room.isStorageNotEmpty()) {
                 target = this.room.storage;
             }
             if(target == null && this.room.getContainerCount() == 0) {
