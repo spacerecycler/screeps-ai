@@ -81,14 +81,19 @@ Creep.prototype.runFiller = function() {
 Creep.prototype.runTransporter = function() {
     var target = Game.getObjectById(this.memory.targetId);
     if(target == null) {
-        var targets = flatMap(Memory.rooms, (mem, room) =>{
-            if(Game.rooms[room] != null && mem.type == sh.ROOM_HOME) {
-                return Game.rooms[room].find(FIND_STRUCTURES, {
-                    filter: (target) => {
-                        return target.structureType == STRUCTURE_CONTAINER
-                            && target.store[RESOURCE_ENERGY] < target.storeCapacity;
-                    }
-                });
+        _.forEach(Memory.config.rooms, (name) => {
+            var room = Game.rooms[name];
+            if(room != null && room.isMine() && room.isStorageNotFull()) {
+                target = room.storage;
+                return false;
+            }
+        });
+    }
+    if(target == null) {
+        var targets = flatMap(Memory.config.rooms, (name) =>{
+            var room = Game.rooms[name];
+            if(room != null && room.isMine()) {
+                return room.findNotFullContainers();
             }
         });
         if(_.size(targets) > 0) {
@@ -107,7 +112,13 @@ Creep.prototype.runTransporter = function() {
     }
 };
 Creep.prototype.runHarvester = function() {
-    var target = this.findNotFullContainer();
+    var target = null;
+    if(this.room.isStorageNotFull()) {
+        target = this.room.storage;
+    }
+    if(target == null) {
+        target = this.findNotFullContainer();
+    }
     if(target == null) {
         target = this.findFillTarget([STRUCTURE_EXTENSION]);
     }
@@ -184,6 +195,9 @@ Creep.prototype.fillEnergy = function() {
         if(this.memory.role != sh.CREEP_HARVESTER) {
             if(this.memory.role == sh.CREEP_FILLER) {
                 target = this.pos.findClosestByRange(FIND_DROPPED_ENERGY);
+            }
+            if(this.room.isStorageNotEmpty()) {
+                target = this.room.storage;
             }
             if(target == null && this.room.getContainerCount() == 0) {
                 target = this.pos.findClosestByRange(FIND_SOURCES);

@@ -9,6 +9,13 @@ Room.prototype.run = function() {
         tower.run();
     });
 };
+Room.prototype.isMine = function() {
+    if(this.controller != null) {
+        return this.controller.my;
+    } else {
+        return false;
+    }
+};
 Room.prototype.getContainerCount = function() {
     return _.size(this.find(FIND_STRUCTURES, {
         filter: (target) => target.structureType == STRUCTURE_CONTAINER}));
@@ -26,5 +33,27 @@ Room.prototype.findConstructionSites = function(types) {
                 return _.includes(types, target.structureType);
             }
         });
+    }
+};
+Room.prototype.findNotFullContainers = function() {
+    return this.find(FIND_MY_STRUCTURES, {
+        filter: (target) => {
+            return target.structureType == STRUCTURE_CONTAINER
+                && target.store[RESOURCE_ENERGY] < target.storeCapacity;
+        }
+    });
+};
+Room.prototype.isStorageNotFull = function() {
+    if(this.storage != null && this.storage.store[RESOURCE_ENERGY] < this.storage.storeCapacity){
+        return true;
+    } else {
+        return false;
+    }
+};
+Room.prototype.isStorageNotEmpty = function() {
+    if(this.storage != null && this.storage.store[RESOURCE_ENERGY] > 0){
+        return true;
+    } else {
+        return false;
     }
 };

@@ -13,11 +13,11 @@ var m = {
             Memory.config.wallsMax = 5000;
         }
         m.clearMem();
-        _.forEach(Memory.rooms, (mem, room) => {
-            if(Game.rooms[room] == null) {
-                return;
+        _.forEach(Memory.config.rooms, (name) => {
+            var room = Game.rooms[name];
+            if(room != null) {
+                room.run();
             }
-            Game.rooms[room].run();
         });
         _.forEach(Game.creeps, (creep) => {
             creep.run();

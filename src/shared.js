@@ -7,8 +7,6 @@ var sh = {
     CREEP_CAPTURER: 'capturer',
     CREEP_FILLER: 'filler',
     CREEP_TRANSPORTER: 'transporter',
-    ROOM_HOME: 'home',
-    ROOM_EXPANSION: 'expansion',
     FLAG_IDLE: 'idle',
     reservationMin: 500,
     reservationMax: 1500,

@@ -2,85 +2,89 @@ var _ = require('lodash');
 var sh = require('shared');
 StructureSpawn.prototype.run = function() {
     var spawnedOrMissing = false;
-    _.forEach(Memory.rooms, (mem, room) => {
-        if(mem.type == sh.ROOM_HOME) {
-            spawnedOrMissing = this.spawnMissingCreep(room, mem);
+    _.forEach(Memory.config.rooms, (name) => {
+        var room = Game.rooms[name];
+        if(room != null && room.isMine()) {
+            spawnedOrMissing = this.spawnMissingCreep(name);
             return !spawnedOrMissing;
         }
     });
     if(!spawnedOrMissing) {
-        _.forEach(Memory.rooms, (mem, room) => {
-            if(mem.type != sh.ROOM_HOME) {
-                spawnedOrMissing = this.spawnMissingCreep(room, mem);
+        _.forEach(Memory.config.rooms, (name) => {
+            var room = Game.rooms[name];
+            if(room == null || !room.isMine()) {
+                spawnedOrMissing = this.spawnMissingCreep(name);
                 return !spawnedOrMissing;
             }
         });
     }
 };
-StructureSpawn.prototype.spawnMissingCreep = function(room, mem) {
-    var expected = this.getExpectedCreeps(room, mem);
+StructureSpawn.prototype.spawnMissingCreep = function(name) {
+    var expected = this.getExpectedCreeps(name);
     var spawnedOrMissing = false;
-    if(mem.type == sh.ROOM_HOME) {
-        spawnedOrMissing = this.doSpawnCreep(room, sh.CREEP_HARVESTER, 1);
+    var room = Game.rooms[name];
+    if(room != null && room.isMine()) {
+        spawnedOrMissing = this.doSpawnCreep(name, sh.CREEP_HARVESTER, 1);
         if(!spawnedOrMissing) {
-            spawnedOrMissing = this.doSpawnCreep(room, sh.CREEP_FILLER, 1);
+            spawnedOrMissing = this.doSpawnCreep(name, sh.CREEP_FILLER, 1);
         }
     }
     if(!spawnedOrMissing) {
         _.forEach(expected, (count, role) => {
-            spawnedOrMissing = this.doSpawnCreep(room, role, count);
+            spawnedOrMissing = this.doSpawnCreep(name, role, count);
             return !spawnedOrMissing;
         });
     }
     return spawnedOrMissing;
 },
-StructureSpawn.prototype.getExpectedCreeps = function(room, mem) {
+StructureSpawn.prototype.getExpectedCreeps = function(name) {
     var expected = {};
-    if(Game.rooms[room] != null) {
-        var containerCount = Game.rooms[room].getContainerCount();
-        if(containerCount > 0) {
-            expected[sh.CREEP_HARVESTER] = Math.min(containerCount, mem.maxHarvesters);
-            if(mem.type == sh.ROOM_EXPANSION) {
+    var room = Game.rooms[name];
+    if(room != null) {
+        var containerCount = room.getContainerCount();
+        if(room.storage != null) {
+            expected[sh.CREEP_HARVESTER] = room.memory.maxHarvesters;
+        } else if(containerCount > 0) {
+            expected[sh.CREEP_HARVESTER] = Math.min(containerCount, room.memory.maxHarvesters);
+            if(!room.isMine()) {
                 expected[sh.CREEP_TRANSPORTER] = Math.min(containerCount, 2);
             }
         } else {
-            var structureCount = _.size(Game.rooms[room].find(FIND_MY_STRUCTURES));
+            var structureCount = _.size(room.find(FIND_MY_STRUCTURES));
             if(structureCount > 0) {
                 expected[sh.CREEP_HARVESTER] = 2;
             }
         }
-        if(Game.rooms[room].energyCapacityAvailable > 0) {
-            expected[sh.CREEP_FILLER] = Math.ceil(Game.rooms[room].energyCapacityAvailable/500);
+        if(room.energyCapacityAvailable > 0) {
+            expected[sh.CREEP_FILLER] = Math.ceil(room.energyCapacityAvailable/500);
         }
-        if(mem.type == sh.ROOM_HOME) {
+        if(room.isMine()) {
             expected[sh.CREEP_UPGRADER] = 1;
         }
-        if(_.size(Game.rooms[room].findConstructionSites()) > 0) {
+        if(_.size(room.findConstructionSites()) > 0) {
             expected[sh.CREEP_BUILDER] = 1;
         }
-        if(Game.rooms[room].getTowerCount() == 0) {
+        if(room.getTowerCount() == 0) {
             expected[sh.CREEP_REPAIRER] = 1;
         }
-        if(mem.type == sh.ROOM_EXPANSION) {
-            if(Game.rooms[room].controller == null || Game.rooms[room].controller.reservation == null) {
-                mem.needReserve = true;
+        if(!room.isMine()) {
+            if(room.controller == null || room.controller.reservation == null) {
+                room.memory.needReserve = true;
             } else {
-                if(Game.rooms[room].controller.reservation.ticksToEnd < sh.reservationMin) {
-                    mem.needReserve = true;
+                if(room.controller.reservation.ticksToEnd < sh.reservationMin) {
+                    room.memory.needReserve = true;
                 }
-                if(Game.rooms[room].controller.reservation.ticksToEnd > sh.reservationMax) {
-                    mem.needReserve = false;
+                if(room.controller.reservation.ticksToEnd > sh.reservationMax) {
+                    room.memory.needReserve = false;
                 }
             }
         }
     } else {
         expected[sh.CREEP_REPAIRER] = 1;
-        if(mem.type == sh.ROOM_EXPANSION) {
-            mem.needReserve = true;
-        }
+        Memory.rooms[name].needReserve = true;
     }
-    if(mem.type == sh.ROOM_EXPANSION) {
-        if(mem.needReserve) {
+    if(Memory.rooms[name].needReserve != null) {
+        if(Memory.rooms[name].needReserve) {
             expected[sh.CREEP_CAPTURER] = 2;
         } else {
             expected[sh.CREEP_CAPTURER] = 1;
@@ -88,17 +92,17 @@ StructureSpawn.prototype.getExpectedCreeps = function(room, mem) {
     }
     return expected;
 };
-StructureSpawn.prototype.doSpawnCreep = function(room, role, count) {
-    var roomCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == room);
+StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
+    var roomCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == name);
     if(_.size(roomCreeps) < count) {
         var body = this.chooseBody(role);
         if(this.canCreateCreep(body) == OK) {
             var result = this.createCreep(body, null, {
                 role: role,
-                room: room
+                room: name
             });
             if(_.isString(result)) {
-                console.log('Spawning new ' + role + ' for ' + room + ': ' + result);
+                console.log('Spawning new ' + role + ' for ' + name + ': ' + result);
                 return true;
             } else {
                 console.log('Spawn error: ' + result);

@@ -40,6 +40,7 @@
         STRUCTURE_EXTENSION: false
         STRUCTURE_SPAWN: false
         STRUCTURE_CONTAINER: false
+        STRUCTURE_STORAGE: false
         ERR_NOT_IN_RANGE: false
         ERR_NOT_ENOUGH_RESOURCES: false
         OK: false
