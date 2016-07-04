@@ -223,7 +223,9 @@ Creep.prototype.fillEnergy = function() {
     }
     if(target != null) {
         if(target instanceof Source) {
-            if(this.harvest(target) == ERR_NOT_IN_RANGE) {
+            if(this.pos.isNearTo(target)) {
+                this.harvest(target);
+            } else {
                 this.moveToS(target);
             }
         } else if(target instanceof StructureContainer || target instanceof StructureStorage) {
