@@ -63,6 +63,9 @@ Creep.prototype.runBuilder = function() {
     }
 };
 Creep.prototype.runFiller = function() {
+    if(this.memory.energyTarget != null) {
+        delete this.memory.energyTarget;
+    }
     var target = this.findFillTarget([STRUCTURE_EXTENSION]);
     if(target == null) {
         target = this.findFillTarget([STRUCTURE_SPAWN]);
