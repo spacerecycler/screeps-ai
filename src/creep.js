@@ -217,7 +217,7 @@ Creep.prototype.fillEnergy = function() {
             if(this.harvest(target) == ERR_NOT_IN_RANGE) {
                 this.moveToS(target);
             }
-        } else if(target instanceof StructureContainer) {
+        } else if(target instanceof StructureContainer || target instanceof StructureStorage) {
             switch(target.transfer(this, RESOURCE_ENERGY)) {
                 case ERR_NOT_IN_RANGE:
                     this.moveToS(target);
