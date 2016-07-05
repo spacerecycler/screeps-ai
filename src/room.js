@@ -1,81 +1,81 @@
 let _ = require('lodash');
 let sh = require('shared');
 Room.prototype.run = function() {
-    if(this.memory.maxHarvesters == null) {
-        let count = 0;
-        let sources = this.find(FIND_SOURCES);
-        _.forEach(sources, (source) => {
-            count += source.countHarvestSpots();
-        });
-        this.memory.maxHarvesters = count;
-    }
-    if(this.mode == MODE_SIMULATION && !this.memory.test) {
-        _.forEach(this.find(FIND_SOURCES), (source) => {
-            let vals = PathFinder.search(Game.spawns.Spawn1.pos, {pos: source.pos, range: 1});
-            console.log(vals.path);
-            _.forEach(vals.path, (val) => {
-                this.createConstructionSite(val, STRUCTURE_ROAD);
-            });
-        });
-        this.memory.test = true;
-    }
-    let spawns = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_SPAWN});
-    _.forEach(spawns, (spawn) => {
-        spawn.run();
+  if(this.memory.maxHarvesters == null) {
+    let count = 0;
+    let sources = this.find(FIND_SOURCES);
+    _.forEach(sources, (source) => {
+      count += source.countHarvestSpots();
     });
-    let towers = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_TOWER});
-    _.forEach(towers, (tower) => {
-        tower.run();
+    this.memory.maxHarvesters = count;
+  }
+  if(this.mode == MODE_SIMULATION && !this.memory.test) {
+    _.forEach(this.find(FIND_SOURCES), (source) => {
+      let vals = PathFinder.search(Game.spawns.Spawn1.pos, {pos: source.pos, range: 1});
+      console.log(vals.path);
+      _.forEach(vals.path, (val) => {
+        this.createConstructionSite(val, STRUCTURE_ROAD);
+      });
     });
+    this.memory.test = true;
+  }
+  let spawns = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_SPAWN});
+  _.forEach(spawns, (spawn) => {
+    spawn.run();
+  });
+  let towers = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_TOWER});
+  _.forEach(towers, (tower) => {
+    tower.run();
+  });
 };
 Room.prototype.isMine = function() {
-    return this.controller != null && this.controller.my;
+  return this.controller != null && this.controller.my;
 };
 Room.prototype.hasHostileAttacker = function() {
-    let targets = this.find(FIND_HOSTILE_CREEPS, {
-        filter: (target) => {
-            let hasAttack = false;
-            _.forEach(target.body, (part) => {
-                if(_.includes(sh.ATTACKER_PARTS, part.type)) {
-                    hasAttack = true;
-                    return false;
-                }
-            });
-            return hasAttack;
+  let targets = this.find(FIND_HOSTILE_CREEPS, {
+    filter: (target) => {
+      let hasAttack = false;
+      _.forEach(target.body, (part) => {
+        if(_.includes(sh.ATTACKER_PARTS, part.type)) {
+          hasAttack = true;
+          return false;
         }
-    });
-    return _.size(targets) > 0;
+      });
+      return hasAttack;
+    }
+  });
+  return _.size(targets) > 0;
 };
 Room.prototype.getContainerCount = function() {
-    return _.size(this.find(FIND_STRUCTURES, {
-        filter: (target) => target.structureType == STRUCTURE_CONTAINER}));
+  return _.size(this.find(FIND_STRUCTURES, {
+    filter: (target) => target.structureType == STRUCTURE_CONTAINER}));
 };
 Room.prototype.getTowerCount = function() {
-    return _.size(this.find(FIND_MY_STRUCTURES, {
-        filter: (target) => target.structureType == STRUCTURE_TOWER}));
+  return _.size(this.find(FIND_MY_STRUCTURES, {
+    filter: (target) => target.structureType == STRUCTURE_TOWER}));
 };
 Room.prototype.findConstructionSites = function(types) {
-    if(types == null) {
-        return this.find(FIND_MY_CONSTRUCTION_SITES);
-    } else {
-        return this.find(FIND_MY_CONSTRUCTION_SITES, {
-            filter: (target) => {
-                return _.includes(types, target.structureType);
-            }
-        });
-    }
+  if(types == null) {
+    return this.find(FIND_MY_CONSTRUCTION_SITES);
+  } else {
+    return this.find(FIND_MY_CONSTRUCTION_SITES, {
+      filter: (target) => {
+        return _.includes(types, target.structureType);
+      }
+    });
+  }
 };
 Room.prototype.findNotFullContainers = function() {
-    return this.find(FIND_MY_STRUCTURES, {
-        filter: (target) => {
-            return target.structureType == STRUCTURE_CONTAINER
+  return this.find(FIND_MY_STRUCTURES, {
+    filter: (target) => {
+      return target.structureType == STRUCTURE_CONTAINER
         && target.store[RESOURCE_ENERGY] < target.storeCapacity;
-        }
-    });
+    }
+  });
 };
 Room.prototype.isStorageNotFull = function() {
-    return this.storage != null && this.storage.store[RESOURCE_ENERGY] < this.storage.storeCapacity;
+  return this.storage != null && this.storage.store[RESOURCE_ENERGY] < this.storage.storeCapacity;
 };
 Room.prototype.isStorageNotEmpty = function() {
-    return this.storage != null && this.storage.store[RESOURCE_ENERGY] > 0;
+  return this.storage != null && this.storage.store[RESOURCE_ENERGY] > 0;
 };
