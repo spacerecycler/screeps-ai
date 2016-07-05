@@ -8,6 +8,7 @@ Source.prototype.countHarvestSpots = function() {
             count++;
         }
     });
+    return count;
 };
 Source.prototype.needsHarvester = function() {
     let creeps = this.room.find(FIND_MY_CREEPS, {
