@@ -103,21 +103,22 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
 };
 StructureSpawn.prototype.trySpawnCreep = function(room, role, count) {
   let creeps = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == room);
+  let memory = {
+    role: role,
+    room: room
+  };
   if(_.size(creeps) < count) {
-    this.doSpawnCreep(room, role);
+    this.doSpawnCreep(memory);
     return true;
   }
   return false;
 };
-StructureSpawn.prototype.doSpawnCreep = function(room, role) {
-  let body = this.chooseBody(role);
+StructureSpawn.prototype.doSpawnCreep = function(memory) {
+  let body = this.chooseBody(memory.role);
   if(this.canCreateCreep(body) == OK) {
-    let result = this.createCreep(body, null, {
-      role: role,
-      room: room
-    });
+    let result = this.createCreep(body, null, memory);
     if(_.isString(result)) {
-      console.log('Spawning new ' + role + ' for ' + room + ': ' + result);
+      console.log('Spawning new ' + memory.role + ' for ' + memory.room + ': ' + result);
     } else {
       console.log('Spawn error: ' + result);
     }
