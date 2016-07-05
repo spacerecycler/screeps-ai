@@ -36,7 +36,7 @@ StructureSpawn.prototype.spawnMissingCreep = function(name) {
         });
     }
     return spawnedOrMissing;
-},
+};
 StructureSpawn.prototype.getExpectedCreeps = function(name) {
     let expected = {};
     let room = Game.rooms[name];
@@ -123,7 +123,7 @@ StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
         }
     }
     return false;
-},
+};
 StructureSpawn.prototype.chooseBody = function(role) {
     let totalCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role);
     let energyCapAvail = this.room.energyCapacityAvailable;

@@ -83,16 +83,8 @@ Room.prototype.findNotFullContainers = function() {
     });
 };
 Room.prototype.isStorageNotFull = function() {
-    if(this.storage != null && this.storage.store[RESOURCE_ENERGY] < this.storage.storeCapacity){
-        return true;
-    } else {
-        return false;
-    }
+    return this.storage != null && this.storage.store[RESOURCE_ENERGY] < this.storage.storeCapacity;
 };
 Room.prototype.isStorageNotEmpty = function() {
-    if(this.storage != null && this.storage.store[RESOURCE_ENERGY] > 0){
-        return true;
-    } else {
-        return false;
-    }
+    return this.storage != null && this.storage.store[RESOURCE_ENERGY] > 0;
 };

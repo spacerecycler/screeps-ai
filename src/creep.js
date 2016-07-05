@@ -162,7 +162,7 @@ Creep.prototype.runCapturer = function() {
     if(this.reserveController(this.room.controller) == ERR_NOT_IN_RANGE) {
         this.moveToS(this.room.controller);
     }
-},
+};
 Creep.prototype.ensureRoom = function() {
     if(this.room.name != this.memory.room) {
         let exitDir = this.memory.exitDir;
