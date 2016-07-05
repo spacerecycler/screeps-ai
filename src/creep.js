@@ -38,13 +38,16 @@ Creep.prototype.run = function() {
 Creep.prototype.runBuilder = function() {
     let target = Game.getObjectById(this.memory.targetId);
     if(target == null) {
-        target = this.pos.findNearestConstructionSite([STRUCTURE_WALL, STRUCTURE_RAMPART]);
+        target = this.pos.findNearestConstructionSite([STRUCTURE_WALL,STRUCTURE_RAMPART]);
     }
     if(target == null) {
         target = this.pos.findNearestConstructionSite([STRUCTURE_ROAD]);
     }
     if(target == null) {
-        target = this.pos.findNearestConstructionSite([STRUCTURE_TOWER, STRUCTURE_EXTENSION]);
+        target = this.pos.findNearestConstructionSite([STRUCTURE_TOWER,STRUCTURE_EXTENSION]);
+    }
+    if(target == null) {
+        target = this.pos.findNearestConstructionSite([STRUCTURE_CONTAINER]);
     }
     if(target == null) {
         target = this.pos.findNearestConstructionSite();
