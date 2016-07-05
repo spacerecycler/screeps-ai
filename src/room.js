@@ -14,13 +14,12 @@ Room.prototype.run = function() {
         this.memory.maxHarvesters = count;
     }
     if(this.mode == MODE_SIMULATION && !this.memory.test) {
-        var goals = _.map(this.find(FIND_SOURCES), function(source) {
-            return { pos: source.pos, range: 1};
-        });
-        var vals = PathFinder.search(Game.spawns.Spawn1.pos, goals);
-        _.forEach(vals, (val) => {
-            console.log(val);
-            this.createConstructionSite(val, STRUCTURE_ROAD);
+        _.forEach(this.find(FIND_SOURCES), (source) => {
+            var vals = PathFinder.search(Game.spawns.Spawn1.pos, {pos: source.pos, range: 1});
+            console.log(vals);
+            _.forEach(vals, (val) => {
+                this.createConstructionSite(val, STRUCTURE_ROAD);
+            });
         });
         this.memory.test = true;
     }
