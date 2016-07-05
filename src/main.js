@@ -7,24 +7,7 @@ require('creep');
 var m = {
     /** Main loop function for screeps **/
     loop: function() {
-        if(Memory.config == null) {
-            Memory.config = {};
-        }
-        if(Memory.config.wallsMax == null) {
-            Memory.config.wallsMax = 5000;
-        }
-        if(Memory.config.rooms == null) {
-            Memory.config.rooms = [];
-            _.forEach(Game.spawns, (spawn) => {
-                Memory.config.rooms.push(spawn.room.name);
-            });
-        }
-        if(Memory.config.blacklist == null) {
-            Memory.config.blacklist = [];
-        }
-        _.remove(Memory.config.blacklist, (id) => {
-            return Game.getObjectById(id) == null;
-        });
+        m.setupMem();
         m.clearMem();
         _.forEach(Memory.config.rooms, (name) => {
             var room = Game.rooms[name];
@@ -36,6 +19,19 @@ var m = {
             creep.run();
         });
     },
+    setupMem: function() {
+        _.defaults(Memory.config, {
+            wallsMax: 5000,
+            rooms: [],
+            blacklist: [],
+            towers: {}
+        });
+        if(_.isEmpty(Memory.config.rooms)) {
+            _.forEach(Game.spawns, (spawn) => {
+                Memory.config.rooms.push(spawn.room.name);
+            });
+        }
+    },
     /** Clear unused memory **/
     clearMem: function() {
         _.forEach(Memory.creeps, (value, name) => {
@@ -43,13 +39,13 @@ var m = {
                 delete Memory.creeps[name];
             }
         });
-        if(Memory.towers == null) {
-            Memory.towers = {};
-        }
         _.forEach(Memory.towers, (value, id) => {
             if(!Game.getObjectById(id)) {
                 delete Memory.towers[id];
             }
+        });
+        _.remove(Memory.config.blacklist, (id) => {
+            return Game.getObjectById(id) == null;
         });
     }
 };
