@@ -17,7 +17,7 @@ Room.prototype.run = function() {
         var goals = _.map(this.find(FIND_SOURCES), function(source) {
             return { pos: source.pos, range: 1};
         });
-        var vals = PathFinder.search(Game.spawns[Spawn1].pos, goals);
+        var vals = PathFinder.search(Game.spawns.Spawn1.pos, goals);
         console.log(vals);
         this.memory.test = true;
     }
