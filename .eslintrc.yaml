@@ -1,65 +1,68 @@
 ---
-    extends:
-        - eslint:recommended
-    parserOptions:
-        ecmaVersion: 6
-    env:
-        node: true
-        es6: true
-    rules:
-        no-undef: warn
-        no-console: off
-        semi: error
-        no-extra-semi: error
-        no-extra-parens: error
-        valid-jsdoc:
-            - warn
-            - requireReturn: false
-        curly: error
-        indent:
-            - error
-            - 4
-            - SwitchCase: 1
-        no-cond-assign:
-            - error
-            - always
-    globals:
-        Memory: false
-        Game: false
-        RESOURCE_ENERGY: false
-        FIND_MY_CONSTRUCTION_SITES: false
-        FIND_MY_STRUCTURES: false
-        FIND_STRUCTURES: false
-        FIND_FLAGS: false
-        FIND_SOURCES: false
-        FIND_DROPPED_ENERGY: false
-        FIND_HOSTILE_CREEPS: false
-        FIND_MY_CREEPS: false
-        STRUCTURE_WALL: false
-        STRUCTURE_RAMPART: false
-        STRUCTURE_ROAD: false
-        STRUCTURE_TOWER: false
-        STRUCTURE_EXTENSION: false
-        STRUCTURE_SPAWN: false
-        STRUCTURE_CONTAINER: false
-        STRUCTURE_STORAGE: false
-        LOOK_TERRAIN: false
-        ERR_NOT_IN_RANGE: false
-        ERR_NOT_ENOUGH_RESOURCES: false
-        OK: false
-        WORK: false
-        CARRY: false
-        MOVE: false
-        CLAIM: false
-        TOUGH: false
-        ATTACK: false
-        RANGED_ATTACK: false
-        StructureTower: false
-        StructureSpawn: false
-        Creep: false
-        Room: false
-        RoomPosition: false
-        Source: false
-        StructureContainer: false
-        StructureStorage: false
-        Resource: false
+  extends:
+    - eslint:recommended
+  parserOptions:
+    ecmaVersion: 6
+  env:
+    node: true
+    es6: true
+  rules:
+    no-undef: warn
+    no-console: off
+    semi: error
+    no-extra-semi: error
+    no-extra-parens: error
+    valid-jsdoc:
+      - warn
+      - requireReturn: false
+    curly: error
+    indent:
+      - error
+      - 2
+      - SwitchCase: 1
+    no-cond-assign:
+      - error
+      - always
+  globals:
+    OK: false
+    ERR_NOT_IN_RANGE: false
+    ERR_NOT_ENOUGH_RESOURCES: false
+    FIND_MY_CREEPS: false
+    FIND_HOSTILE_CREEPS: false
+    FIND_SOURCES: false
+    FIND_DROPPED_ENERGY: false
+    FIND_STRUCTURES: false
+    FIND_MY_STRUCTURES: false
+    FIND_FLAGS: false
+    FIND_MY_CONSTRUCTION_SITES: false
+    LOOK_TERRAIN: false
+    MOVE: false
+    WORK: false
+    CARRY: false
+    ATTACK: false
+    RANGED_ATTACK: false
+    TOUGH: false
+    CLAIM: false
+    BODYPART_COST: false
+    STRUCTURE_SPAWN: false
+    STRUCTURE_EXTENSION: false
+    STRUCTURE_ROAD: false
+    STRUCTURE_WALL: false
+    STRUCTURE_RAMPART: false
+    STRUCTURE_STORAGE: false
+    STRUCTURE_TOWER: false
+    STRUCTURE_CONTAINER: false
+    RESOURCE_ENERGY: false
+    MODE_SIMULATION: false
+    Game: false
+    Memory: false
+    PathFinder: false
+    Room: false
+    RoomPosition: false
+    Creep: false
+    Resource: false
+    Source: false
+    StructureSpawn: false
+    StructureStorage: false
+    StructureTower: false
+    StructureContainer: false
