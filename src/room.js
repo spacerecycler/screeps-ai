@@ -18,7 +18,10 @@ Room.prototype.run = function() {
             return { pos: source.pos, range: 1};
         });
         var vals = PathFinder.search(Game.spawns.Spawn1.pos, goals);
-        console.log(vals);
+        _.forEach(vals, (val) => {
+            console.log(val);
+            this.createConstructionSite(val, STRUCTURE_ROAD);
+        });
         this.memory.test = true;
     }
     var spawns = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_SPAWN});
