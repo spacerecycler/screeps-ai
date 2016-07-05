@@ -1,4 +1,5 @@
 var _ = require('lodash');
+require('source');
 require('room');
 require('room_pos');
 require('spawn');

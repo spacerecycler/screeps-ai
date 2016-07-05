@@ -214,11 +214,19 @@ Creep.prototype.fillEnergy = function() {
             if(target == null) {
                 target = this.pos.findNearestNotEmptyContainer();
             }
+            if(target != null) {
+                this.memory.energyTarget = target.id;
+            }
         } else {
-            target = this.pos.findClosestByRange(FIND_SOURCES);
-        }
-        if(target != null) {
-            this.memory.energyTarget = target.id;
+            if(this.memory.targetSource == null) {
+                var sources = this.room.find(FIND_SOURCES, {
+                    filter: (source) => {
+                        return source.needsHarvester();
+                    }
+                });
+                this.memory.targetSource = _.head(sources).id;
+            }
+            target = Game.getObjectById(this.memory.targetSource);
         }
     }
     if(target != null) {
