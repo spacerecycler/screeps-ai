@@ -13,6 +13,14 @@ Room.prototype.run = function() {
         });
         this.memory.maxHarvesters = count;
     }
+    if(this.mode == MODE_SIMULATION && !this.memory.test) {
+        var goals = _.map(this.find(FIND_SOURCES), function(source) {
+            return { pos: source.pos, range: 1};
+        });
+        var vals = PathFinder.search(Game.spawns[Spawn1].pos, goals);
+        console.log(vals);
+        this.memory.test = true;
+    }
     var spawns = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_SPAWN});
     _.forEach(spawns, (spawn) => {
         spawn.run();
