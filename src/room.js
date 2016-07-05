@@ -1,10 +1,10 @@
-var _ = require('lodash');
+let _ = require('lodash');
 Room.prototype.run = function() {
     if(this.memory.maxHarvesters == null) {
-        var count = 0;
-        var sources = this.find(FIND_SOURCES);
+        let count = 0;
+        let sources = this.find(FIND_SOURCES);
         _.forEach(sources, (source) => {
-            var tiles = this.lookForAtArea(LOOK_TERRAIN, source.pos.y-1, source.pos.x-1, source.pos.y+1, source.pos.x+1, true);
+            let tiles = this.lookForAtArea(LOOK_TERRAIN, source.pos.y-1, source.pos.x-1, source.pos.y+1, source.pos.x+1, true);
             _.forEach(tiles, (tile) => {
                 if(tile.terrain != 'wall') {
                     count++;
@@ -15,7 +15,7 @@ Room.prototype.run = function() {
     }
     if(this.mode == MODE_SIMULATION && !this.memory.test) {
         _.forEach(this.find(FIND_SOURCES), (source) => {
-            var vals = PathFinder.search(Game.spawns.Spawn1.pos, {pos: source.pos, range: 1});
+            let vals = PathFinder.search(Game.spawns.Spawn1.pos, {pos: source.pos, range: 1});
             console.log(vals.path);
             _.forEach(vals.path, (val) => {
                 this.createConstructionSite(val, STRUCTURE_ROAD);
@@ -23,11 +23,11 @@ Room.prototype.run = function() {
         });
         this.memory.test = true;
     }
-    var spawns = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_SPAWN});
+    let spawns = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_SPAWN});
     _.forEach(spawns, (spawn) => {
         spawn.run();
     });
-    var towers = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_TOWER});
+    let towers = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_TOWER});
     _.forEach(towers, (tower) => {
         tower.run();
     });
@@ -40,9 +40,9 @@ Room.prototype.isMine = function() {
     }
 };
 Room.prototype.hasHostileAttacker = function() {
-    var targets = this.find(FIND_HOSTILE_CREEPS, {
+    let targets = this.find(FIND_HOSTILE_CREEPS, {
         filter: (target) => {
-            var hasAttack = false;
+            let hasAttack = false;
             _.forEach(target.body, (part) => {
                 if(_.includes([RANGED_ATTACK,ATTACK], part.type)) {
                     hasAttack = true;

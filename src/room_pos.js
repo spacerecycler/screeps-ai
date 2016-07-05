@@ -1,9 +1,9 @@
-var _ = require('lodash');
-var sh = require('shared');
+let _ = require('lodash');
+let sh = require('shared');
 RoomPosition.prototype.findNearestAttacker = function() {
     return this.findClosestByRange(FIND_HOSTILE_CREEPS, {
         filter: (target) => {
-            var hasAttack = false;
+            let hasAttack = false;
             _.forEach(target.body, (part) => {
                 if(_.includes([RANGED_ATTACK,ATTACK], part.type)) {
                     hasAttack = true;
@@ -22,7 +22,7 @@ RoomPosition.prototype.findNearestHurtCreep = function() {
 RoomPosition.prototype.findNearestHurtStructure = function() {
     return this.findClosestByRange(FIND_STRUCTURES, {
         filter: (target) => {
-            var max = target.hitsMax * 0.9;
+            let max = target.hitsMax * 0.9;
             if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART], target.structureType)) {
                 max = Math.min(target.hitsMax, Memory.config.wallsMax * 0.9);
             } else if (!_.includes([STRUCTURE_ROAD,STRUCTURE_CONTAINER], target.structureType) && !target.my) {

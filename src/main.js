@@ -1,17 +1,17 @@
-var _ = require('lodash');
+let _ = require('lodash');
 require('source');
 require('room');
 require('room_pos');
 require('spawn');
 require('tower');
 require('creep');
-var m = {
+let m = {
     /** Main loop function for screeps **/
     loop: function() {
         m.setupMem();
         m.clearMem();
         _.forEach(Memory.config.rooms, (name) => {
-            var room = Game.rooms[name];
+            let room = Game.rooms[name];
             if(room != null) {
                 room.run();
             }

@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var sh = {
+let _ = require('lodash');
+let sh = {
     CREEP_HARVESTER: 'harvester',
     CREEP_UPGRADER: 'upgrader',
     CREEP_BUILDER: 'builder',
@@ -11,11 +11,11 @@ var sh = {
     reservationMin: 1000,
     reservationMax: 2000,
     tryRepair: function(obj, mem) {
-        var target = Game.getObjectById(mem.targetId);
+        let target = Game.getObjectById(mem.targetId);
         // logic below to only repair things when they are 90% damaged
         // also cap hitpoints for walls since they have so many
         if(target != null) {
-            var max = target.hitsMax;
+            let max = target.hitsMax;
             if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART], target.structureType)) {
                 max = Math.min(target.hitsMax, Memory.config.wallsMax);
             }
