@@ -75,7 +75,7 @@ Room.prototype.findConstructionSites = function(types) {
     }
 };
 Room.prototype.findNotFullContainers = function() {
-    return this.find(FIND_MY_STRUCTURES, {
+    return this.find(FIND_STRUCTURES, {
         filter: (target) => {
             return target.structureType == STRUCTURE_CONTAINER
                 && target.store[RESOURCE_ENERGY] < target.storeCapacity;
