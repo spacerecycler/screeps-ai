@@ -10,7 +10,7 @@ Source.prototype.countHarvestSpots = function() {
     });
 };
 Source.prototype.needsHarvester = function() {
-    let creeps = this.find(FIND_MY_CREEPS, {
+    let creeps = this.room.find(FIND_MY_CREEPS, {
         filter: (creep) => {
             return creep.memory.role == sh.CREEP_HARVESTER && creep.memory.source == this.id;
         }
