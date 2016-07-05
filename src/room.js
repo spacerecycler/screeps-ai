@@ -16,8 +16,8 @@ Room.prototype.run = function() {
     if(this.mode == MODE_SIMULATION && !this.memory.test) {
         _.forEach(this.find(FIND_SOURCES), (source) => {
             var vals = PathFinder.search(Game.spawns.Spawn1.pos, {pos: source.pos, range: 1});
-            console.log(vals);
-            _.forEach(vals, (val) => {
+            console.log(vals.path);
+            _.forEach(vals.path, (val) => {
                 this.createConstructionSite(val, STRUCTURE_ROAD);
             });
         });
