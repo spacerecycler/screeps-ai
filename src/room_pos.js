@@ -5,7 +5,7 @@ RoomPosition.prototype.findNearestAttacker = function() {
         filter: (target) => {
             let hasAttack = false;
             _.forEach(target.body, (part) => {
-                if(_.includes([RANGED_ATTACK,ATTACK], part.type)) {
+                if(_.includes(sh.ATTACKER_PARTS, part.type)) {
                     hasAttack = true;
                     return false;
                 }

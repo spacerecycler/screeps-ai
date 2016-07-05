@@ -1,4 +1,5 @@
 let _ = require('lodash');
+let sh = require('shared');
 Room.prototype.run = function() {
     if(this.memory.maxHarvesters == null) {
         let count = 0;
@@ -44,7 +45,7 @@ Room.prototype.hasHostileAttacker = function() {
         filter: (target) => {
             let hasAttack = false;
             _.forEach(target.body, (part) => {
-                if(_.includes([RANGED_ATTACK,ATTACK], part.type)) {
+                if(_.includes(sh.ATTACKER_PARTS, part.type)) {
                     hasAttack = true;
                     return false;
                 }
