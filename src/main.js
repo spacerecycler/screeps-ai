@@ -20,6 +20,9 @@ var m = {
         });
     },
     setupMem: function() {
+        if(Memory.config == null) {
+            Memory.config = {};
+        }
         _.defaults(Memory.config, {
             wallsMax: 5000,
             rooms: [],
