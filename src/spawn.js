@@ -167,6 +167,7 @@ StructureSpawn.prototype.chooseBody = function(role) {
         _.times(Math.trunc(energyCapAvail/150), () => {
             body.push(ATTACK,TOUGH,TOUGH,MOVE);
         });
+        return body;
     }
     let body = [];
     let div = energyCapAvail/50;
