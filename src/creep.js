@@ -166,7 +166,13 @@ Creep.prototype.runCapturer = function() {
     }
 };
 Creep.prototype.runScout = function() {
-    this.suicide();
+    let targets = this.room.find(FIND_SOURCES);
+    let target = _.head(targets);
+    if(!this.pos.isNearTo(target)) {
+        this.moveToS(target);
+    } else {
+        this.suicide();
+    }
 };
 Creep.prototype.runDefender = function() {
     let target = this.pos.findNearestAttacker();
