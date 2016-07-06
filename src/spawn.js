@@ -63,7 +63,11 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
             }
         }
         if(room.isMine()) {
-            expected[sh.CREEP_UPGRADER] = 1;
+            if(room.storage != null && room.storage.store[RESOURCE_ENERGY] > 10000) {
+                expected[sh.CREEP_UPGRADER] = 2;
+            } else {
+                expected[sh.CREEP_UPGRADER] = 1;
+            }
         }
         if(_.size(room.findConstructionSites()) > 0) {
             expected[sh.CREEP_BUILDER] = 1;
