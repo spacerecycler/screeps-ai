@@ -25,6 +25,12 @@ Creep.prototype.run = function() {
                 case sh.CREEP_TRANSPORTER:
                     this.runTransporter();
                     return;
+                case sh.CREEP_SCOUT:
+                    this.runScout();
+                    return;
+                case sh.CREEP_DEFENDER:
+                    this.runDefender();
+                    return;
             }
         } else {
             if(this.memory.role != sh.CREEP_TRANSPORTER
