@@ -165,6 +165,17 @@ Creep.prototype.runCapturer = function() {
         this.moveToS(this.room.controller);
     }
 };
+Creep.prototype.runScout = function() {
+    this.suicide();
+};
+Creep.prototype.runDefender = function() {
+    let target = this.pos.findNearestAttacker();
+    if(target != null) {
+        if(this.attack(target) == ERR_NOT_IN_RANGE) {
+            this.moveToS(target);
+        }
+    }
+};
 Creep.prototype.ensureRoom = function() {
     if(this.room.name != this.memory.room) {
         let exitDir = this.memory.exitDir;

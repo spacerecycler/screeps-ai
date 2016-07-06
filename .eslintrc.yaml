@@ -50,6 +50,7 @@
         STRUCTURE_ROAD: false
         STRUCTURE_WALL: false
         STRUCTURE_RAMPART: false
+        STRUCTURE_KEEPER_LAIR: false
         STRUCTURE_STORAGE: false
         STRUCTURE_TOWER: false
         STRUCTURE_CONTAINER: false
