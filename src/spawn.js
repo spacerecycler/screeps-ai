@@ -1,17 +1,17 @@
-let _ = require('lodash');
-let sh = require('shared');
+var _ = require('lodash');
+var sh = require('shared');
 StructureSpawn.prototype.run = function() {
-    let spawnedOrMissing = false;
-    _.forEach(Memory.config.rooms, (name) => {
-        let room = Game.rooms[name];
+    var spawnedOrMissing = false;
+    _.forEach(Memory.config.rooms, function(name) {
+        var room = Game.rooms[name];
         if(room != null && room.isMine()) {
             spawnedOrMissing = this.spawnMissingCreep(name);
             return !spawnedOrMissing;
         }
     });
     if(!spawnedOrMissing) {
-        _.forEach(Memory.config.rooms, (name) => {
-            let room = Game.rooms[name];
+        _.forEach(Memory.config.rooms, function(name) {
+            var room = Game.rooms[name];
             if(room == null || !room.isMine()) {
                 spawnedOrMissing = this.spawnMissingCreep(name);
                 return !spawnedOrMissing;
@@ -20,9 +20,9 @@ StructureSpawn.prototype.run = function() {
     }
 };
 StructureSpawn.prototype.spawnMissingCreep = function(name) {
-    let expected = this.getExpectedCreeps(name);
-    let spawnedOrMissing = false;
-    let room = Game.rooms[name];
+    var expected = this.getExpectedCreeps(name);
+    var spawnedOrMissing = false;
+    var room = Game.rooms[name];
     if(room != null && room.isMine()) {
         spawnedOrMissing = this.doSpawnCreep(name, sh.CREEP_HARVESTER, 1);
         if(!spawnedOrMissing) {
@@ -30,7 +30,7 @@ StructureSpawn.prototype.spawnMissingCreep = function(name) {
         }
     }
     if(!spawnedOrMissing) {
-        _.forEach(expected, (count, role) => {
+        _.forEach(expected, function(count, role) {
             spawnedOrMissing = this.doSpawnCreep(name, role, count);
             return !spawnedOrMissing;
         });
@@ -38,10 +38,10 @@ StructureSpawn.prototype.spawnMissingCreep = function(name) {
     return spawnedOrMissing;
 };
 StructureSpawn.prototype.getExpectedCreeps = function(name) {
-    let expected = {};
-    let room = Game.rooms[name];
+    var expected = {};
+    var room = Game.rooms[name];
     if(room != null) {
-        let containerCount = room.getContainerCount();
+        var containerCount = room.getContainerCount();
         if(room.storage != null) {
             expected[sh.CREEP_HARVESTER] = room.memory.maxHarvesters;
         } else if(containerCount > 0) {
@@ -50,7 +50,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
                 expected[sh.CREEP_TRANSPORTER] = Math.min(containerCount, 2);
             }
         } else {
-            let structureCount = _.size(room.find(FIND_MY_STRUCTURES));
+            var structureCount = _.size(room.find(FIND_MY_STRUCTURES));
             if(structureCount > 0) {
                 expected[sh.CREEP_HARVESTER] = 2;
             }
@@ -108,11 +108,11 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
     return expected;
 };
 StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
-    let roomCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == name);
+    var roomCreeps = _.filter(Game.creeps, function(creep) {return creep.memory.role == role && creep.memory.room == name;});
     if(_.size(roomCreeps) < count) {
-        let body = this.chooseBody(role);
+        var body = this.chooseBody(role);
         if(this.canCreateCreep(body) == OK) {
-            let result = this.createCreep(body, null, {
+            var result = this.createCreep(body, null, {
                 role: role,
                 room: name
             });
@@ -129,11 +129,11 @@ StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
     return false;
 };
 StructureSpawn.prototype.chooseBody = function(role) {
-    let totalCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role);
-    let energyCapAvail = this.room.energyCapacityAvailable;
-    let body = [];
+    var totalCreeps = _.filter(Game.creeps, function(creep) {return creep.memory.role == role;});
+    var energyCapAvail = this.room.energyCapacityAvailable;
+    var body = [];
     if(role == sh.CREEP_CAPTURER) {
-        _.times(Math.trunc(energyCapAvail/650), () => {
+        _.times(Math.trunc(energyCapAvail/650), function() {
             body.push(CLAIM);
             body.push(MOVE);
         });
@@ -143,8 +143,8 @@ StructureSpawn.prototype.chooseBody = function(role) {
         if(role == sh.CREEP_FILLER && totalCreeps == 0) {
             return [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE];
         }
-        let div = Math.trunc(energyCapAvail/100);
-        _.times(div, () => {
+        var div = Math.trunc(energyCapAvail/100);
+        _.times(div, function() {
             body.push(CARRY);
             body.push(MOVE);
         });
@@ -153,12 +153,12 @@ StructureSpawn.prototype.chooseBody = function(role) {
     if(role == sh.CREEP_HARVESTER && totalCreeps == 0) {
         return [WORK,WORK,CARRY,MOVE];
     }
-    let parts50 = energyCapAvail/50;
+    var parts50 = energyCapAvail/50;
     // number of 50 cost parts * 5/8 /2 = num work parts
-    let numWorkParts = Math.ceil(parts50*5 /16);
-    let remainingParts = parts50 - numWorkParts*2;
-    _.times(numWorkParts, () => body.push(WORK));
-    _.times(Math.trunc(remainingParts/2), () => {
+    var numWorkParts = Math.ceil(parts50*5 /16);
+    var remainingParts = parts50 - numWorkParts*2;
+    _.times(numWorkParts, function() {body.push(WORK);});
+    _.times(Math.trunc(remainingParts/2), function() {
         body.push(CARRY);
         body.push(MOVE);
     });

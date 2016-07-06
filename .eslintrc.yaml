@@ -1,13 +1,11 @@
 ---
     extends:
         - eslint:recommended
-    parserOptions:
-        ecmaVersion: 6
     env:
         node: true
-        es6: true
     rules:
         no-undef: warn
+        no-unused-vars: warn
         no-console: off
         semi: error
         no-extra-semi: error
@@ -24,6 +22,8 @@
             - error
             - always
     globals:
+        _: false
+        sh: false
         OK: false
         ERR_NOT_IN_RANGE: false
         ERR_NOT_ENOUGH_RESOURCES: false

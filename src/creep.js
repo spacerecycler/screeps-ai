@@ -1,6 +1,4 @@
-let _ = require('lodash');
-let sh = require('shared');
-let flatMap = _.compose(_.compact, _.flatten, _.map);
+var flatMap = _.compose(_.compact, _.flatten, _.map);
 Creep.prototype.run = function() {
     if(this.memory.role == sh.CREEP_TRANSPORTER || this.ensureRoom()) {
         if(this.carryCapacity == 0 || this.isCreepWorking()) {
@@ -36,7 +34,7 @@ Creep.prototype.run = function() {
     }
 };
 Creep.prototype.runBuilder = function() {
-    let target = Game.getObjectById(this.memory.targetId);
+    var target = Game.getObjectById(this.memory.targetId);
     if(target == null) {
         target = this.pos.findNearestConstructionSite([STRUCTURE_WALL,STRUCTURE_RAMPART]);
     }
@@ -66,7 +64,7 @@ Creep.prototype.runBuilder = function() {
     }
 };
 Creep.prototype.runFiller = function() {
-    let target = null;
+    var target = null;
     if(!this.room.hasHostileAttacker()) {
         target = this.pos.findNearestFillTarget([STRUCTURE_EXTENSION]);
         if(target == null) {
@@ -85,10 +83,10 @@ Creep.prototype.runFiller = function() {
     }
 };
 Creep.prototype.runTransporter = function() {
-    let target = Game.getObjectById(this.memory.targetId);
+    var target = Game.getObjectById(this.memory.targetId);
     if(target == null) {
-        _.forEach(Memory.config.rooms, (name) => {
-            let room = Game.rooms[name];
+        _.forEach(Memory.config.rooms, function(name) {
+            var room = Game.rooms[name];
             if(room != null && room.isMine() && room.isStorageNotFull()) {
                 target = room.storage;
                 return false;
@@ -96,8 +94,8 @@ Creep.prototype.runTransporter = function() {
         });
     }
     if(target == null) {
-        let targets = flatMap(Memory.config.rooms, (name) =>{
-            let room = Game.rooms[name];
+        var targets = flatMap(Memory.config.rooms, function(name) {
+            var room = Game.rooms[name];
             if(room != null && room.isMine()) {
                 return room.findNotFullContainers();
             }
@@ -118,7 +116,7 @@ Creep.prototype.runTransporter = function() {
     }
 };
 Creep.prototype.runHarvester = function() {
-    let target = null;
+    var target = null;
     if(this.room.isStorageNotFull()) {
         target = this.room.storage;
     }
@@ -142,15 +140,15 @@ Creep.prototype.runHarvester = function() {
     }
 };
 Creep.prototype.runUpgrader = function() {
-    let target = this.room.controller;
+    var target = this.room.controller;
     if(this.upgradeController(target) == ERR_NOT_IN_RANGE) {
         this.moveToS(target);
     }
 };
 Creep.prototype.runRepairer = function() {
-    let target = sh.tryRepair(this, this.memory);
+    var target = sh.tryRepair(this, this.memory);
     if(target == null) {
-        target = _.head(_.filter(Memory.config.blacklist, (id) => {
+        target = _.head(_.filter(Memory.config.blacklist, function(id) {
             return Game.getObjectById(id).room.name == this.room.name;
         }));
         if(target != null && this.dismantle(target) == ERR_NOT_IN_RANGE) {
@@ -168,12 +166,12 @@ Creep.prototype.runCapturer = function() {
 };
 Creep.prototype.ensureRoom = function() {
     if(this.room.name != this.memory.room) {
-        let exitDir = this.memory.exitDir;
+        var exitDir = this.memory.exitDir;
         if(exitDir == null) {
             exitDir = this.room.findExitTo(this.memory.room);
             this.memory.exitDir = exitDir;
         }
-        let exit = this.pos.findClosestByRange(exitDir);
+        var exit = this.pos.findClosestByRange(exitDir);
         this.moveToS(exit);
         return false;
     } else {
@@ -184,7 +182,7 @@ Creep.prototype.ensureRoom = function() {
     }
 };
 Creep.prototype.idle = function() {
-    let flag = this.pos.findNearestIdleFlag();
+    var flag = this.pos.findNearestIdleFlag();
     if(!this.pos.isNearTo(flag)) {
         this.moveToS(flag);
     }
@@ -202,7 +200,7 @@ Creep.prototype.isCreepWorking = function() {
 };
 Creep.prototype.fillEnergy = function() {
     // most creeps must harvest
-    let target = Game.getObjectById(this.memory.energyTarget);
+    var target = Game.getObjectById(this.memory.energyTarget);
     if(target == null) {
         if(this.memory.role != sh.CREEP_HARVESTER) {
             if(!this.room.hasHostileAttacker()) {
@@ -222,8 +220,8 @@ Creep.prototype.fillEnergy = function() {
             }
         } else {
             if(this.memory.targetSource == null) {
-                let sources = this.room.find(FIND_SOURCES, {
-                    filter: (source) => {
+                var sources = this.room.find(FIND_SOURCES, {
+                    filter: function(source) {
                         return source.needsHarvester();
                     }
                 });
