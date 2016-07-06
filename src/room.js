@@ -1,12 +1,5 @@
 let sh = require('shared');
 Room.prototype.run = function() {
-    if(!this.isMine() && this.memory.type == null) {
-        if(this.isKeeperLairRoom()) {
-            this.memory.type = sh.ROOM_KEEPER_LAIR;
-        } else {
-            this.memory.type = sh.ROOM_EXPANSION;
-        }
-    }
     if(this.memory.maxHarvesters == null) {
         let count = 0;
         let sources = this.find(FIND_SOURCES);
@@ -19,6 +12,13 @@ Room.prototype.run = function() {
             });
         });
         this.memory.maxHarvesters = count;
+    }
+    if(!this.isMine() && this.memory.type == null) {
+        if(this.isKeeperLairRoom()) {
+            this.memory.type = sh.ROOM_KEEPER_LAIR;
+        } else {
+            this.memory.type = sh.ROOM_EXPANSION;
+        }
     }
     if(this.mode == MODE_SIMULATION && !this.memory.test) {
         _.forEach(this.find(FIND_SOURCES), (source) => {
@@ -47,7 +47,8 @@ Room.prototype.isMine = function() {
     }
 };
 Room.prototype.isKeeperLairRoom = function() {
-    return !_.isEmpty(this.find(FIND_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_KEEPER_LAIR}));
+    let s = this.find(FIND_STRUCTURES, {filter: (t) => {return t.structureType == STRUCTURE_KEEPER_LAIR;}});
+    return !_.isEmpty(s);
 };
 Room.prototype.hasHostileAttacker = function() {
     let targets = this.find(FIND_HOSTILE_CREEPS, {
