@@ -89,9 +89,9 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
             }
         }
     } else {
-        if(Memory.rooms[name] == null || Memory.rooms[name].type == null) {
+        if(Memory.rooms[name] == null || Memory.rooms[name].role == null) {
             expected[sh.CREEP_SCOUT] = 1;
-        } else if (Memory.rooms[name].type == sh.ROOM_EXPANSION) {
+        } else if (Memory.rooms[name].role == sh.ROOM_EXPANSION) {
             expected[sh.CREEP_REPAIRER] = 1;
             Memory.rooms[name].needReserve = true;
         }
@@ -109,7 +109,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
             }
         }
     }
-    if(Memory.rooms[name].type == sh.ROOM_KEEPER_LAIR) {
+    if(Memory.rooms[name].role == sh.ROOM_KEEPER_LAIR) {
         expected[sh.CREEP_DEFENDER] = 1;
     }
     return expected;
