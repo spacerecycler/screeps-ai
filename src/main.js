@@ -34,6 +34,9 @@ let m = {
                 Memory.config.rooms.push(spawn.room.name);
             });
         }
+        _.forEach(Memory.config.rooms, (name) => {
+            Memory.rooms[name] = {};
+        });
     },
     /** Clear unused memory **/
     clearMem: function() {
