@@ -35,7 +35,7 @@ let m = {
             });
         }
         _.forEach(Memory.config.rooms, (name) => {
-            if(Memory.config[name] == null) {
+            if(Memory.rooms[name] == null) {
                 Memory.rooms[name] = {};
             }
         });
