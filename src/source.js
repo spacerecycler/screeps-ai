@@ -1,9 +1,9 @@
-var _ = require('lodash');
-var sh = require('shared');
+let _ = require('lodash');
+let sh = require('shared');
 Source.prototype.countHarvestSpots = function() {
-    var count = 0;
-    var tiles = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y-1, this.pos.x-1, this.pos.y+1, this.pos.x+1, true);
-    _.forEach(tiles, function(tile) {
+    let count = 0;
+    let tiles = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y-1, this.pos.x-1, this.pos.y+1, this.pos.x+1, true);
+    _.forEach(tiles, (tile) => {
         if(tile.terrain != 'wall') {
             count++;
         }
@@ -11,8 +11,8 @@ Source.prototype.countHarvestSpots = function() {
     return count;
 };
 Source.prototype.needsHarvester = function() {
-    var creeps = this.room.find(FIND_MY_CREEPS, {
-        filter: function(creep) {
+    let creeps = this.room.find(FIND_MY_CREEPS, {
+        filter: (creep) => {
             return creep.memory.role == sh.CREEP_HARVESTER && creep.memory.targetSource == this.id;
         }
     });

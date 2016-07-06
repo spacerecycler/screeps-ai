@@ -1,22 +1,22 @@
-var sh = require('shared');
+let _ = require('lodash');
 require('source');
 require('room');
 require('room_pos');
 require('spawn');
 require('tower');
 require('creep');
-var m = {
+let m = {
     /** Main loop function for screeps **/
     loop: function() {
         m.setupMem();
         m.clearMem();
-        _.forEach(Memory.config.rooms, function(name) {
-            var room = Game.rooms[name];
+        _.forEach(Memory.config.rooms, (name) => {
+            let room = Game.rooms[name];
             if(room != null) {
                 room.run();
             }
         });
-        _.forEach(Game.creeps, function(creep) {
+        _.forEach(Game.creeps, (creep) => {
             creep.run();
         });
     },
@@ -31,24 +31,24 @@ var m = {
             towers: {}
         });
         if(_.isEmpty(Memory.config.rooms)) {
-            _.forEach(Game.spawns, function(spawn) {
+            _.forEach(Game.spawns, (spawn) => {
                 Memory.config.rooms.push(spawn.room.name);
             });
         }
     },
     /** Clear unused memory **/
     clearMem: function() {
-        _.forEach(Memory.creeps, function(value, name) {
+        _.forEach(Memory.creeps, (value, name) => {
             if(!Game.creeps[name]) {
                 delete Memory.creeps[name];
             }
         });
-        _.forEach(Memory.towers, function(value, id) {
+        _.forEach(Memory.towers, (value, id) => {
             if(!Game.getObjectById(id)) {
                 delete Memory.towers[id];
             }
         });
-        _.remove(Memory.config.blacklist, function(id) {
+        _.remove(Memory.config.blacklist, (id) => {
             return Game.getObjectById(id) == null;
         });
     }

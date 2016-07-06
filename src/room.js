@@ -1,12 +1,12 @@
-var _ = require('lodash');
-var sh = require('shared');
+let _ = require('lodash');
+let sh = require('shared');
 Room.prototype.run = function() {
     if(this.memory.maxHarvesters == null) {
-        var count = 0;
-        var sources = this.find(FIND_SOURCES);
-        _.forEach(sources, function(source) {
-            var tiles = this.lookForAtArea(LOOK_TERRAIN, source.pos.y-1, source.pos.x-1, source.pos.y+1, source.pos.x+1, true);
-            _.forEach(tiles, function(tile) {
+        let count = 0;
+        let sources = this.find(FIND_SOURCES);
+        _.forEach(sources, (source) => {
+            let tiles = this.lookForAtArea(LOOK_TERRAIN, source.pos.y-1, source.pos.x-1, source.pos.y+1, source.pos.x+1, true);
+            _.forEach(tiles, (tile) => {
                 if(tile.terrain != 'wall') {
                     count++;
                 }
@@ -15,21 +15,21 @@ Room.prototype.run = function() {
         this.memory.maxHarvesters = count;
     }
     if(this.mode == MODE_SIMULATION && !this.memory.test) {
-        _.forEach(this.find(FIND_SOURCES), function(source) {
-            var vals = PathFinder.search(Game.spawns.Spawn1.pos, {pos: source.pos, range: 1});
+        _.forEach(this.find(FIND_SOURCES), (source) => {
+            let vals = PathFinder.search(Game.spawns.Spawn1.pos, {pos: source.pos, range: 1});
             console.log(vals.path);
-            _.forEach(vals.path, function(val) {
+            _.forEach(vals.path, (val) => {
                 this.createConstructionSite(val, STRUCTURE_ROAD);
             });
         });
         this.memory.test = true;
     }
-    var spawns = this.find(FIND_MY_STRUCTURES, {filter: function(target) {return target.structureType == STRUCTURE_SPAWN;}});
-    _.forEach(spawns, function(spawn) {
+    let spawns = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_SPAWN});
+    _.forEach(spawns, (spawn) => {
         spawn.run();
     });
-    var towers = this.find(FIND_MY_STRUCTURES, {filter: function(target) {return target.structureType == STRUCTURE_TOWER;}});
-    _.forEach(towers, function(tower) {
+    let towers = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_TOWER});
+    _.forEach(towers, (tower) => {
         tower.run();
     });
 };
@@ -41,10 +41,10 @@ Room.prototype.isMine = function() {
     }
 };
 Room.prototype.hasHostileAttacker = function() {
-    var targets = this.find(FIND_HOSTILE_CREEPS, {
-        filter: function(target) {
-            var hasAttack = false;
-            _.forEach(target.body, function(part) {
+    let targets = this.find(FIND_HOSTILE_CREEPS, {
+        filter: (target) => {
+            let hasAttack = false;
+            _.forEach(target.body, (part) => {
                 if(_.includes(sh.ATTACKER_PARTS, part.type)) {
                     hasAttack = true;
                     return false;
@@ -57,18 +57,18 @@ Room.prototype.hasHostileAttacker = function() {
 };
 Room.prototype.getContainerCount = function() {
     return _.size(this.find(FIND_STRUCTURES, {
-        filter: function(target) {return target.structureType == STRUCTURE_CONTAINER;}}));
+        filter: (target) => target.structureType == STRUCTURE_CONTAINER}));
 };
 Room.prototype.getTowerCount = function() {
     return _.size(this.find(FIND_MY_STRUCTURES, {
-        filter: function(target) {return target.structureType == STRUCTURE_TOWER;}}));
+        filter: (target) => target.structureType == STRUCTURE_TOWER}));
 };
 Room.prototype.findConstructionSites = function(types) {
     if(types == null) {
         return this.find(FIND_MY_CONSTRUCTION_SITES);
     } else {
         return this.find(FIND_MY_CONSTRUCTION_SITES, {
-            filter: function(target) {
+            filter: (target) => {
                 return _.includes(types, target.structureType);
             }
         });
@@ -76,7 +76,7 @@ Room.prototype.findConstructionSites = function(types) {
 };
 Room.prototype.findNotFullContainers = function() {
     return this.find(FIND_STRUCTURES, {
-        filter: function(target) {
+        filter: (target) => {
             return target.structureType == STRUCTURE_CONTAINER
                 && target.store[RESOURCE_ENERGY] < target.storeCapacity;
         }

@@ -1,6 +1,6 @@
-var sh = require('shared');
+let sh = require('shared');
 StructureTower.prototype.run = function() {
-    var target = this.pos.findNearestAttacker();
+    let target = this.pos.findNearestAttacker();
     if(target != null) {
         if(this.attack(target) == OK) {
             return;
