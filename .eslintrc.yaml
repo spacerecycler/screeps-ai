@@ -24,6 +24,7 @@
             - error
             - always
     globals:
+        _: false
         OK: false
         ERR_NOT_IN_RANGE: false
         ERR_NOT_ENOUGH_RESOURCES: false

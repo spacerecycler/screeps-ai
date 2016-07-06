@@ -1,4 +1,3 @@
-let _ = require('lodash');
 let sh = require('shared');
 StructureSpawn.prototype.run = function() {
     let spawnedOrMissing = false;

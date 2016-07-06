@@ -1,4 +1,3 @@
-let _ = require('lodash');
 let sh = require('shared');
 Room.prototype.run = function() {
     if(this.memory.maxHarvesters == null) {

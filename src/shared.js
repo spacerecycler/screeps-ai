@@ -1,4 +1,3 @@
-let _ = require('lodash');
 let sh = {
     CREEP_HARVESTER: 'harvester',
     CREEP_UPGRADER: 'upgrader',

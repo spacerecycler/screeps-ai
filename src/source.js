@@ -1,4 +1,3 @@
-let _ = require('lodash');
 let sh = require('shared');
 Source.prototype.countHarvestSpots = function() {
     let count = 0;

@@ -1,4 +1,3 @@
-let _ = require('lodash');
 let sh = require('shared');
 RoomPosition.prototype.findNearestAttacker = function() {
     return this.findClosestByRange(FIND_HOSTILE_CREEPS, {
