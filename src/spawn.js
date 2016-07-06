@@ -71,11 +71,11 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         if(_.size(room.findConstructionSites()) > 0) {
             expected[sh.CREEP_BUILDER] = 1;
         }
-        if(room.memory.type != sh.ROOM_KEEPER_LAIR && room.getTowerCount() == 0) {
+        if(room.memory.role != sh.ROOM_KEEPER_LAIR && room.getTowerCount() == 0) {
             expected[sh.CREEP_REPAIRER] = 1;
         }
         if(!room.isMine()) {
-            if(room.memory.type == sh.ROOM_EXPANSION) {
+            if(room.memory.role == sh.ROOM_EXPANSION) {
                 if(room.controller == null || room.controller.reservation == null) {
                     room.memory.needReserve = true;
                 } else {

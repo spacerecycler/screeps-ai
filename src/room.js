@@ -13,11 +13,11 @@ Room.prototype.run = function() {
         });
         this.memory.maxHarvesters = count;
     }
-    if(!this.isMine() && this.memory.type == null) {
+    if(!this.isMine() && this.memory.role == null) {
         if(this.isKeeperLairRoom()) {
-            this.memory.type = sh.ROOM_KEEPER_LAIR;
+            this.memory.role = sh.ROOM_KEEPER_LAIR;
         } else {
-            this.memory.type = sh.ROOM_EXPANSION;
+            this.memory.role = sh.ROOM_EXPANSION;
         }
     }
     if(this.mode == MODE_SIMULATION && !this.memory.test) {
