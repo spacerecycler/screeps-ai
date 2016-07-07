@@ -350,7 +350,7 @@ Creep.prototype.fillEnergy = function() {
         if(target == null && this.room.isStorageNotEmpty()) {
             target = this.room.storage;
         }
-        if(target == null && this.room.storage == null && this.room.getContainerCount() == 0) {
+        if(target == null && this.room.storage == null && this.room.getContainerCount() == 0 && this.memory.role != sh.CREEP_FILLER) {
             target = this.pos.findClosestByPath(FIND_SOURCES);
         }
         if(target == null) {

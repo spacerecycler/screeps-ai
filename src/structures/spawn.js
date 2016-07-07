@@ -1,5 +1,14 @@
 let sh = require('shared');
 StructureSpawn.prototype.run = function() {
+    if(this.room.mode == MODE_SIMULATION && !this.memory.roadsToSources) {
+        for(let source of this.room.find(FIND_SOURCES)) {
+            let vals = PathFinder.search(this.pos, {pos: source.pos, range: 1});
+            for(let val of vals.path) {
+                this.room.createConstructionSite(val, STRUCTURE_ROAD);
+            }
+        }
+        this.memory.roadsToSources = true;
+    }
     let spawnedOrMissing = false;
     spawnedOrMissing = this.spawnMissingCreep(this.room.name);
     if(!spawnedOrMissing) {

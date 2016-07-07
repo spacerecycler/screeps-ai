@@ -10,18 +10,16 @@ Room.prototype.run = function() {
     if(this.controller != null) {
         this.memory.controllerReserveSpots = this.controller.countReserveSpots();
     }
-    if(this.mode == MODE_SIMULATION && !this.memory.test) {
-        for(let source of this.find(FIND_SOURCES)) {
-            let vals = PathFinder.search(Game.spawns.Spawn1.pos, {pos: source.pos, range: 1});
-            console.log(vals.path);
-            for(let val of vals.path) {
-                this.createConstructionSite(val, STRUCTURE_ROAD);
-            }
-        }
-        this.memory.test = true;
-    }
     let spawns = this.find(FIND_MY_STRUCTURES, {
         filter: (t) => t.structureType == STRUCTURE_SPAWN});
+    if(!_.isEmpty(spawns) && _.isEmpty(this.findIdleFlags())) {
+        let result = this.createFlag(spawns[0].pos.x, spawns[0].pos.y-3);
+        if(_.isString(result)) {
+            Memory.flags[result] = {type: sh.FLAG_IDLE};
+        } else {
+            console.error('error creating flag');
+        }
+    }
     for(let spawn of spawns) {
         spawn.run();
     }
@@ -103,4 +101,7 @@ Room.prototype.findSourcesForHarvester = function() {
 };
 Room.prototype.checkNeedHarvester = function() {
     return !_.isEmpty(this.findSourcesForHarvester());
+};
+Room.prototype.findIdleFlags = function() {
+    return this.find(FIND_FLAGS, {filter: (flag) => flag.memory.type == sh.FLAG_IDLE});
 };
