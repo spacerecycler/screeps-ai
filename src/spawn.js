@@ -110,7 +110,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         }
     }
     if(Memory.rooms[name].type == sh.ROOM_KEEPER_LAIR) {
-        expected[sh.CREEP_DEFENDER] = 1;
+        //expected[sh.CREEP_DEFENDER] = 1;
     }
     return expected;
 };
