@@ -110,7 +110,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         }
     }
     if(Memory.rooms[name].type == sh.ROOM_KEEPER_LAIR) {
-        //expected[sh.CREEP_DEFENDER] = 1;
+        expected[sh.CREEP_DEFENDER] = 1;
     }
     return expected;
 };
@@ -163,10 +163,11 @@ StructureSpawn.prototype.chooseBody = function(role) {
         return [MOVE];
     }
     if(role == sh.CREEP_DEFENDER) {
-        let body = [];
-        _.times(Math.trunc(energyCapAvail/150), () => {
-            body.push(ATTACK,TOUGH,TOUGH,MOVE);
-        });
+        let div = Math.trunc(energyCapAvail/140);
+        let body = Array(div*3);
+        _.fill(body, TOUGH, 0, div);
+        _.fill(body, MOVE, div, div*2);
+        _.fill(body, ATTACK, div*2, div*3);
         return body;
     }
     let body = [];
