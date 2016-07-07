@@ -9,6 +9,7 @@
     rules:
         no-undef: warn
         no-console: off
+        no-unused-vars: warn
         semi: error
         no-extra-semi: error
         no-extra-parens: error

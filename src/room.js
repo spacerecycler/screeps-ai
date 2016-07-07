@@ -2,15 +2,14 @@ let sh = require('shared');
 Room.prototype.run = function() {
     if(this.memory.maxHarvesters == null) {
         let count = 0;
-        let sources = this.find(FIND_SOURCES);
-        _.forEach(sources, (source) => {
+        for(let source of this.find(FIND_SOURCES)) {
             let tiles = this.lookForAtArea(LOOK_TERRAIN, source.pos.y-1, source.pos.x-1, source.pos.y+1, source.pos.x+1, true);
-            _.forEach(tiles, (tile) => {
+            for(let tile of tiles) {
                 if(tile.terrain != 'wall') {
                     count++;
                 }
-            });
-        });
+            }
+        }
         this.memory.maxHarvesters = count;
     }
     if(!this.isMine() && this.memory.type == null) {
@@ -21,48 +20,43 @@ Room.prototype.run = function() {
         }
     }
     if(this.mode == MODE_SIMULATION && !this.memory.test) {
-        _.forEach(this.find(FIND_SOURCES), (source) => {
+        for(let source of this.find(FIND_SOURCES)) {
             let vals = PathFinder.search(Game.spawns.Spawn1.pos, {pos: source.pos, range: 1});
             console.log(vals.path);
-            _.forEach(vals.path, (val) => {
+            for(let val of vals.path) {
                 this.createConstructionSite(val, STRUCTURE_ROAD);
-            });
-        });
+            }
+        }
         this.memory.test = true;
     }
     let spawns = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_SPAWN});
-    _.forEach(spawns, (spawn) => {
+    for(let spawn of spawns) {
         spawn.run();
-    });
+    }
     let towers = this.find(FIND_MY_STRUCTURES, {filter: (target) => target.structureType == STRUCTURE_TOWER});
-    _.forEach(towers, (tower) => {
+    for(let tower of towers) {
         tower.run();
-    });
-};
-Room.prototype.isMine = function() {
-    if(this.controller != null) {
-        return this.controller.my;
-    } else {
-        return false;
     }
 };
+Room.prototype.isMine = function() {
+    return this.controller != null && this.controller.my;
+};
 Room.prototype.isKeeperLairRoom = function() {
-    return !_.isEmpty(this.find(FIND_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_KEEPER_LAIR}));
+    return !_.isEmpty(this.find(FIND_STRUCTURES, {
+        filter: (t) => t.structureType == STRUCTURE_KEEPER_LAIR}));
 };
 Room.prototype.hasHostileAttacker = function() {
     let targets = this.find(FIND_HOSTILE_CREEPS, {
         filter: (target) => {
-            let hasAttack = false;
-            _.forEach(target.body, (part) => {
-                if(_.includes(sh.ATTACKER_PARTS, part.type)) {
-                    hasAttack = true;
-                    return false;
+            for(let part of target.body) {
+                if(sh.ATTACKER_PARTS.has(part.type)) {
+                    return true;
                 }
-            });
-            return hasAttack;
+            }
+            return false;
         }
     });
-    return _.size(targets) > 0;
+    return !_.isEmpty(targets);
 };
 Room.prototype.getContainerCount = function() {
     return _.size(this.find(FIND_STRUCTURES, {

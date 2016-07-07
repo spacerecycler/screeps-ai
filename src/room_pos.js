@@ -2,14 +2,12 @@ let sh = require('shared');
 RoomPosition.prototype.findNearestAttacker = function() {
     return this.findClosestByRange(FIND_HOSTILE_CREEPS, {
         filter: (target) => {
-            let hasAttack = false;
-            _.forEach(target.body, (part) => {
-                if(_.includes(sh.ATTACKER_PARTS, part.type)) {
-                    hasAttack = true;
-                    return false;
+            for(let part of target.body) {
+                if(sh.ATTACKER_PARTS.has(part.type)) {
+                    return true;
                 }
-            });
-            return hasAttack;
+            }
+            return false;
         }
     });
 };
