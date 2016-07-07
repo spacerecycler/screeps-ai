@@ -17,6 +17,7 @@
     "eslint": "^3.0.0",
     "grunt": "^1.0.1",
     "grunt-eslint": "^19.0.0",
+    "grunt-gitinfo": "^0.1.8",
     "grunt-screeps": "^1.2.1",
     "load-grunt-tasks": "^3.5.0"
   }

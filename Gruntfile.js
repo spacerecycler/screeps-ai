@@ -10,7 +10,7 @@ module.exports = (grunt) => {
             options: {
                 email: '<%= secret.email %>',
                 password: '<%= secret.password %>',
-                branch: 'default',
+                branch: '<%= gitinfo.local.branch.current.name %>',
                 ptr: false
             },
             dist: {
@@ -18,5 +18,5 @@ module.exports = (grunt) => {
             }
         },
     });
-    grunt.registerTask('default', ['eslint']);
+    grunt.registerTask('default', ['gitinfo', 'eslint', 'screeps']);
 };
