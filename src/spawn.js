@@ -61,7 +61,8 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         }
         if(room.isMine()) {
             if(room.storage != null && room.storage.store[RESOURCE_ENERGY] > 10000) {
-                expected.set(sh.CREEP_UPGRADER, 2);
+                let count = Math.min(4, Math.trunc(room.storage.store[RESOURCE_ENERGY]/10000));
+                expected.set(sh.CREEP_UPGRADER, count);
             } else {
                 expected.set(sh.CREEP_UPGRADER, 1);
             }
