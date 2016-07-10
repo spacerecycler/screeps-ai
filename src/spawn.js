@@ -61,7 +61,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         }
         if(room.isMine()) {
             if(room.storage != null && room.storage.store[RESOURCE_ENERGY] > 10000) {
-                let count = Math.min(4, Math.trunc(room.storage.store[RESOURCE_ENERGY]/10000));
+                let count = Math.min(2, Math.trunc(room.storage.store[RESOURCE_ENERGY]/10000));
                 expected.set(sh.CREEP_UPGRADER, count);
             } else {
                 expected.set(sh.CREEP_UPGRADER, 1);
@@ -109,7 +109,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         }
     }
     if(Memory.rooms[name].type == sh.ROOM_KEEPER_LAIR) {
-        //expected.set(sh.CREEP_DEFENDER, 1);
+        //expected.set(sh.CREEP_WARRIOR, 1);
     }
     return expected;
 };
@@ -123,6 +123,7 @@ StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
                 room: name
             });
             if(_.isString(result)) {
+                // console.log('body: ' + body);
                 console.log('Spawning new ' + role + ' for ' + name + ': ' + result);
                 return true;
             } else {
@@ -137,49 +138,61 @@ StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
 StructureSpawn.prototype.chooseBody = function(role) {
     let totalCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == role);
     let energyCapAvail = this.room.energyCapacityAvailable;
-    if(role == sh.CREEP_CAPTURER) {
-        let body = [];
-        _.times(Math.trunc(energyCapAvail/650), () => {
-            body.push(CLAIM,MOVE);
-        });
-        return body;
-    }
-    if(role == sh.CREEP_FILLER || role == sh.CREEP_TRANSPORTER) {
-        if(role == sh.CREEP_FILLER && totalCreeps == 0) {
-            return [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE];
-        }
-        let body = [];
-        let div = Math.trunc(energyCapAvail/100);
-        _.times(div, () => {
-            body.push(CARRY,MOVE);
-        });
-        return body;
-    }
-    if(role == sh.CREEP_HARVESTER && totalCreeps == 0) {
-        return [WORK,WORK,CARRY,MOVE];
-    }
-    if(role == sh.CREEP_SCOUT) {
-        return [MOVE];
-    }
-    if(role == sh.CREEP_DEFENDER) {
-        let div = Math.trunc(energyCapAvail/140);
-        let body = Array(div*3);
-        _.fill(body, TOUGH, 0, div);
-        _.fill(body, MOVE, div, div*2);
-        _.fill(body, ATTACK, div*2, div*3);
-        return body;
-    }
     let body = [];
-    let div = energyCapAvail/50;
-    // number of 50 cost parts * 5/8 /2 = num work parts
-    let numWorkParts = Math.ceil(div*5 /16);
-    let remainingParts = div - numWorkParts*2;
-    _.times(numWorkParts, () => body.push(WORK));
-    _.times(Math.trunc(remainingParts/2), () => {
-        body.push(CARRY,MOVE);
-    });
-    if(remainingParts%2 > 0) {
-        body.push(MOVE);
+    let div = 0;
+    switch(role) {
+        case sh.CREEP_CAPTURER:
+            div = Math.min(2, Math.trunc(energyCapAvail/650));
+            this.addParts(body, div, CLAIM);
+            this.addParts(body, div, MOVE);
+            return body;
+        case sh.CREEP_FILLER:
+        case sh.CREEP_TRANSPORTER:
+            div = Math.min(10, Math.trunc(energyCapAvail/100));
+            if(totalCreeps == 0) {
+                div = 3;
+            }
+            this.addParts(body, div, CARRY);
+            this.addParts(body, div, MOVE);
+            return body;
+        case sh.CREEP_SCOUT:
+            return [MOVE];
+        case sh.CREEP_WARRIOR:
+            div = Math.trunc(energyCapAvail/140);
+            this.addParts(body, div, TOUGH);
+            this.addParts(body, div, MOVE);
+            this.addParts(body, div, ATTACK);
+            return body;
+        case sh.CREEP_HARVESTER:
+            switch(totalCreeps) {
+                case 0:
+                    return [WORK,WORK,CARRY,MOVE];
+                case 1:
+                    return [WORK,WORK,WORK,CARRY,MOVE];
+                default: {
+                    // optimize creep to harvest
+                    let body = [];
+                    this.addParts(body, 5, WORK);
+                    body.push(CARRY);
+                    body.push(MOVE);
+                    return body;
+                }
+            }
+        case sh.CREEP_BUILDER:
+            body = [WORK,CARRY,MOVE,MOVE];
+            return body;
+        case sh.CREEP_UPGRADER:
+        case sh.CREEP_REPAIRER:
+            this.addParts(body, 5, WORK);
+            body.push(CARRY);
+            this.addParts(body, 6, MOVE);
+            return body;
+        default:
+            return body;
     }
-    return body;
+};
+StructureSpawn.prototype.addParts = function(body, times, part) {
+    _.times(times, () => {
+        body.push(part);
+    });
 };

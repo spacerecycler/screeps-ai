@@ -16,5 +16,13 @@ Source.prototype.needsHarvester = function() {
                 && creep.memory.targetSource == this.id;
         }
     });
-    return _.size(creeps) < this.countHarvestSpots();
+    let workParts = 0;
+    for(let creep of creeps) {
+        for(let part of creep.body) {
+            if(part.type == WORK) {
+                workParts++;
+            }
+        }
+    }
+    return workParts != 5 && _.size(creeps) < this.countHarvestSpots();
 };

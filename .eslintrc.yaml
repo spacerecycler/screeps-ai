@@ -24,6 +24,7 @@
         no-cond-assign:
             - error
             - always
+        no-case-declarations: warn
     globals:
         _: false
         OK: false

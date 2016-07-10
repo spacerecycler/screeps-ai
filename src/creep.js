@@ -28,8 +28,8 @@ Creep.prototype.run = function() {
                 case sh.CREEP_SCOUT:
                     this.runScout();
                     return;
-                case sh.CREEP_DEFENDER:
-                    this.runDefender();
+                case sh.CREEP_WARRIOR:
+                    this.runWarrior();
                     return;
             }
         } else {
@@ -180,7 +180,7 @@ Creep.prototype.runScout = function() {
         this.suicide();
     }
 };
-Creep.prototype.runDefender = function() {
+Creep.prototype.runWarrior = function() {
     let target = this.pos.findNearestAttacker();
     if(target != null) {
         if(this.attack(target) == ERR_NOT_IN_RANGE) {
