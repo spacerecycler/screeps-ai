@@ -88,6 +88,8 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         if(Memory.rooms[name] == null || Memory.rooms[name].type == null) {
             expected.set(sh.CREEP_SCOUT, 1);
         } else if (Memory.rooms[name].type == sh.ROOM_EXPANSION) {
+            expected.set(sh.CREEP_HEALER, 1);
+            expected.set(sh.CREEP_RANGER, 1);
             expected.set(sh.CREEP_REPAIRER, 1);
             Memory.rooms[name].needReserve = true;
         }
@@ -160,6 +162,16 @@ StructureSpawn.prototype.chooseBody = function(role) {
             this.addParts(body, div, MOVE);
             this.addParts(body, div, ATTACK);
             return body;
+        case sh.CREEP_RANGER:
+            this.addParts(body, 5, TOUGH);
+            this.addParts(body, 7, MOVE);
+            this.addParts(body, 2, RANGED_ATTACK);
+            return body;
+        case sh.CREEP_HEALER:
+            this.addParts(body, 5, TOUGH);
+            this.addParts(body, 6, MOVE);
+            body.push(HEAL);
+            return body;
         case sh.CREEP_HARVESTER:
             switch(totalCreeps) {
                 case 0:
@@ -176,13 +188,13 @@ StructureSpawn.prototype.chooseBody = function(role) {
                 }
             }
         case sh.CREEP_BUILDER:
-            body = [WORK,CARRY,MOVE,MOVE];
+            body = [WORK,CARRY,CARRY,MOVE,MOVE,MOVE];
             return body;
         case sh.CREEP_UPGRADER:
         case sh.CREEP_REPAIRER:
             this.addParts(body, 5, WORK);
-            body.push(CARRY);
-            this.addParts(body, 6, MOVE);
+            this.addParts(body, 2, CARRY);
+            this.addParts(body, 7, MOVE);
             return body;
         default:
             return body;

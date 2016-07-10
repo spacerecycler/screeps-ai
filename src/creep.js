@@ -39,6 +39,12 @@ Creep.prototype.run = function() {
                 case sh.CREEP_WARRIOR:
                     this.runWarrior();
                     return;
+                case sh.CREEP_RANGER:
+                    this.runRanger();
+                    return;
+                case sh.CREEP_HEALER:
+                    this.runHealer();
+                    return;
             }
         } else {
             if(this.memory.role != sh.CREEP_TRANSPORTER
@@ -221,6 +227,31 @@ Creep.prototype.runWarrior = function() {
         if(this.attack(target) == ERR_NOT_IN_RANGE) {
             this.moveToS(target);
         }
+    }
+};
+Creep.prototype.runRanger = function() {
+    let target = this.pos.findNearestAttacker();
+    if(target != null) {
+        if(this.pos.inRangeTo(target, 3)) {
+            this.rangedAttack(target);
+        } else {
+            this.moveToS(target);
+        }
+    } else {
+        this.idle();
+    }
+};
+Creep.prototype.runHealer = function() {
+    let target = this.pos.findNearestHurtCreep();
+    if(target != null) {
+        if(this.pos.isNearTo(target)) {
+            this.heal(target);
+        } else {
+            this.rangedHeal(target);
+            this.moveToS(target);
+        }
+    } else {
+        this.idle();
     }
 };
 Creep.prototype.ensureRoom = function() {

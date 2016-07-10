@@ -45,6 +45,7 @@
         ATTACK: false
         RANGED_ATTACK: false
         TOUGH: false
+        HEAL: false
         CLAIM: false
         BODYPART_COST: false
         HARVEST_POWER: false
