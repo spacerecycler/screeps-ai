@@ -59,10 +59,7 @@ Creep.prototype.setupMem = function() {
     }
     if(this.memory.role == sh.CREEP_HARVESTER && this.memory.targetSource == null) {
         let sources = Game.rooms[this.memory.room].find(FIND_SOURCES, {
-            filter: (source) => {
-                return source.needsHarvester();
-            }
-        });
+            filter: (s) => s.needsHarvester()});
         this.memory.targetSource = _.head(sources).id;
     }
 };
