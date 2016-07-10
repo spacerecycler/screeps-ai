@@ -111,7 +111,7 @@ Creep.prototype.runFiller = function() {
         target = this.pos.findNearestFillTarget([STRUCTURE_TOWER]);
     }
     if(target != null) {
-        if(this.isNearTo(target)) {
+        if(this.pos.isNearTo(target)) {
             this.transfer(target, RESOURCE_ENERGY);
         } else {
             this.moveToS(target);
