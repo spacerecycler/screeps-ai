@@ -1,6 +1,14 @@
 let sh = require('shared');
 let flatMap = _.compose(_.compact, _.flatten, _.map);
 Creep.prototype.run = function() {
+    if(this.memory.numWorkParts == null) {
+        this.memory.numWorkParts = 0;
+        for(let part of this.body) {
+            if(part.type == WORK) {
+                this.memory.numWorkParts++;
+            }
+        }
+    }
     if(this.memory.role == sh.CREEP_TRANSPORTER || this.ensureRoom()) {
         if(this.carryCapacity == 0 || this.isCreepWorking()) {
             switch (this.memory.role) {

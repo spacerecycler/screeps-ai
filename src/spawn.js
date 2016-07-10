@@ -38,19 +38,16 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
     let expected = new Map();
     let room = Game.rooms[name];
     if(room != null) {
+        let harvesters = _.size(_.filter(Game.creeps, (creep) => creep.memory.role == sh.CREEP_HARVESTER && creep.memory.room == name));
+        for(let source of room.find(FIND_SOURCES)) {
+            if(source.needsHarvester()) {
+                harvesters++;
+            }
+        }
+        expected.set(sh.CREEP_HARVESTER, harvesters);
         let containerCount = room.getContainerCount();
-        if(room.storage != null) {
-            expected.set(sh.CREEP_HARVESTER, room.memory.maxHarvesters);
-        } else if(containerCount > 0) {
-            expected.set(sh.CREEP_HARVESTER, Math.min(containerCount, room.memory.maxHarvesters));
-            if(!room.isMine()) {
-                expected.set(sh.CREEP_TRANSPORTER, Math.min(containerCount, 2));
-            }
-        } else {
-            let structureCount = _.size(room.find(FIND_MY_STRUCTURES));
-            if(structureCount > 0) {
-                expected.set(sh.CREEP_HARVESTER, 2);
-            }
+        if(containerCount > 0 && !this.room.isMine()) {
+            expected.set(sh.CREEP_TRANSPORTER, Math.min(containerCount, 2));
         }
         if(room.energyCapacityAvailable > 0) {
             if(room.energyCapacityAvailable > 400) {
