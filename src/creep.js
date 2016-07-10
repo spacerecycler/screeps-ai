@@ -165,7 +165,11 @@ Creep.prototype.runHarvester = function() {
         }
     }
     let target = null;
-    if(this.room.isStorageNotFull()) {
+    target = this.pos.findNearestLink();
+    if(target != null && !this.pos.isNearTo(target)) {
+        target = null;
+    }
+    if(target == null && this.room.isStorageNotFull()) {
         target = this.room.storage;
     }
     if(target == null) {

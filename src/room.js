@@ -30,7 +30,7 @@ Room.prototype.run = function() {
     let links = this.find(FIND_MY_STRUCTURES, {
         filter: (t) => t.structureType == STRUCTURE_LINK});
     for(let link of links) {
-        // link.run();
+        link.run();
     }
 };
 Room.prototype.isMine = function() {

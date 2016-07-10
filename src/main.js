@@ -1,5 +1,6 @@
 require('source');
 require('room');
+require('link');
 require('room_pos');
 require('spawn');
 require('tower');
@@ -22,6 +23,9 @@ let m = {
     setupMem: function() {
         if(Memory.towers == null) {
             Memory.towers = {};
+        }
+        if(Memory.links == null) {
+            Memory.links = {};
         }
         if(Memory.config == null) {
             Memory.config = {};

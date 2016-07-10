@@ -69,6 +69,7 @@
         Creep: false
         Resource: false
         Source: false
+        StructureLink: false
         StructureSpawn: false
         StructureStorage: false
         StructureTower: false

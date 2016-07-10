@@ -47,6 +47,14 @@ RoomPosition.prototype.findNearestFillTarget = function(types) {
         }
     });
 };
+RoomPosition.prototype.findNearestLink = function() {
+    return this.findClosestByRange(FIND_MY_STRUCTURES, {
+        filter: (t) => {
+            return t.structureType == STRUCTURE_LINK
+                && t.energy < t.energyCapacity;
+        }
+    });
+};
 RoomPosition.prototype.findNearestNotFullContainer = function() {
     return this.findClosestByRange(FIND_STRUCTURES, {
         filter: (t) => {
