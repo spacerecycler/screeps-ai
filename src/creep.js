@@ -308,6 +308,9 @@ Creep.prototype.fillEnergy = function() {
         if(!this.room.hasHostileAttacker()) {
             target = this.pos.findClosestByRange(FIND_DROPPED_ENERGY);
         }
+        if(target == null) {
+            target = this.pos.findNearestLink();
+        }
         if(target == null && this.room.isStorageNotEmpty()) {
             target = this.room.storage;
         }
@@ -335,6 +338,8 @@ Creep.prototype.fillEnergy = function() {
                 // }
             } else if(target instanceof Resource) {
                 this.pickup(target);
+            } else if(target instanceof StructureLink) {
+                target.transferEnergy(this);
             } else {
                 console.log('error unable to load energy');
             }

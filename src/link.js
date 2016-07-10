@@ -6,7 +6,7 @@ StructureLink.prototype.run = function() {
         let source = this.pos.findClosestByRange(FIND_SOURCES);
         Memory.links[this.id].nearSource = this.pos.inRangeTo(source, 2);
     }
-    if(this.cooldown <= 0) {
+    if(this.cooldown <= 0 && this.energy >= this.energyCapacity*0.9) {
         let links = this.room.find(FIND_MY_STRUCTURES, {
             filter: (t) => {
                 return t.structureType == STRUCTURE_LINK
