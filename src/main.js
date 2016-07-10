@@ -58,6 +58,11 @@ let m = {
                 delete Memory.towers[id];
             }
         });
+        _.forEach(Memory.links, (value, id) => {
+            if(!Game.getObjectById(id)) {
+                delete Memory.links[id];
+            }
+        });
         _.remove(Memory.config.blacklist, (id) => {
             return Game.getObjectById(id) == null;
         });
