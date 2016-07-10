@@ -260,6 +260,15 @@ Creep.prototype.isCreepWorking = function() {
 Creep.prototype.fillEnergy = function() {
     // most creeps must harvest
     let target = Game.getObjectById(this.memory.energyTarget);
+    // if(target instanceof StructureContainer || target instanceof StructureStorage) {
+    //     if(target.projectedEnergy == null) {
+    //         target.projectedEnergy = target.storage[RESOURCE_ENERGY];
+    //     }
+    //     if(target.storage[RESOURCE_ENERGY] == 0 || target.projectedEnergy <= 0) {
+    //         target = null;
+    //         delete this.memory.energyTarget;
+    //     }
+    // }
     if(target == null) {
         if(!this.room.hasHostileAttacker()) {
             target = this.pos.findClosestByRange(FIND_DROPPED_ENERGY);
@@ -278,34 +287,29 @@ Creep.prototype.fillEnergy = function() {
         }
     }
     if(target != null) {
-        if(target instanceof Source) {
-            if(this.pos.isNearTo(target)) {
+        if(this.pos.isNearTo(target)) {
+            if(target instanceof Source) {
                 this.harvest(target);
-            // if(this.carry[RESOURCE_ENERGY] + this.memory.numWorkParts*HARVEST_POWER < this.carryCapacity) {
-            //     return;
-            // }
+            } else if(target instanceof StructureContainer || target instanceof StructureStorage) {
+                // let energyNeeded = this.carryCapacity - this.carry[RESOURCE_ENERGY];
+                target.transfer(this, RESOURCE_ENERGY);
+                // if(target.projectedEnergy == null) {
+                //     target.projectedEnergy = target.storage[RESOURCE_ENERGY] - energyNeeded;
+                // } else {
+                //     target.projectedEnergy -= energyNeeded;
+                // }
+            } else if(target instanceof Resource) {
+                this.pickup(target);
             } else {
-                this.moveToS(target);
-            }
-        } else if(target instanceof StructureContainer || target instanceof StructureStorage) {
-            switch(target.transfer(this, RESOURCE_ENERGY)) {
-                case ERR_NOT_IN_RANGE:
-                    this.moveToS(target);
-                    break;
-                case ERR_NOT_ENOUGH_RESOURCES:
-                    delete this.memory.energyTarget;
-                    break;
-            }
-        } else if(target instanceof Resource) {
-            if(this.pickup(target) == ERR_NOT_IN_RANGE) {
-                this.moveToS(target);
+                console.log('error unable to load energy');
             }
         } else {
-            console.log('error unable to load energy');
+            this.moveToS(target);
         }
     } else {
         this.idle();
     }
+    return false;
 };
 Creep.prototype.moveToS = function(target) {
     this.moveTo(target, {reusePath: 3});
