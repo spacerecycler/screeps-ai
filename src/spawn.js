@@ -82,14 +82,19 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
                         room.memory.needReserve = false;
                     }
                 }
+                if(room.hasHurtCreep()) {
+                    expected.set(sh.CREEP_HEALER, 1);
+                }
+                if(room.hasHostileAttacker()) {
+                    expected.set(sh.CREEP_HEALER, 1);
+                    expected.set(sh.CREEP_RANGER, 1);
+                }
             }
         }
     } else {
         if(Memory.rooms[name] == null || Memory.rooms[name].type == null) {
             expected.set(sh.CREEP_SCOUT, 1);
         } else if (Memory.rooms[name].type == sh.ROOM_EXPANSION) {
-            expected.set(sh.CREEP_HEALER, 1);
-            expected.set(sh.CREEP_RANGER, 1);
             expected.set(sh.CREEP_REPAIRER, 1);
             Memory.rooms[name].needReserve = true;
         }
