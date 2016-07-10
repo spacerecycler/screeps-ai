@@ -47,6 +47,7 @@
         TOUGH: false
         CLAIM: false
         BODYPART_COST: false
+        HARVEST_POWER: false
         STRUCTURE_SPAWN: false
         STRUCTURE_EXTENSION: false
         STRUCTURE_ROAD: false

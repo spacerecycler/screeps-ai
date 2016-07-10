@@ -46,7 +46,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         }
         expected.set(sh.CREEP_HARVESTER, harvesters);
         let containerCount = room.getContainerCount();
-        if(containerCount > 0 && !this.room.isMine()) {
+        if(containerCount > 0 && !room.isMine()) {
             expected.set(sh.CREEP_TRANSPORTER, Math.min(containerCount, 2));
         }
         if(room.energyCapacityAvailable > 0) {

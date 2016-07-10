@@ -1,20 +1,20 @@
 let sh = require('shared');
 let flatMap = _.compose(_.compact, _.flatten, _.map);
 Creep.prototype.run = function() {
-    if(this.memory.numWorkParts == null) {
-        this.memory.numWorkParts = 0;
-        for(let part of this.body) {
-            if(part.type == WORK) {
-                this.memory.numWorkParts++;
-            }
-        }
-    }
+    this.setupMem();
     if(this.memory.role == sh.CREEP_TRANSPORTER || this.ensureRoom()) {
+        // if(!this.isCreepWorking()) {
+        //     let full = this.fillEnergy();
+        //     if(!full) {
+        //         return;
+        //     }
+        // }
+        if(this.memory.role == sh.CREEP_HARVESTER) {
+            this.runHarvester();
+            return;
+        }
         if(this.carryCapacity == 0 || this.isCreepWorking()) {
             switch (this.memory.role) {
-                case sh.CREEP_HARVESTER:
-                    this.runHarvester();
-                    return;
                 case sh.CREEP_UPGRADER:
                     this.runUpgrader();
                     return;
@@ -46,6 +46,24 @@ Creep.prototype.run = function() {
                 this.fillEnergy();
             }
         }
+    }
+};
+Creep.prototype.setupMem = function() {
+    if(this.memory.numWorkParts == null) {
+        this.memory.numWorkParts = 0;
+        for(let part of this.body) {
+            if(part.type == WORK) {
+                this.memory.numWorkParts++;
+            }
+        }
+    }
+    if(this.memory.role == sh.CREEP_HARVESTER && this.memory.targetSource == null) {
+        let sources = Game.rooms[this.memory.room].find(FIND_SOURCES, {
+            filter: (source) => {
+                return source.needsHarvester();
+            }
+        });
+        this.memory.targetSource = _.head(sources).id;
     }
 };
 Creep.prototype.runBuilder = function() {
@@ -131,6 +149,18 @@ Creep.prototype.runTransporter = function() {
     }
 };
 Creep.prototype.runHarvester = function() {
+    if(!this.isCreepWorking()) {
+        let targetSource = Game.getObjectById(this.memory.targetSource);
+        if(this.pos.isNearTo(targetSource)) {
+            this.harvest(targetSource);
+            if(this.carry[RESOURCE_ENERGY] + this.memory.numWorkParts*HARVEST_POWER < this.carryCapacity) {
+                return;
+            }
+        } else {
+            this.moveToS(targetSource);
+            return;
+        }
+    }
     let target = null;
     if(this.room.isStorageNotFull()) {
         target = this.room.storage;
@@ -234,38 +264,29 @@ Creep.prototype.fillEnergy = function() {
     // most creeps must harvest
     let target = Game.getObjectById(this.memory.energyTarget);
     if(target == null) {
-        if(this.memory.role != sh.CREEP_HARVESTER) {
-            if(!this.room.hasHostileAttacker()) {
-                target = this.pos.findClosestByRange(FIND_DROPPED_ENERGY);
-            }
-            if(target == null && this.room.isStorageNotEmpty()) {
-                target = this.room.storage;
-            }
-            if(target == null && this.room.storage == null && this.room.getContainerCount() == 0) {
-                target = this.pos.findClosestByRange(FIND_SOURCES);
-            }
-            if(target == null) {
-                target = this.pos.findNearestNotEmptyContainer();
-            }
-            if(target != null) {
-                this.memory.energyTarget = target.id;
-            }
-        } else {
-            if(this.memory.targetSource == null) {
-                let sources = this.room.find(FIND_SOURCES, {
-                    filter: (source) => {
-                        return source.needsHarvester();
-                    }
-                });
-                this.memory.targetSource = _.head(sources).id;
-            }
-            target = Game.getObjectById(this.memory.targetSource);
+        if(!this.room.hasHostileAttacker()) {
+            target = this.pos.findClosestByRange(FIND_DROPPED_ENERGY);
+        }
+        if(target == null && this.room.isStorageNotEmpty()) {
+            target = this.room.storage;
+        }
+        if(target == null && this.room.storage == null && this.room.getContainerCount() == 0) {
+            target = this.pos.findClosestByRange(FIND_SOURCES);
+        }
+        if(target == null) {
+            target = this.pos.findNearestNotEmptyContainer();
+        }
+        if(target != null) {
+            this.memory.energyTarget = target.id;
         }
     }
     if(target != null) {
         if(target instanceof Source) {
             if(this.pos.isNearTo(target)) {
                 this.harvest(target);
+            // if(this.carry[RESOURCE_ENERGY] + this.memory.numWorkParts*HARVEST_POWER < this.carryCapacity) {
+            //     return;
+            // }
             } else {
                 this.moveToS(target);
             }
@@ -282,6 +303,8 @@ Creep.prototype.fillEnergy = function() {
             if(this.pickup(target) == ERR_NOT_IN_RANGE) {
                 this.moveToS(target);
             }
+        } else {
+            console.log('error unable to load energy');
         }
     } else {
         this.idle();
