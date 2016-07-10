@@ -47,11 +47,20 @@ RoomPosition.prototype.findNearestFillTarget = function(types) {
         }
     });
 };
-RoomPosition.prototype.findNearestLink = function() {
+RoomPosition.prototype.findNearestNotFullLink = function() {
     return this.findClosestByRange(FIND_MY_STRUCTURES, {
         filter: (t) => {
             return t.structureType == STRUCTURE_LINK
                 && t.energy < t.energyCapacity;
+        }
+    });
+};
+RoomPosition.prototype.findNearestNotEmptyLink = function() {
+    return this.findClosestByRange(FIND_MY_STRUCTURES, {
+        filter: (t) => {
+            return t.structureType == STRUCTURE_LINK
+                && t.energy > 0
+                && !Memory.links[t.id].nearSource;
         }
     });
 };

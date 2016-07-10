@@ -111,7 +111,9 @@ Creep.prototype.runFiller = function() {
         target = this.pos.findNearestFillTarget([STRUCTURE_TOWER]);
     }
     if(target != null) {
-        if(this.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if(this.isNearTo(target)) {
+            this.transfer(target, RESOURCE_ENERGY);
+        } else {
             this.moveToS(target);
         }
     } else {
@@ -155,8 +157,12 @@ Creep.prototype.runHarvester = function() {
     if(!this.isCreepWorking()) {
         let targetSource = Game.getObjectById(this.memory.targetSource);
         if(this.pos.isNearTo(targetSource)) {
-            this.harvest(targetSource);
-            if(this.carry[RESOURCE_ENERGY] + this.memory.numWorkParts*HARVEST_POWER < this.carryCapacity) {
+            let energyTaken = 0;
+            if(this.harvest(targetSource) == OK) {
+                energyTaken = Math.min(this.memory.numWorkParts*HARVEST_POWER, targetSource.energy);
+                targetSource.energy -= energyTaken;
+            }
+            if(this.carry[RESOURCE_ENERGY] + energyTaken < this.carryCapacity) {
                 return;
             }
         } else {
@@ -165,7 +171,7 @@ Creep.prototype.runHarvester = function() {
         }
     }
     let target = null;
-    target = this.pos.findNearestLink();
+    target = this.pos.findNearestNotFullLink();
     if(target != null && !this.pos.isNearTo(target)) {
         target = null;
     }
@@ -295,21 +301,31 @@ Creep.prototype.isCreepWorking = function() {
 Creep.prototype.fillEnergy = function() {
     // most creeps must harvest
     let target = Game.getObjectById(this.memory.energyTarget);
-    // if(target instanceof StructureContainer || target instanceof StructureStorage) {
-    //     if(target.projectedEnergy == null) {
-    //         target.projectedEnergy = target.storage[RESOURCE_ENERGY];
-    //     }
-    //     if(target.storage[RESOURCE_ENERGY] == 0 || target.projectedEnergy <= 0) {
-    //         target = null;
-    //         delete this.memory.energyTarget;
-    //     }
-    // }
+    if(target != null) {
+        let energyLeft = 0;
+        switch(target.constructor) {
+            case StructureContainer:
+            case StructureStorage:
+                energyLeft = target.store[RESOURCE_ENERGY];
+                break;
+            case Source:
+            case StructureLink:
+                energyLeft = target.energy;
+                break;
+            case Resource:
+                energyLeft = target.amount;
+        }
+        if(energyLeft == 0) {
+            target = null;
+            delete this.memory.energyLeft;
+        }
+    }
     if(target == null) {
         if(!this.room.hasHostileAttacker()) {
             target = this.pos.findClosestByRange(FIND_DROPPED_ENERGY);
         }
         if(target == null) {
-            target = this.pos.findNearestLink();
+            target = this.pos.findNearestNotEmptyLink();
         }
         if(target == null && this.room.isStorageNotEmpty()) {
             target = this.room.storage;
@@ -326,22 +342,30 @@ Creep.prototype.fillEnergy = function() {
     }
     if(target != null) {
         if(this.pos.isNearTo(target)) {
-            if(target instanceof Source) {
-                this.harvest(target);
-            } else if(target instanceof StructureContainer || target instanceof StructureStorage) {
-                // let energyNeeded = this.carryCapacity - this.carry[RESOURCE_ENERGY];
-                target.transfer(this, RESOURCE_ENERGY);
-                // if(target.projectedEnergy == null) {
-                //     target.projectedEnergy = target.storage[RESOURCE_ENERGY] - energyNeeded;
-                // } else {
-                //     target.projectedEnergy -= energyNeeded;
-                // }
-            } else if(target instanceof Resource) {
-                this.pickup(target);
-            } else if(target instanceof StructureLink) {
-                target.transferEnergy(this);
-            } else {
-                console.log('error unable to load energy');
+            switch(target.constructor) {
+                case Source:
+                    if(this.harvest(target) == OK) {
+                        target.energy -= Math.min(this.memory.numWorkParts*HARVEST_POWER, target.energy);
+                    }
+                    break;
+                case StructureContainer:
+                case StructureStorage:
+                    if(target.transfer(this, RESOURCE_ENERGY) == OK) {
+                        target.store[RESOURCE_ENERGY] -= Math.min(target.store[RESOURCE_ENERGY], this.carryCapacity - this.carry[RESOURCE_ENERGY]);
+                    }
+                    break;
+                case Resource:
+                    if(this.pickup(target) == OK) {
+                        target.amount -= Math.min(target.amount, this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
+                    }
+                    break;
+                case StructureLink:
+                    if(target.transferEnergy(this) == OK) {
+                        target.energy -= Math.min(target.energy, this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
+                    }
+                    break;
+                default:
+                    console.log('error unable to load energy');
             }
         } else {
             this.moveToS(target);
