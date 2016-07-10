@@ -54,8 +54,8 @@ Room.prototype.hasHostileAttacker = function() {
     return !_.isEmpty(targets);
 };
 Room.prototype.hasHurtCreep = function() {
-    return this.find(FIND_MY_CREEPS, {
-        filter: (t) => t.hits < t.hitsMax});
+    return !_.isEmpty(this.find(FIND_MY_CREEPS, {
+        filter: (t) => t.hits < t.hitsMax}));
 };
 Room.prototype.getContainerCount = function() {
     return _.size(this.find(FIND_STRUCTURES, {
