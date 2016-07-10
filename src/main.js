@@ -20,14 +20,16 @@ let m = {
         });
     },
     setupMem: function() {
+        if(Memory.towers == null) {
+            Memory.towers = {};
+        }
         if(Memory.config == null) {
             Memory.config = {};
         }
         _.defaults(Memory.config, {
             wallsMax: 5000,
             rooms: [],
-            blacklist: [],
-            towers: {}
+            blacklist: []
         });
         if(_.isEmpty(Memory.config.rooms)) {
             _.forEach(Game.spawns, (spawn) => {
