@@ -1,7 +1,8 @@
-require('source');
 require('room');
-require('link');
 require('room_pos');
+require('room_obj');
+require('source');
+require('link');
 require('spawn');
 require('tower');
 require('creep');

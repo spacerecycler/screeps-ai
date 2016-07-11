@@ -204,7 +204,7 @@ Creep.prototype.runUpgrader = function() {
     }
 };
 Creep.prototype.runRepairer = function() {
-    let target = sh.tryRepair(this, this.memory);
+    let target = this.tryRepair(this.memory);
     if(target == null) {
         target = Game.getObjectById(_.head(_.filter(Memory.config.blacklist, (id) => {
             return Game.getObjectById(id).room.name == this.room.name;

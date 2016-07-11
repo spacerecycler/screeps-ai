@@ -66,6 +66,7 @@
         PathFinder: false
         Room: false
         RoomPosition: false
+        RoomObject: false
         Creep: false
         Resource: false
         Source: false
