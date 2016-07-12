@@ -86,9 +86,9 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
                     expected.set(sh.CREEP_HEALER, 1);
                 }
                 if(room.hasHostileAttacker()) {
+                    expected.set(sh.CREEP_WARRIOR, 1);
                     expected.set(sh.CREEP_HEALER, 1);
                     expected.set(sh.CREEP_RANGER, 1);
-                    expected.set(sh.CREEP_WARRIOR, 1);
                 }
             }
         }
