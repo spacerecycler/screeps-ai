@@ -152,6 +152,13 @@ StructureSpawn.prototype.chooseBody = function(role) {
             this.addParts(body, div, MOVE);
             return body;
         case sh.CREEP_FILLER:
+            div = Math.min(5, Math.trunc(energyCapAvail/100));
+            if(totalCreeps == 0) {
+                div = 3;
+            }
+            this.addParts(body, div, CARRY);
+            this.addParts(body, div, MOVE);
+            return body;
         case sh.CREEP_TRANSPORTER:
             div = Math.min(10, Math.trunc(energyCapAvail/100));
             if(totalCreeps == 0) {
