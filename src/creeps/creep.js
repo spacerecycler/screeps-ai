@@ -350,7 +350,7 @@ Creep.prototype.fillEnergy = function() {
                     break;
                 case StructureContainer:
                 case StructureStorage:
-                    if(target.transfer(this, RESOURCE_ENERGY) == OK) {
+                    if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
                         target.store[RESOURCE_ENERGY] -= Math.min(target.store[RESOURCE_ENERGY], this.carryCapacity - this.carry[RESOURCE_ENERGY]);
                     }
                     break;
@@ -360,7 +360,7 @@ Creep.prototype.fillEnergy = function() {
                     }
                     break;
                 case StructureLink:
-                    if(target.transferEnergy(this) == OK) {
+                    if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
                         target.energy -= Math.min(target.energy, this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
                     }
                     break;
