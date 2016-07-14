@@ -237,6 +237,8 @@ Creep.prototype.runWarrior = function() {
         if(this.attack(target) == ERR_NOT_IN_RANGE) {
             this.moveToS(target);
         }
+    } else {
+        this.idle();
     }
 };
 Creep.prototype.runRanger = function() {
