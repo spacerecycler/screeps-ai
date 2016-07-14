@@ -1,6 +1,6 @@
 let sh = require('shared');
 RoomPosition.prototype.findNearestAttacker = function() {
-    return this.findClosestByRange(FIND_HOSTILE_CREEPS, {
+    let attacker = this.findClosestByRange(FIND_HOSTILE_CREEPS, {
         filter: (t) => {
             for(let part of t.body) {
                 if(sh.ATTACKER_PARTS.has(part.type)) {
@@ -10,6 +10,24 @@ RoomPosition.prototype.findNearestAttacker = function() {
             return false;
         }
     });
+    if(attacker == null) {
+        return null;
+    }
+    let healer = this.findClosestByRange(FIND_HOSTILE_CREEPS, {
+        filter: (t) => {
+            for(let part of t.body) {
+                if(part.type == HEAL) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    });
+    if(healer != null) {
+        return healer;
+    } else {
+        return attacker;
+    }
 };
 RoomPosition.prototype.findNearestHurtCreep = function() {
     return this.findClosestByRange(FIND_MY_CREEPS, {
