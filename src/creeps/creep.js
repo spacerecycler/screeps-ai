@@ -218,7 +218,16 @@ Creep.prototype.runRepairer = function() {
     }
 };
 Creep.prototype.runCapturer = function() {
-    if(this.reserveController(this.room.controller) == ERR_NOT_IN_RANGE) {
+    if(this.pos.isNearTo(this.room.controller)) {
+        if(Memory.config.canClaim) {
+            this.claimController(this.room.controller);
+            delete this.room.memory.type;
+            delete this.room.memory.needReserve;
+            Memory.config.canClaim = false;
+        } else {
+            this.reserveController(this.room.controller);
+        }
+    } else {
         this.moveToS(this.room.controller);
     }
 };

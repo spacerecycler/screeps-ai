@@ -9,6 +9,9 @@ require('creep');
 let m = {
     /** Main loop function for screeps **/
     loop: function() {
+        if(Game.gcl.progress % 1000 < 10) {
+            console.log("GCL Progress: " + Game.gcl.progress);
+        }
         m.setupMem();
         m.clearMem();
         _.forEach(Memory.config.rooms, (name) => {
@@ -33,6 +36,7 @@ let m = {
         }
         _.defaults(Memory.config, {
             wallsMax: 5000,
+            canClaim: false,
             rooms: [],
             blacklist: []
         });
@@ -41,11 +45,17 @@ let m = {
                 Memory.config.rooms.push(spawn.room.name);
             });
         }
+        let mine = 0;
         _.forEach(Memory.config.rooms, (name) => {
             if(Memory.rooms[name] == null) {
                 Memory.rooms[name] = {};
             }
+            let room = Game.rooms[name];
+            if(room != null && room.isMine()) {
+                mine++;
+            }
         });
+        Memory.config.canClaim = mine < Game.gcl.level;
     },
     /** Clear unused memory **/
     clearMem: function() {
