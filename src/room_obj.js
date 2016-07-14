@@ -5,7 +5,7 @@ RoomObject.prototype.tryRepair = function(mem) {
     if(target != null) {
         let max = target.hitsMax;
         if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART], target.structureType)) {
-            max = Math.min(target.hitsMax, Memory.config.wallsMax);
+            max = Math.min(target.hitsMax, this.room.memory.wallsMax);
         }
         if(target.hits >= max) {
             delete mem.targetId;

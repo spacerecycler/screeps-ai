@@ -38,7 +38,7 @@ RoomPosition.prototype.findNearestHurtStructure = function() {
         filter: (t) => {
             let max = t.hitsMax * 0.9;
             if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART], t.structureType)) {
-                max = Math.min(t.hitsMax, Memory.config.wallsMax * 0.9);
+                max = Math.min(t.hitsMax, Memory.rooms[this.roomName].wallsMax * 0.9);
             } else if (!_.includes([STRUCTURE_ROAD,STRUCTURE_CONTAINER], t.structureType) && !t.my) {
                 return false;
             }

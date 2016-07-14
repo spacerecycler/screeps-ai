@@ -35,7 +35,6 @@ let m = {
             Memory.config = {};
         }
         _.defaults(Memory.config, {
-            wallsMax: 5000,
             canClaim: false,
             rooms: [],
             blacklist: []
@@ -50,6 +49,9 @@ let m = {
             if(Memory.rooms[name] == null) {
                 Memory.rooms[name] = {};
             }
+            _.defaults(Memory.rooms[name], {
+                wallsMax: 5000
+            });
             let room = Game.rooms[name];
             if(room != null && room.isMine()) {
                 mine++;
