@@ -61,9 +61,13 @@ Room.prototype.getContainerCount = function() {
     return _.size(this.find(FIND_STRUCTURES, {
         filter: (t) => t.structureType == STRUCTURE_CONTAINER}));
 };
-Room.prototype.getTowerCount = function() {
-    return _.size(this.find(FIND_MY_STRUCTURES, {
+Room.prototype.hasTower = function() {
+    return !_.isEmpty(this.find(FIND_MY_STRUCTURES, {
         filter: (t) => t.structureType == STRUCTURE_TOWER}));
+};
+Room.prototype.hasSpawn = function() {
+    return !_.isEmpty(this.find(FIND_MY_STRUCTURES, {
+        filter: (t) => t.structureType == STRUCTURE_SPAWN}));
 };
 Room.prototype.findConstructionSites = function(types) {
     if(types == null) {

@@ -1,13 +1,16 @@
 let sh = require('shared');
 StructureSpawn.prototype.run = function() {
     let spawnedOrMissing = false;
-    _.forEach(Memory.config.rooms, (name) => {
-        let room = Game.rooms[name];
-        if(room != null && room.isMine()) {
-            spawnedOrMissing = this.spawnMissingCreep(name);
-            return !spawnedOrMissing;
-        }
-    });
+    spawnedOrMissing = this.spawnMissingCreep(this.room.name);
+    if(!spawnedOrMissing) {
+        _.forEach(Memory.config.rooms, (name) => {
+            let room = Game.rooms[name];
+            if(name != this.room.name && room != null && room.isMine() && !room.hasSpawn()) {
+                spawnedOrMissing = this.spawnMissingCreep(name);
+                return !spawnedOrMissing;
+            }
+        });
+    }
     if(!spawnedOrMissing) {
         _.forEach(Memory.config.rooms, (name) => {
             let room = Game.rooms[name];
@@ -70,8 +73,16 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         } else if(numConstructionSites > 0) {
             expected.set(sh.CREEP_BUILDER, 1);
         }
-        if((room.isMine() || room.memory.type == sh.ROOM_EXPANSION) && room.getTowerCount() == 0) {
+        if((room.isMine() || room.memory.type == sh.ROOM_EXPANSION) && !room.hasTower()) {
             expected.set(sh.CREEP_REPAIRER, 1);
+            if(room.hasHurtCreep()) {
+                expected.set(sh.CREEP_HEALER, 1);
+            }
+            if(room.hasHostileAttacker()) {
+                expected.set(sh.CREEP_WARRIOR, 1);
+                expected.set(sh.CREEP_HEALER, 1);
+                expected.set(sh.CREEP_RANGER, 1);
+            }
         }
         if(!room.isMine()) {
             if(room.memory.type == sh.ROOM_EXPANSION) {
@@ -84,14 +95,6 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
                     if(room.controller.reservation.ticksToEnd > sh.reservationMax) {
                         room.memory.needReserve = false;
                     }
-                }
-                if(room.hasHurtCreep()) {
-                    expected.set(sh.CREEP_HEALER, 1);
-                }
-                if(room.hasHostileAttacker()) {
-                    expected.set(sh.CREEP_WARRIOR, 1);
-                    expected.set(sh.CREEP_HEALER, 1);
-                    expected.set(sh.CREEP_RANGER, 1);
                 }
             }
         }
