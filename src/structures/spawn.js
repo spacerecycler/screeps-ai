@@ -150,6 +150,7 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
     let energyCapAvail = this.room.energyCapacityAvailable;
     let body = [];
     let div = 0;
+    let numCarry = 0;
     switch(role) {
         case sh.CREEP_CAPTURER:
             div = Math.min(2, Math.trunc(energyCapAvail/650));
@@ -191,24 +192,30 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
             body.push(MOVE);
             return body;
         case sh.CREEP_HARVESTER:
-            body.push(CARRY);
             if(this.room.name == name) {
-                body.push(MOVE);
                 div = Math.min(5, Math.trunc((energyCapAvail-100)/100));
                 this.addParts(body, div, WORK);
+                body.push(MOVE);
             } else {
                 div = Math.min(5, Math.trunc((energyCapAvail-50)/150));
                 this.addParts(body, div, WORK);
                 this.addParts(body, div, MOVE);
             }
+            body.push(CARRY);
             return body;
         case sh.CREEP_BUILDER:
             return [WORK,CARRY,CARRY,MOVE,MOVE,MOVE];
         case sh.CREEP_UPGRADER:
         case sh.CREEP_REPAIRER:
-            this.addParts(body, 5, WORK);
-            this.addParts(body, 2, CARRY);
-            this.addParts(body, 7, MOVE);
+            numCarry = 1;
+            if(energyCapAvail >= 500) {
+                numCarry = 2;
+            }
+            div = Math.min(5, Math.trunc((energyCapAvail-numCarry*100)/150));
+            this.addParts(body, div, WORK);
+            this.addParts(body, div, MOVE);
+            this.addParts(body, numCarry, CARRY);
+            this.addParts(body, numCarry, MOVE);
             return body;
         default:
             return body;
