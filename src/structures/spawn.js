@@ -5,7 +5,7 @@ StructureSpawn.prototype.run = function() {
     if(!spawnedOrMissing) {
         _.forEach(Memory.config.rooms, (name) => {
             let room = Game.rooms[name];
-            if(name != this.room.name && room != null && room.isMine() && !room.hasSpawn()) {
+            if(name != this.room.name && room != null && room.isMine()) {
                 spawnedOrMissing = this.spawnMissingCreep(name);
                 return !spawnedOrMissing;
             }
@@ -134,10 +134,10 @@ StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
             });
             if(_.isString(result)) {
                 // console.log('body: ' + body);
-                console.log('Spawning new ' + role + ' for ' + name + ': ' + result);
+                console.log(this.name + ' Spawning new ' + role + ' for ' + name + ': ' + result);
                 return true;
             } else {
-                console.log('Spawn error: ' + result);
+                console.log(this.name + ' Spawn error: ' + result);
             }
         } else {
             return true;
