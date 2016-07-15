@@ -191,27 +191,19 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
             body.push(MOVE);
             return body;
         case sh.CREEP_HARVESTER:
-            switch(totalCreeps) {
-                case 0:
-                    return [WORK,WORK,CARRY,MOVE];
-                case 1:
-                    return [WORK,WORK,WORK,CARRY,MOVE];
-                default: {
-                    // optimize creep to harvest
-                    let body = [];
-                    this.addParts(body, 5, WORK);
-                    body.push(CARRY);
-                    if(this.room.name == name) {
-                        body.push(MOVE);
-                    } else {
-                        this.addParts(body, 6, MOVE);
-                    }
-                    return body;
-                }
+            body.push(CARRY);
+            if(this.room.name == name) {
+                body.push(MOVE);
+                div = Math.min(5, Math.trunc((energyCapAvail-100)/100));
+                this.addParts(body, div, WORK);
+            } else {
+                div = Math.min(5, Math.trunc((energyCapAvail-50)/150));
+                this.addParts(body, div, WORK);
+                this.addParts(body, div, MOVE);
             }
-        case sh.CREEP_BUILDER:
-            body = [WORK,CARRY,CARRY,MOVE,MOVE,MOVE];
             return body;
+        case sh.CREEP_BUILDER:
+            return [WORK,CARRY,CARRY,MOVE,MOVE,MOVE];
         case sh.CREEP_UPGRADER:
         case sh.CREEP_REPAIRER:
             this.addParts(body, 5, WORK);
