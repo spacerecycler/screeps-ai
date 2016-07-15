@@ -66,7 +66,11 @@ Creep.prototype.setupMem = function() {
     if(this.memory.role == sh.CREEP_HARVESTER && this.memory.targetSource == null) {
         let sources = Game.rooms[this.memory.room].find(FIND_SOURCES, {
             filter: (s) => s.needsHarvester()});
-        this.memory.targetSource = _.head(sources).id;
+        if(_.isEmpty(sources)) {
+            this.suicide();
+        } else {
+            this.memory.targetSource = _.head(sources).id;
+        }
     }
 };
 Creep.prototype.runBuilder = function() {
