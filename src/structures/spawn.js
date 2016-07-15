@@ -41,13 +41,18 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
     let expected = new Map();
     let room = Game.rooms[name];
     if(room != null) {
-        let harvesters = _.size(_.filter(Game.creeps, (creep) => creep.memory.role == sh.CREEP_HARVESTER && creep.memory.room == name));
-        for(let source of room.find(FIND_SOURCES)) {
-            if(source.needsHarvester()) {
-                harvesters++;
+        if(_.isEmpty(_.filter(Game.creeps, (creep) => {
+            return creep.memory.role == sh.CREEP_HARVESTER
+                && creep.memory.room == name
+                && creep.memory.targetSource == null;}))) {
+            let harvesters = _.size(_.filter(Game.creeps, (creep) => creep.memory.role == sh.CREEP_HARVESTER && creep.memory.room == name));
+            for(let source of room.find(FIND_SOURCES)) {
+                if(source.needsHarvester()) {
+                    harvesters++;
+                }
             }
+            expected.set(sh.CREEP_HARVESTER, harvesters);
         }
-        expected.set(sh.CREEP_HARVESTER, harvesters);
         let containerCount = room.getContainerCount();
         if(containerCount > 0 && !room.isMine()) {
             expected.set(sh.CREEP_TRANSPORTER, Math.min(containerCount, 2));
