@@ -13,7 +13,10 @@ RoomObject.prototype.tryRepair = function(mem) {
         }
     }
     if(target == null) {
-        target = this.pos.findNearestHurtStructure();
+        target = this.pos.findNearestHurtStructure([STRUCTURE_RAMPART]);
+        if(target == null) {
+            target = this.pos.findNearestHurtStructure();
+        }
         if(target != null) {
             mem.targetId = target.id;
         }

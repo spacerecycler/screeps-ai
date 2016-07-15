@@ -33,7 +33,7 @@ RoomPosition.prototype.findNearestHurtCreep = function() {
     return this.findClosestByRange(FIND_MY_CREEPS, {
         filter: (t) => t.hits < t.hitsMax});
 };
-RoomPosition.prototype.findNearestHurtStructure = function() {
+RoomPosition.prototype.findNearestHurtStructure = function(types) {
     return this.findClosestByRange(FIND_STRUCTURES, {
         filter: (t) => {
             let max = t.hitsMax * 0.9;
@@ -43,6 +43,9 @@ RoomPosition.prototype.findNearestHurtStructure = function() {
                 return false;
             }
             if(_.includes(Memory.config.blacklist, t.id)) {
+                return false;
+            }
+            if(types != null && !_.includes(types, t.structureType)) {
                 return false;
             }
             return t.hits < max;
