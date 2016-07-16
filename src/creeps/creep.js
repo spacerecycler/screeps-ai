@@ -290,17 +290,17 @@ Creep.prototype.runHealer = function() {
 };
 Creep.prototype.ensureRoom = function() {
     if(this.room.name != this.memory.room) {
-        let exitDir = this.memory.exitDir;
-        if(exitDir == null) {
-            exitDir = this.room.findExitTo(this.memory.room);
-            this.memory.exitDir = exitDir;
+        if(this.memory.exit == null || this.memory.exit.roomName != this.room.name) {
+            let exitDir = this.room.findExitTo(this.memory.room);
+            this.memory.exit = this.pos.findClosestByPath(exitDir);
         }
-        let exit = this.pos.findClosestByPath(exitDir);
-        this.moveToS(exit);
+        if(this.memory.exit != null) {
+            this.moveToS(new RoomPosition(this.memory.exit.x, this.memory.exit.y, this.memory.exit.roomName));
+        }
         return false;
     } else {
-        if(this.memory.exitDir != null) {
-            delete this.memory.exitDir;
+        if(this.memory.exit != null) {
+            delete this.memory.exit;
         }
         return true;
     }
