@@ -1,8 +1,12 @@
 module.exports = (grunt) => {
     require('load-grunt-tasks')(grunt);
+    let secret = null;
+    if(grunt.file.exists('secret.json')) {
+        secret = grunt.file.readJSON('secret.json');
+    }
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        secret: grunt.file.readJSON('secret.json'),
+        secret: secret,
         eslint: {
             target: ['src/']
         },
