@@ -2,6 +2,7 @@ require('room');
 require('room_pos');
 require('room_obj');
 require('source');
+require('controller');
 require('link');
 require('spawn');
 require('tower');

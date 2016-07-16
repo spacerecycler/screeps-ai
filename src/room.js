@@ -7,6 +7,9 @@ Room.prototype.run = function() {
             this.memory.type = sh.ROOM_EXPANSION;
         }
     }
+    if(this.controller != null) {
+        this.memory.controllerReserveSpots = this.controller.countReserveSpots();
+    }
     if(this.mode == MODE_SIMULATION && !this.memory.test) {
         for(let source of this.find(FIND_SOURCES)) {
             let vals = PathFinder.search(Game.spawns.Spawn1.pos, {pos: source.pos, range: 1});

@@ -71,6 +71,7 @@
         Resource: false
         Source: false
         Structure: false
+        StructureController: false
         StructureLink: false
         StructureSpawn: false
         StructureStorage: false

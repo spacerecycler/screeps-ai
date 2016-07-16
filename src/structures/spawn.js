@@ -111,6 +111,9 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
     }
     if(Memory.rooms[name].needReserve != null) {
         let num = (3 - Math.min(2, Math.trunc(this.room.energyCapacityAvailable/650))) % 3;
+        if(Memory.rooms[name].controllerReserveSpots == 1) {
+            num = 1;
+        }
         if(Memory.config.canClaim) {
             expected.set(sh.CREEP_CAPTURER, 1);
         } else {
@@ -157,6 +160,9 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
     switch(role) {
         case sh.CREEP_CAPTURER:
             div = Math.min(2, Math.trunc(energyCapAvail/650));
+            if(Memory.rooms[name].controllerReserveSpots == 1) {
+                div = 2;
+            }
             this.addParts(body, div, CLAIM);
             this.addParts(body, div, MOVE);
             return body;
