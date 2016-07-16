@@ -29,9 +29,15 @@ RoomPosition.prototype.findNearestAttacker = function() {
         return attacker;
     }
 };
-RoomPosition.prototype.findNearestHurtCreep = function() {
+RoomPosition.prototype.findNearestHurtCreep = function(roles) {
     return this.findClosestByRange(FIND_MY_CREEPS, {
-        filter: (t) => t.hits < t.hitsMax});
+        filter: (t) => {
+            if(roles == null) {
+                return t.hits < t.hitsMax;
+            } else {
+                return _.includes(roles, t.memory.role) && t.hits < t.hitsMax;
+            }
+        }});
 };
 RoomPosition.prototype.findNearestHurtStructure = function(types) {
     return this.findClosestByRange(FIND_STRUCTURES, {

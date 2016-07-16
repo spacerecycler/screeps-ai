@@ -272,7 +272,10 @@ Creep.prototype.runRanger = function() {
     }
 };
 Creep.prototype.runHealer = function() {
-    let target = this.pos.findNearestHurtCreep();
+    let target = this.pos.findNearestHurtCreep([sh.CREEP_RANGER, sh.CREEP_WARRIOR]);
+    if(target == null) {
+        target = this.pos.findNearestHurtCreep();
+    }
     if(target != null) {
         if(this.pos.isNearTo(target)) {
             this.heal(target);
