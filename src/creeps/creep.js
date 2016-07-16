@@ -211,8 +211,8 @@ Creep.prototype.runUpgrader = function() {
 Creep.prototype.runRepairer = function() {
     let target = this.tryRepair(this.memory);
     if(target == null) {
-        let objects = _.map(Memory.config.blacklist, (id) => Game.getObjectById(id));
-        target = _.head(_.filter(objects, (t) => t != null && t instanceof Structure && t.room.name == this.room.name));
+        let objects = _.map(Memory.config.blacklist[this.room.name], (id) => Game.getObjectById(id));
+        target = _.head(_.filter(objects, (t) => t != null && t instanceof Structure));
         if(target != null && this.dismantle(target) == ERR_NOT_IN_RANGE) {
             this.moveToS(target);
         }

@@ -37,7 +37,7 @@ let m = {
         _.defaults(Memory.config, {
             canClaim: false,
             rooms: [],
-            blacklist: []
+            blacklist: {}
         });
         if(_.isEmpty(Memory.config.rooms)) {
             _.forEach(Game.spawns, (spawn) => {
@@ -55,6 +55,9 @@ let m = {
             let room = Game.rooms[name];
             if(room != null && room.isMine()) {
                 mine++;
+            }
+            if(Memory.config.blacklist[name] == null) {
+                Memory.config.blacklist[name] = [];
             }
         });
         Memory.config.canClaim = mine < Game.gcl.level;
@@ -76,8 +79,10 @@ let m = {
                 delete Memory.links[id];
             }
         });
-        _.remove(Memory.config.blacklist, (id) => {
-            return Game.getObjectById(id) == null;
+        _.forEach(Memory.config.blacklist, (ids, name) => {
+            if(Game.rooms[name] != null) {
+                _.remove(ids, (id) => Game.getObjectById(id) == null);
+            }
         });
     }
 };

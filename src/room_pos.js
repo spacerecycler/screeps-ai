@@ -42,7 +42,7 @@ RoomPosition.prototype.findNearestHurtStructure = function(types) {
             } else if (!_.includes([STRUCTURE_ROAD,STRUCTURE_CONTAINER], t.structureType) && !t.my) {
                 return false;
             }
-            if(_.includes(Memory.config.blacklist, t.id)) {
+            if(_.includes(Memory.config.blacklist[this.roomName], t.id)) {
                 return false;
             }
             if(types != null && !_.includes(types, t.structureType)) {
@@ -90,7 +90,7 @@ RoomPosition.prototype.findNearestNotFullContainer = function() {
         filter: (t) => {
             return t.structureType == STRUCTURE_CONTAINER
                 && t.store[RESOURCE_ENERGY] < t.storeCapacity
-                && !_.includes(Memory.config.blacklist, t.id);
+                && !_.includes(Memory.config.blacklist[this.roomName], t.id);
         }
     });
 };
