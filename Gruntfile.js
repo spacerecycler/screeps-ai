@@ -18,7 +18,7 @@ module.exports = (grunt) => {
                 ptr: false
             },
             dist: {
-                src: ['src/**/*.js']
+                src: ['src/**/*.js', 'node_modules/screeps-profiler/screeps-profiler.js']
             }
         },
     });

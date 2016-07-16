@@ -19,7 +19,8 @@
     "grunt-eslint": "^19.0.0",
     "grunt-gitinfo": "^0.1.8",
     "grunt-screeps": "^1.2.1",
-    "load-grunt-tasks": "^3.5.0"
+    "load-grunt-tasks": "^3.5.0",
+    "screeps-profiler": "^1.1.2"
   },
   "scripts": {
     "test": "grunt test"
