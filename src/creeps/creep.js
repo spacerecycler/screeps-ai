@@ -79,6 +79,9 @@ Creep.prototype.runBuilder = function() {
     if(target == null) {
         target = this.pos.findNearestConstructionSite([STRUCTURE_WALL,STRUCTURE_RAMPART]);
     }
+    if(target == null && this.room.getContainerCount() == 0) {
+        target = this.pos.findNearestConstructionSite([STRUCTURE_CONTAINER]);
+    }
     if(target == null) {
         target = this.pos.findNearestConstructionSite([STRUCTURE_ROAD]);
     }
@@ -199,6 +202,12 @@ Creep.prototype.runHarvester = function() {
             this.moveToS(target);
         }
     } else {
+        if(target == null && this.room.getContainerCount() == 0) {
+            target = this.pos.findNearestConstructionSite([STRUCTURE_CONTAINER]);
+        }
+        if(target != null) {
+            this.build(target);
+        }
         this.idle();
     }
 };
