@@ -18,5 +18,6 @@ module.exports = (grunt) => {
             }
         },
     });
+    grunt.registerTask('test', ['gitinfo', 'eslint']);
     grunt.registerTask('default', ['gitinfo', 'eslint', 'screeps']);
 };
