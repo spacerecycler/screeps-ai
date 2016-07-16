@@ -46,10 +46,8 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
                 && creep.memory.room == name
                 && creep.memory.targetSource == null;}))) {
             let harvesters = _.size(_.filter(Game.creeps, (creep) => creep.memory.role == sh.CREEP_HARVESTER && creep.memory.room == name));
-            for(let source of room.find(FIND_SOURCES)) {
-                if(source.needsHarvester()) {
-                    harvesters++;
-                }
+            if(room.checkNeedHarvester()) {
+                harvesters++;
             }
             expected.set(sh.CREEP_HARVESTER, harvesters);
         }
