@@ -3,54 +3,50 @@ let flatMap = _.compose(_.compact, _.flatten, _.map);
 Creep.prototype.run = function() {
     this.setupMem();
     if(this.memory.role == sh.CREEP_TRANSPORTER || this.ensureRoom()) {
-        // if(!this.isCreepWorking()) {
-        //     let full = this.fillEnergy();
-        //     if(!full) {
-        //         return;
-        //     }
-        // }
         if(this.memory.role == sh.CREEP_HARVESTER) {
             this.runHarvester();
             return;
         }
-        if(this.carryCapacity == 0 || this.isCreepWorking()) {
-            switch (this.memory.role) {
-                case sh.CREEP_UPGRADER:
-                    this.runUpgrader();
-                    return;
-                case sh.CREEP_BUILDER:
-                    this.runBuilder();
-                    return;
-                case sh.CREEP_REPAIRER:
-                    this.runRepairer();
-                    return;
-                case sh.CREEP_CAPTURER:
-                    this.runCapturer();
-                    return;
-                case sh.CREEP_FILLER:
-                    this.runFiller();
-                    return;
-                case sh.CREEP_TRANSPORTER:
-                    this.runTransporter();
-                    return;
-                case sh.CREEP_SCOUT:
-                    this.runScout();
-                    return;
-                case sh.CREEP_WARRIOR:
-                    this.runWarrior();
-                    return;
-                case sh.CREEP_RANGER:
-                    this.runRanger();
-                    return;
-                case sh.CREEP_HEALER:
-                    this.runHealer();
-                    return;
+        if(this.carryCapacity > 0 && !this.isCreepWorking()) {
+            if(this.memory.role == sh.CREEP_TRANSPORTER && !this.ensureRoom()) {
+                return;
             }
-        } else {
-            if(this.memory.role != sh.CREEP_TRANSPORTER
-                || this.ensureRoom()) {
-                this.fillEnergy();
+            let full = this.fillEnergy();
+            if(!full) {
+                return;
             }
+        }
+        switch (this.memory.role) {
+            case sh.CREEP_UPGRADER:
+                this.runUpgrader();
+                return;
+            case sh.CREEP_BUILDER:
+                this.runBuilder();
+                return;
+            case sh.CREEP_REPAIRER:
+                this.runRepairer();
+                return;
+            case sh.CREEP_CAPTURER:
+                this.runCapturer();
+                return;
+            case sh.CREEP_FILLER:
+                this.runFiller();
+                return;
+            case sh.CREEP_TRANSPORTER:
+                this.runTransporter();
+                return;
+            case sh.CREEP_SCOUT:
+                this.runScout();
+                return;
+            case sh.CREEP_WARRIOR:
+                this.runWarrior();
+                return;
+            case sh.CREEP_RANGER:
+                this.runRanger();
+                return;
+            case sh.CREEP_HEALER:
+                this.runHealer();
+                return;
         }
     }
 };
@@ -341,7 +337,7 @@ Creep.prototype.fillEnergy = function() {
         }
         if(energyLeft == 0) {
             target = null;
-            delete this.memory.energyLeft;
+            delete this.memory.energyTarget;
         }
     }
     if(target == null) {
@@ -366,31 +362,37 @@ Creep.prototype.fillEnergy = function() {
     }
     if(target != null) {
         if(this.pos.isNearTo(target)) {
+            let energyTaken = 0;
             switch(target.constructor) {
                 case Source:
                     if(this.harvest(target) == OK) {
-                        target.energy -= Math.min(this.memory.numWorkParts*HARVEST_POWER, target.energy);
+                        energyTaken = Math.min(this.memory.numWorkParts*HARVEST_POWER, target.energy);
+                        target.energy -= energyTaken;
                     }
                     break;
                 case StructureContainer:
                 case StructureStorage:
                     if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
-                        target.store[RESOURCE_ENERGY] -= Math.min(target.store[RESOURCE_ENERGY], this.carryCapacity - this.carry[RESOURCE_ENERGY]);
+                        energyTaken = Math.min(target.store[RESOURCE_ENERGY], this.carryCapacity - this.carry[RESOURCE_ENERGY]);
+                        target.store[RESOURCE_ENERGY] -= energyTaken;
                     }
                     break;
                 case Resource:
                     if(this.pickup(target) == OK) {
-                        target.amount -= Math.min(target.amount, this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
+                        energyTaken = Math.min(target.amount, this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
+                        target.amount -= energyTaken;
                     }
                     break;
                 case StructureLink:
                     if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
-                        target.energy -= Math.min(target.energy, this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
+                        energyTaken = Math.min(target.energy, this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
+                        target.energy -= energyTaken;
                     }
                     break;
                 default:
                     console.log('error unable to load energy');
             }
+            return this.carry[RESOURCE_ENERGY] + energyTaken >= this.carryCapacity;
         } else {
             this.moveToS(target);
         }
