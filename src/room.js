@@ -42,33 +42,48 @@ Room.prototype.isKeeperLairRoom = function() {
         filter: (t) => t.structureType == STRUCTURE_KEEPER_LAIR}));
 };
 Room.prototype.hasHostileAttacker = function() {
-    let targets = this.find(FIND_HOSTILE_CREEPS, {
-        filter: (t) => {
-            for(let part of t.body) {
-                if(sh.ATTACKER_PARTS.has(part.type)) {
-                    return true;
+    if(this.hostileAttackerVar == null) {
+        let targets = this.find(FIND_HOSTILE_CREEPS, {
+            filter: (t) => {
+                for(let part of t.body) {
+                    if(sh.ATTACKER_PARTS.has(part.type)) {
+                        return true;
+                    }
                 }
+                return false;
             }
-            return false;
-        }
-    });
-    return !_.isEmpty(targets);
+        });
+        this.hostileAttackerVar = !_.isEmpty(targets);
+    }
+    return this.hostileAttackerVar;
 };
 Room.prototype.hasHurtCreep = function() {
-    return !_.isEmpty(this.find(FIND_MY_CREEPS, {
-        filter: (t) => t.hits < t.hitsMax}));
+    if(this.hurtCreepVar == null) {
+        this.hurtCreepVar = !_.isEmpty(this.find(FIND_MY_CREEPS, {
+            filter: (t) => t.hits < t.hitsMax}));
+    }
+    return this.hurtCreepVar;
 };
 Room.prototype.getContainerCount = function() {
-    return _.size(this.find(FIND_STRUCTURES, {
-        filter: (t) => t.structureType == STRUCTURE_CONTAINER}));
+    if(this.containerCount == null) {
+        this.containerCount = _.size(this.find(FIND_STRUCTURES, {
+            filter: (t) => t.structureType == STRUCTURE_CONTAINER}));
+    }
+    return this.containerCount;
 };
 Room.prototype.hasTower = function() {
-    return !_.isEmpty(this.find(FIND_MY_STRUCTURES, {
-        filter: (t) => t.structureType == STRUCTURE_TOWER}));
+    if(this.hasTowerVar == null) {
+        this.hasTowerVar = !_.isEmpty(this.find(FIND_MY_STRUCTURES, {
+            filter: (t) => t.structureType == STRUCTURE_TOWER}));
+    }
+    return this.hasTowerVar;
 };
 Room.prototype.hasSpawn = function() {
-    return !_.isEmpty(this.find(FIND_MY_STRUCTURES, {
-        filter: (t) => t.structureType == STRUCTURE_SPAWN}));
+    if(this.hasSpawnVar == null) {
+        this.hasSpawnVar = !_.isEmpty(this.find(FIND_MY_STRUCTURES, {
+            filter: (t) => t.structureType == STRUCTURE_SPAWN}));
+    }
+    return this.hasSpawnVar;
 };
 Room.prototype.findConstructionSites = function(types) {
     if(types == null) {
