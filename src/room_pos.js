@@ -54,9 +54,9 @@ RoomPosition.prototype.findNearestHurtStructure = function(types) {
 };
 RoomPosition.prototype.findNearestConstructionSite = function(types) {
     if(types == null) {
-        return this.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
+        return this.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
     } else {
-        return this.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {
+        return this.findClosestByPath(FIND_MY_CONSTRUCTION_SITES, {
             filter: (t) => _.includes(types, t.structureType)});
     }
 };
@@ -77,7 +77,7 @@ RoomPosition.prototype.findNearestNotFullLink = function() {
     });
 };
 RoomPosition.prototype.findNearestNotEmptyLink = function() {
-    return this.findClosestByRange(FIND_MY_STRUCTURES, {
+    return this.findClosestByPath(FIND_MY_STRUCTURES, {
         filter: (t) => {
             return t.structureType == STRUCTURE_LINK
                 && t.energy > 0
@@ -95,7 +95,7 @@ RoomPosition.prototype.findNearestNotFullContainer = function() {
     });
 };
 RoomPosition.prototype.findNearestNotEmptyContainer = function() {
-    return this.findClosestByRange(FIND_STRUCTURES, {
+    return this.findClosestByPath(FIND_STRUCTURES, {
         filter: (t) => {
             return t.structureType == STRUCTURE_CONTAINER
                 && t.store[RESOURCE_ENERGY] > 0;

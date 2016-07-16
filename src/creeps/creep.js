@@ -287,7 +287,7 @@ Creep.prototype.ensureRoom = function() {
             exitDir = this.room.findExitTo(this.memory.room);
             this.memory.exitDir = exitDir;
         }
-        let exit = this.pos.findClosestByRange(exitDir);
+        let exit = this.pos.findClosestByPath(exitDir);
         this.moveToS(exit);
         return false;
     } else {
@@ -338,7 +338,7 @@ Creep.prototype.fillEnergy = function() {
     }
     if(target == null) {
         if(!this.room.hasHostileAttacker()) {
-            target = this.pos.findClosestByRange(FIND_DROPPED_ENERGY);
+            target = this.pos.findClosestByPath(FIND_DROPPED_ENERGY);
         }
         if(target == null) {
             target = this.pos.findNearestNotEmptyLink();
@@ -347,7 +347,7 @@ Creep.prototype.fillEnergy = function() {
             target = this.room.storage;
         }
         if(target == null && this.room.storage == null && this.room.getContainerCount() == 0) {
-            target = this.pos.findClosestByRange(FIND_SOURCES);
+            target = this.pos.findClosestByPath(FIND_SOURCES);
         }
         if(target == null) {
             target = this.pos.findNearestNotEmptyContainer();
