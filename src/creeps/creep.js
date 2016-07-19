@@ -405,7 +405,7 @@ Creep.prototype.fillEnergy = function() {
     return false;
 };
 Creep.prototype.moveToS = function(target) {
-    this.moveTo(target, {reusePath: 3});
+    this.moveTo(target, {reusePath: 4});
 };
 Creep.prototype.doRepair = function(target) {
     if(this.repair(target) == ERR_NOT_IN_RANGE) {
