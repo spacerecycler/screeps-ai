@@ -114,7 +114,7 @@ Creep.prototype.runFiller = function() {
     if(target == null) {
         target = this.pos.findNearestFillTarget([STRUCTURE_TOWER]);
     }
-    if(target == null && this.room.isStorageNotFull()) {
+    if(target == null && this.room.isStorageNotFull() && this.room.storage.id != this.memory.energyTarget) {
         target = this.room.storage;
     }
     if(target != null) {
@@ -329,10 +329,10 @@ Creep.prototype.isCreepWorking = function() {
     // work until we have no more energy
     if(this.memory.working && this.carry[RESOURCE_ENERGY] == 0) {
         this.memory.working = false;
+        delete this.memory.energyTarget;
     }
     if(!this.memory.working && this.carry[RESOURCE_ENERGY] == this.carryCapacity) {
         this.memory.working = true;
-        delete this.memory.energyTarget;
     }
     return this.memory.working;
 };
