@@ -7,27 +7,27 @@ require('link');
 require('spawn');
 require('tower');
 require('creep');
-// var profiler = require('screeps-profiler');
-// profiler.enable();
+var profiler = require('screeps-profiler');
+profiler.enable();
 let m = {
     /** Main loop function for screeps **/
     loop: function() {
-        // profiler.wrap(function() {
-        if(Game.gcl.progress % 1000 < 10) {
-            console.log("GCL Progress: " + Game.gcl.progress);
-        }
-        m.setupMem();
-        m.clearMem();
-        _.forEach(Memory.config.rooms, (name) => {
-            let room = Game.rooms[name];
-            if(room != null) {
-                room.run();
+        profiler.wrap(function() {
+            if(Game.gcl.progress % 1000 < 10) {
+                console.log("GCL Progress: " + Game.gcl.progress);
             }
+            m.setupMem();
+            m.clearMem();
+            _.forEach(Memory.config.rooms, (name) => {
+                let room = Game.rooms[name];
+                if(room != null) {
+                    room.run();
+                }
+            });
+            _.forEach(Game.creeps, (creep) => {
+                creep.run();
+            });
         });
-        _.forEach(Game.creeps, (creep) => {
-            creep.run();
-        });
-        // });
     },
     setupMem: function() {
         if(Memory.towers == null) {
