@@ -338,7 +338,7 @@ Creep.prototype.runHealer = function() {
 };
 Creep.prototype.runTank = function() {
     let source = Game.getObjectById(this.memory.targetSource);
-    let targets = source.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
+    let targets = source.findHostileNearby();
     if(!_.isEmpty(targets)) {
         let target = _.head(targets);
         if(this.pos.isNearTo(target)) {

@@ -129,8 +129,7 @@ Room.prototype.findSourcesForHarvester = function() {
         && !_.includes(Memory.config.blacklist[this.name], t.id)});
 };
 Room.prototype.checkNeedHarvester = function() {
-    return this.memory.type != sh.ROOM_KEEPER_LAIR
-        && !_.isEmpty(this.findSourcesForHarvester());
+    return !_.isEmpty(this.findSourcesForHarvester());
 };
 Room.prototype.findIdleFlags = function() {
     return this.find(FIND_FLAGS, {filter: (f) => f.isIdle()});

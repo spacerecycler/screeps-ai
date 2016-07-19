@@ -22,5 +22,12 @@ Source.prototype.needsHarvester = function() {
     for(let creep of creeps) {
         workParts += creep.memory.numWorkParts;
     }
-    return workParts < 5 && _.size(creeps) < this.countHarvestSpots();
+    return !this.isHostileNearby && workParts < 5
+        && _.size(creeps) < this.countHarvestSpots();
+};
+Source.prototype.findHostileNearby = function() {
+    return this.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
+};
+Source.prototype.isHostileNearby = function() {
+    return !_.isEmpty(this.findHostileNearby());
 };

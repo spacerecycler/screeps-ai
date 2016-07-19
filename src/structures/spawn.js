@@ -77,9 +77,9 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         }
         if(room.isMine()) {
             if(room.storage != null
-                && room.storage.store[RESOURCE_ENERGY] > 10000) {
-                let count = Math.min(2,
-                    Math.trunc(room.storage.store[RESOURCE_ENERGY]/10000));
+                && room.storage.store[RESOURCE_ENERGY] > 100000) {
+                let count = 2 +
+                    Math.trunc(room.storage.store[RESOURCE_ENERGY]/200000);
                 expected.set(sh.CREEP_UPGRADER, count);
             } else {
                 expected.set(sh.CREEP_UPGRADER, 1);
@@ -212,9 +212,8 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
             return [MOVE];
         case sh.CREEP_WARRIOR:
             this.addParts(body, 2, TOUGH);
-            this.addParts(body, 5, MOVE);
+            this.addParts(body, 6, MOVE);
             this.addParts(body, 4, ATTACK);
-            body.push(MOVE);
             return body;
         case sh.CREEP_RANGER:
             this.addParts(body, 5, MOVE);
@@ -227,8 +226,8 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
             body.push(MOVE);
             return body;
         case sh.CREEP_TANK:
-            this.addParts(body, 4, TOUGH);
-            this.addParts(body, 5, MOVE);
+            this.addParts(body, 5, TOUGH);
+            this.addParts(body, 6, MOVE);
             body.push(ATTACK);
             return body;
         case sh.CREEP_HARVESTER:
