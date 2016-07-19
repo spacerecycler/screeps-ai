@@ -86,7 +86,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
             }
         }
         let numConstructionSites = _.size(room.findConstructionSites());
-        if(numConstructionSites > 2) {
+        if(numConstructionSites > 1) {
             expected.set(sh.CREEP_BUILDER, 2);
         } else if(numConstructionSites > 0) {
             expected.set(sh.CREEP_BUILDER, 1);

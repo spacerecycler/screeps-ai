@@ -292,9 +292,8 @@ Creep.prototype.runWarrior = function() {
     }
     let source = Game.getObjectById(this.memory.targetSource);
     if(source != null) {
-        let targets = source.findHostileNearby();
-        if(!_.isEmpty(targets)) {
-            let target = _.head(targets);
+        let target = _.head(source.findHostileNearby());
+        if(target != null && target.hits > 100) {
             if(this.pos.isNearTo(target)) {
                 this.attack(target);
             } else {
@@ -322,9 +321,8 @@ Creep.prototype.runRanger = function() {
     }
     let source = Game.getObjectById(this.memory.targetSource);
     if(source != null) {
-        let targets = source.findHostileNearby();
-        if(!_.isEmpty(targets)) {
-            let target = _.head(targets);
+        let target = _.head(source.findHostileNearby());
+        if(target != null && target.hits > 100) {
             if(this.pos.inRangeTo(target, 3)) {
                 this.rangedAttack(target);
             } else {
@@ -382,9 +380,8 @@ Creep.prototype.runTank = function() {
         this.memory.ready = true;
     }
     let source = Game.getObjectById(this.memory.targetSource);
-    let targets = source.findHostileNearby();
-    if(!_.isEmpty(targets)) {
-        let target = _.head(targets);
+    let target = _.head(source.findHostileNearby());
+    if(target != null && target.hits > 100) {
         if(this.pos.isNearTo(target)) {
             this.attack(target);
         } else {
