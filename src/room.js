@@ -104,6 +104,14 @@ Room.prototype.findNotFullContainers = function() {
         }
     });
 };
+Room.prototype.findNotEmptyContainers = function() {
+    return this.find(FIND_STRUCTURES, {
+        filter: (t) => {
+            return t.structureType == STRUCTURE_CONTAINER
+                && t.store[RESOURCE_ENERGY] > 0;
+        }
+    });
+};
 Room.prototype.isStorageNotFull = function() {
     return this.storage != null
         && this.storage.store[RESOURCE_ENERGY] < this.storage.storeCapacity;
