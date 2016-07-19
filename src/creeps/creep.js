@@ -129,7 +129,8 @@ Creep.prototype.runFiller = function() {
         target = this.pos.findNearestFillTarget([STRUCTURE_TOWER]);
     }
     if(target == null && this.room.isStorageNotFull()
-        && !_.isEmpty(this.room.findNotEmptyContainers())) {
+        && (!_.isEmpty(this.room.findNotEmptyContainers())
+        || !_.isEmpty(this.room.findNotEmptyLinks()))) {
         target = this.room.storage;
     }
     if(target != null) {

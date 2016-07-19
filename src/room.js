@@ -113,6 +113,15 @@ Room.prototype.findNotEmptyContainers = function() {
         }
     });
 };
+Room.prototype.findNotEmptyLink = function() {
+    return this.find(FIND_MY_STRUCTURES, {
+        filter: (t) => {
+            return t.structureType == STRUCTURE_LINK
+                && t.energy > 0
+                && !Memory.links[t.id].nearSource;
+        }
+    });
+};
 Room.prototype.isStorageNotFull = function() {
     return this.storage != null
         && this.storage.store[RESOURCE_ENERGY] < this.storage.storeCapacity;
