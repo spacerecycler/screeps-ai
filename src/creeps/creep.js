@@ -179,7 +179,7 @@ Creep.prototype.runHarvester = function() {
     if(target != null && !this.pos.isNearTo(target)) {
         target = null;
     }
-    if(target == null && this.room.isStorageNotFull()) {
+    if(target == null && this.room.isStorageNotFull() && this.pos.inRangeTo(this.room.storage, 3)) {
         target = this.room.storage;
     }
     if(target == null) {
