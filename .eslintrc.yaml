@@ -7,7 +7,7 @@
         node: true
         es6: true
     rules:
-        no-undef: warn
+        no-undef: error
         no-console: off
         no-unused-vars: warn
         semi: error
@@ -59,8 +59,10 @@
         STRUCTURE_STORAGE: false
         STRUCTURE_TOWER: false
         STRUCTURE_CONTAINER: false
-        RESOURCE_ENERGY: false
+        STORAGE_CAPACITY: false
         MODE_SIMULATION: false
+        CONTAINER_CAPACITY: false
+        RESOURCE_ENERGY: false
         Game: false
         Memory: false
         PathFinder: false

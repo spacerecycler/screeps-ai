@@ -129,14 +129,22 @@ Creep.prototype.runFiller = function() {
 };
 Creep.prototype.runTransporter = function() {
     let target = Game.getObjectById(this.memory.targetId);
+    if(target != null && target.store[RESOURCE_ENERGY] == target.storeCapacity) {
+        delete this.memory.targetId;
+        target = null;
+    }
     if(target == null) {
+        let curEnergy = STORAGE_CAPACITY;
         _.forEach(Memory.config.rooms, (name) => {
             let room = Game.rooms[name];
-            if(room != null && room.isMine() && room.isStorageNotFull()) {
+            if(room != null && room.isMine() && room.isStorageNotFull() && room.storage.store[RESOURCE_ENERGY] < curEnergy) {
                 target = room.storage;
-                return false;
+                curEnergy = room.storage.store[RESOURCE_ENERGY];
             }
         });
+        if(target != null) {
+            this.memory.targetId = target.id;
+        }
     }
     if(target == null) {
         let targets = flatMap(Memory.config.rooms, (name) =>{
@@ -145,18 +153,22 @@ Creep.prototype.runTransporter = function() {
                 return room.findNotFullContainers();
             }
         });
-        if(_.size(targets) > 0) {
-            target = targets[0];
+        let curEnergy = CONTAINER_CAPACITY;
+        for(let t of targets) {
+            if(t.store[RESOURCE_ENERGY] < curEnergy) {
+                target = t;
+                curEnergy = t.store[RESOURCE_ENERGY];
+            }
+        }
+        if(target != null) {
             this.memory.targetId = target.id;
         }
     }
     if(target != null) {
-        if(target.store[RESOURCE_ENERGY] == target.storeCapacity) {
-            delete this.memory.targetId;
+        if(this.pos.isNearTo(target)) {
+            this.transfer(target, RESOURCE_ENERGY);
         } else {
-            if(this.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                this.moveToS(target);
-            }
+            this.moveToS(target);
         }
     }
 };
