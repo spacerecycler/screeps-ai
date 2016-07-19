@@ -114,6 +114,9 @@ Creep.prototype.runFiller = function() {
     if(target == null) {
         target = this.pos.findNearestFillTarget([STRUCTURE_TOWER]);
     }
+    if(target == null && this.room.isStorageNotFull()) {
+        target = this.room.storage;
+    }
     if(target != null) {
         if(this.pos.isNearTo(target)) {
             this.transfer(target, RESOURCE_ENERGY);
@@ -350,14 +353,14 @@ Creep.prototype.fillEnergy = function() {
         if(target == null) {
             target = this.pos.findNearestNotEmptyLink();
         }
+        if(target == null) {
+            target = this.pos.findNearestNotEmptyContainer();
+        }
         if(target == null && this.room.isStorageNotEmpty()) {
             target = this.room.storage;
         }
         if(target == null && this.room.storage == null && this.room.getContainerCount() == 0 && this.memory.role != sh.CREEP_FILLER) {
             target = this.pos.findClosestByPath(FIND_SOURCES);
-        }
-        if(target == null) {
-            target = this.pos.findNearestNotEmptyContainer();
         }
         if(target != null) {
             this.memory.energyTarget = target.id;
