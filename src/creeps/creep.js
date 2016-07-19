@@ -47,6 +47,9 @@ Creep.prototype.run = function() {
             case sh.CREEP_HEALER:
                 this.runHealer();
                 return;
+            case sh.CREEP_TANK:
+                this.runTank();
+                return;
         }
     }
 };
@@ -66,6 +69,14 @@ Creep.prototype.setupMem = function() {
         if(_.isEmpty(sources)) {
             this.suicide();
         } else {
+            this.memory.targetSource = _.head(sources).id;
+        }
+    }
+    if(this.memory.role == sh.CREEP_TANK
+        && this.memory.targetSource == null
+        && Game.rooms[this.memory.room] != null) {
+        let sources = Game.rooms[this.memory.room].findSourcesForTank();
+        if(!_.isEmpty(sources)) {
             this.memory.targetSource = _.head(sources).id;
         }
     }
@@ -297,8 +308,11 @@ Creep.prototype.runRanger = function() {
     }
 };
 Creep.prototype.runHealer = function() {
-    let target = this.pos.findNearestHurtCreep([sh.CREEP_RANGER,
+    let target = this.pos.findNearestHurtCreep([sh.CREEP_TANK]);
+    if(target == null) {
+        target = this.pos.findNearestHurtCreep([sh.CREEP_RANGER,
         sh.CREEP_WARRIOR]);
+    }
     if(target == null) {
         target = this.pos.findNearestHurtCreep();
     }
@@ -311,6 +325,18 @@ Creep.prototype.runHealer = function() {
         }
     } else {
         this.idle();
+    }
+};
+Creep.prototype.runTank = function() {
+    let source = Game.getObjectById(this.memory.targetSource);
+    let targets = source.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
+    if(!_.isEmpty(targets)) {
+        let target = _.head(targets);
+        if(this.pos.isNearTo(target)) {
+            this.attack(target);
+        } else {
+            this.moveToS(target);
+        }
     }
 };
 Creep.prototype.ensureRoom = function() {

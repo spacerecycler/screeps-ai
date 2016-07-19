@@ -120,6 +120,10 @@ Room.prototype.isStorageNotFull = function() {
 Room.prototype.isStorageNotEmpty = function() {
     return this.storage != null && this.storage.store[RESOURCE_ENERGY] > 0;
 };
+Room.prototype.findSourcesForTank = function() {
+    return this.find(FIND_SOURCES, {filter: (t) =>
+        !_.includes(Memory.config.blacklist[this.name], t.id)});
+};
 Room.prototype.findSourcesForHarvester = function() {
     return this.find(FIND_SOURCES, {filter: (t) => t.needsHarvester()
         && !_.includes(Memory.config.blacklist[this.name], t.id)});

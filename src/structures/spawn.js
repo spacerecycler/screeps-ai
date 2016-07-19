@@ -145,7 +145,10 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         }
     }
     if(Memory.rooms[name].type == sh.ROOM_KEEPER_LAIR) {
-        //expected.set(sh.CREEP_WARRIOR, 1);
+        // expected.set(sh.CREEP_TANK, 1);
+        // expected.set(sh.CREEP_HEALER, 1);
+        // expected.set(sh.CREEP_WARRIOR, 1);
+        // expected.set(sh.CREEP_RANGER, 1);
     }
     return expected;
 };
@@ -222,6 +225,11 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
             this.addParts(body, 3, MOVE);
             this.addParts(body, 2, HEAL);
             body.push(MOVE);
+            return body;
+        case sh.CREEP_TANK:
+            this.addParts(body, 4, TOUGH);
+            this.addParts(body, 5, MOVE);
+            body.push(ATTACK);
             return body;
         case sh.CREEP_HARVESTER:
             if(this.room.name == name) {
