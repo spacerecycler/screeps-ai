@@ -308,6 +308,9 @@ Creep.prototype.runRanger = function() {
     }
 };
 Creep.prototype.runHealer = function() {
+    if(this.hits < this.hitsMax * 0.9) {
+        this.heal(this);
+    }
     let target = this.pos.findNearestHurtCreep([sh.CREEP_TANK]);
     if(target == null) {
         target = this.pos.findNearestHurtCreep([sh.CREEP_RANGER,
@@ -315,6 +318,12 @@ Creep.prototype.runHealer = function() {
     }
     if(target == null) {
         target = this.pos.findNearestHurtCreep();
+    }
+    if(target == null) {
+        target = this.pos.findClosestByRange(FIND_MY_CREEPS, {filter: (t) => {
+            return _.includes([sh.CREEP_WARRIOR,sh.CREEP_RANGER,sh.CREEP_TANK],
+                t.memory.role);
+        }});
     }
     if(target != null) {
         if(this.pos.isNearTo(target)) {
@@ -375,8 +384,8 @@ Creep.prototype.rally = function() {
         return true;
     }
     let flag = _.head(_.filter(Game.flags, (f) => f.isRally(this.memory.room)));
-    if(flag != null && !this.isNearTo(flag)) {
-        if(this.isNearTo(flag)) {
+    if(flag != null) {
+        if(this.pos.isNearTo(flag)) {
             if(flag.hasRallyGroup()) {
                 this.memory.ready = true;
                 return true;
