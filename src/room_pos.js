@@ -112,6 +112,5 @@ RoomPosition.prototype.findNearestNotEmptyContainer = function() {
     });
 };
 RoomPosition.prototype.findNearestIdleFlag = function() {
-    return this.findClosestByRange(FIND_FLAGS, {
-        filter: (t) => t.memory.type == sh.FLAG_IDLE});
+    return this.findClosestByRange(FIND_FLAGS, {filter: (t) => t.isIdle()});
 };

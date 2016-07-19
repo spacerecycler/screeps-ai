@@ -71,6 +71,7 @@
         RoomPosition: false
         RoomObject: false
         Creep: false
+        Flag: false
         Resource: false
         Source: false
         Structure: false

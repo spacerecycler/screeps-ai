@@ -132,6 +132,5 @@ Room.prototype.checkNeedHarvester = function() {
     return !_.isEmpty(this.findSourcesForHarvester());
 };
 Room.prototype.findIdleFlags = function() {
-    return this.find(FIND_FLAGS, {filter: (flag) =>
-        flag.memory.type == sh.FLAG_IDLE});
+    return this.find(FIND_FLAGS, {filter: (f) => f.isIdle()});
 };

@@ -1,6 +1,7 @@
 require('room');
 require('room_pos');
 require('room_obj');
+require('flag');
 require('source');
 require('controller');
 require('link');

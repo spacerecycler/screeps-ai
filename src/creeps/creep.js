@@ -311,7 +311,7 @@ Creep.prototype.runHealer = function() {
     let target = this.pos.findNearestHurtCreep([sh.CREEP_TANK]);
     if(target == null) {
         target = this.pos.findNearestHurtCreep([sh.CREEP_RANGER,
-        sh.CREEP_WARRIOR]);
+            sh.CREEP_WARRIOR]);
     }
     if(target == null) {
         target = this.pos.findNearestHurtCreep();
@@ -340,6 +340,12 @@ Creep.prototype.runTank = function() {
     }
 };
 Creep.prototype.ensureRoom = function() {
+    if(_.includes(sh.CREEPS_WARLIKE, this.memory.role)
+        && Memory.rooms[this.memory.room].type == sh.ROOM_KEEPER_LAIR) {
+        if(!this.rally()) {
+            return false;
+        }
+    }
     if(this.room.name != this.memory.room) {
         if(this.memory.exit == null
             || this.memory.exit.roomName != this.room.name) {
@@ -362,6 +368,25 @@ Creep.prototype.idle = function() {
     let flag = this.pos.findNearestIdleFlag();
     if(!this.pos.isNearTo(flag)) {
         this.moveToS(flag);
+    }
+};
+Creep.prototype.rally = function() {
+    if(this.memory.ready) {
+        return true;
+    }
+    let flag = _.head(_.filter(Game.flags, (f) => f.isRally(this.memory.room)));
+    if(flag != null && !this.isNearTo(flag)) {
+        if(this.isNearTo(flag)) {
+            if(flag.hasRallyGroup()) {
+                this.memory.ready = true;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            this.moveToS(flag);
+            return false;
+        }
     }
 };
 Creep.prototype.isCreepWorking = function() {
