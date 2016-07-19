@@ -120,11 +120,13 @@ Room.prototype.isStorageNotEmpty = function() {
     return this.storage != null && this.storage.store[RESOURCE_ENERGY] > 0;
 };
 Room.prototype.findSourcesForHarvester = function() {
-    return this.find(FIND_SOURCES, {filter: (t) => t.needsHarvester() && !_.includes(Memory.config.blacklist[this.name], t.id)});
+    return this.find(FIND_SOURCES, {filter: (t) => t.needsHarvester()
+        && !_.includes(Memory.config.blacklist[this.name], t.id)});
 };
 Room.prototype.checkNeedHarvester = function() {
     return !_.isEmpty(this.findSourcesForHarvester());
 };
 Room.prototype.findIdleFlags = function() {
-    return this.find(FIND_FLAGS, {filter: (flag) => flag.memory.type == sh.FLAG_IDLE});
+    return this.find(FIND_FLAGS, {filter: (flag) =>
+        flag.memory.type == sh.FLAG_IDLE});
 };

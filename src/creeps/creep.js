@@ -73,7 +73,8 @@ Creep.prototype.setupMem = function() {
 Creep.prototype.runBuilder = function() {
     let target = Game.getObjectById(this.memory.targetId);
     if(target == null) {
-        target = this.pos.findNearestConstructionSite([STRUCTURE_WALL,STRUCTURE_RAMPART]);
+        target = this.pos.findNearestConstructionSite([STRUCTURE_WALL,
+            STRUCTURE_RAMPART]);
     }
     if(target == null && this.room.getContainerCount() == 0) {
         target = this.pos.findNearestConstructionSite([STRUCTURE_CONTAINER]);
@@ -82,7 +83,8 @@ Creep.prototype.runBuilder = function() {
         target = this.pos.findNearestConstructionSite([STRUCTURE_ROAD]);
     }
     if(target == null) {
-        target = this.pos.findNearestConstructionSite([STRUCTURE_TOWER,STRUCTURE_EXTENSION]);
+        target = this.pos.findNearestConstructionSite([STRUCTURE_TOWER,
+            STRUCTURE_EXTENSION]);
     }
     if(target == null) {
         target = this.pos.findNearestConstructionSite([STRUCTURE_CONTAINER]);
@@ -114,7 +116,8 @@ Creep.prototype.runFiller = function() {
     if(target == null) {
         target = this.pos.findNearestFillTarget([STRUCTURE_TOWER]);
     }
-    if(target == null && this.room.isStorageNotFull() && !_.isEmpty(this.room.findNotEmptyContainers())) {
+    if(target == null && this.room.isStorageNotFull()
+        && !_.isEmpty(this.room.findNotEmptyContainers())) {
         target = this.room.storage;
     }
     if(target != null) {
@@ -129,7 +132,8 @@ Creep.prototype.runFiller = function() {
 };
 Creep.prototype.runTransporter = function() {
     let target = Game.getObjectById(this.memory.targetId);
-    if(target != null && target.store[RESOURCE_ENERGY] == target.storeCapacity) {
+    if(target != null
+        && target.store[RESOURCE_ENERGY] == target.storeCapacity) {
         delete this.memory.targetId;
         target = null;
     }
@@ -137,7 +141,8 @@ Creep.prototype.runTransporter = function() {
         let curEnergy = STORAGE_CAPACITY;
         _.forEach(Memory.config.rooms, (name) => {
             let room = Game.rooms[name];
-            if(room != null && room.isMine() && room.isStorageNotFull() && room.storage.store[RESOURCE_ENERGY] < curEnergy) {
+            if(room != null && room.isMine() && room.isStorageNotFull()
+                && room.storage.store[RESOURCE_ENERGY] < curEnergy) {
                 target = room.storage;
                 curEnergy = room.storage.store[RESOURCE_ENERGY];
             }
@@ -178,7 +183,8 @@ Creep.prototype.runHarvester = function() {
         if(this.pos.isNearTo(targetSource)) {
             let energyTaken = 0;
             if(this.harvest(targetSource) == OK) {
-                energyTaken = Math.min(this.memory.numWorkParts*HARVEST_POWER, targetSource.energy);
+                energyTaken = Math.min(this.memory.numWorkParts*HARVEST_POWER,
+                    targetSource.energy);
                 targetSource.energy -= energyTaken;
             }
             if(this.carry[RESOURCE_ENERGY] + energyTaken < this.carryCapacity) {
@@ -194,7 +200,8 @@ Creep.prototype.runHarvester = function() {
     if(target != null && !this.pos.isNearTo(target)) {
         target = null;
     }
-    if(target == null && this.room.isStorageNotFull() && this.pos.inRangeTo(this.room.storage, 3)) {
+    if(target == null && this.room.isStorageNotFull()
+        && this.pos.inRangeTo(this.room.storage, 3)) {
         target = this.room.storage;
     }
     if(target == null) {
@@ -214,7 +221,8 @@ Creep.prototype.runHarvester = function() {
         }
     } else {
         if(target == null && this.room.getContainerCount() == 0) {
-            target = this.pos.findNearestConstructionSite([STRUCTURE_CONTAINER]);
+            target = this.pos.findNearestConstructionSite([
+                STRUCTURE_CONTAINER]);
         }
         if(target != null) {
             this.build(target);
@@ -231,8 +239,10 @@ Creep.prototype.runUpgrader = function() {
 Creep.prototype.runRepairer = function() {
     let target = this.tryRepair(this.memory);
     if(target == null) {
-        let objects = _.map(Memory.config.blacklist[this.room.name], (id) => Game.getObjectById(id));
-        target = _.head(_.filter(objects, (t) => t != null && t instanceof Structure));
+        let objects = _.map(Memory.config.blacklist[this.room.name],
+            (id) => Game.getObjectById(id));
+        target = _.head(_.filter(objects, (t) => t != null
+            && t instanceof Structure));
         if(target != null && this.dismantle(target) == ERR_NOT_IN_RANGE) {
             this.moveToS(target);
         }
@@ -287,7 +297,8 @@ Creep.prototype.runRanger = function() {
     }
 };
 Creep.prototype.runHealer = function() {
-    let target = this.pos.findNearestHurtCreep([sh.CREEP_RANGER, sh.CREEP_WARRIOR]);
+    let target = this.pos.findNearestHurtCreep([sh.CREEP_RANGER,
+        sh.CREEP_WARRIOR]);
     if(target == null) {
         target = this.pos.findNearestHurtCreep();
     }
@@ -304,12 +315,14 @@ Creep.prototype.runHealer = function() {
 };
 Creep.prototype.ensureRoom = function() {
     if(this.room.name != this.memory.room) {
-        if(this.memory.exit == null || this.memory.exit.roomName != this.room.name) {
+        if(this.memory.exit == null
+            || this.memory.exit.roomName != this.room.name) {
             let exitDir = this.room.findExitTo(this.memory.room);
             this.memory.exit = this.pos.findClosestByPath(exitDir);
         }
         if(this.memory.exit != null) {
-            this.moveToS(new RoomPosition(this.memory.exit.x, this.memory.exit.y, this.memory.exit.roomName));
+            this.moveToS(new RoomPosition(this.memory.exit.x,
+                this.memory.exit.y, this.memory.exit.roomName));
         }
         return false;
     } else {
@@ -330,7 +343,8 @@ Creep.prototype.isCreepWorking = function() {
     if(this.memory.working && this.carry[RESOURCE_ENERGY] == 0) {
         this.memory.working = false;
     }
-    if(!this.memory.working && this.carry[RESOURCE_ENERGY] == this.carryCapacity) {
+    if(!this.memory.working
+        && this.carry[RESOURCE_ENERGY] == this.carryCapacity) {
         this.memory.working = true;
         delete this.memory.energyTarget;
     }
@@ -371,7 +385,9 @@ Creep.prototype.fillEnergy = function() {
         if(target == null && this.room.isStorageNotEmpty()) {
             target = this.room.storage;
         }
-        if(target == null && this.room.storage == null && this.room.getContainerCount() == 0 && this.memory.role != sh.CREEP_FILLER) {
+        if(target == null && this.room.storage == null
+            && this.room.getContainerCount() == 0
+            && this.memory.role != sh.CREEP_FILLER) {
             target = this.pos.findClosestByPath(FIND_SOURCES);
         }
         if(target != null) {
@@ -384,26 +400,32 @@ Creep.prototype.fillEnergy = function() {
             switch(target.constructor) {
                 case Source:
                     if(this.harvest(target) == OK) {
-                        energyTaken = Math.min(this.memory.numWorkParts*HARVEST_POWER, target.energy);
+                        energyTaken = Math.min(
+                            this.memory.numWorkParts*HARVEST_POWER,
+                            target.energy);
                         target.energy -= energyTaken;
                     }
                     break;
                 case StructureContainer:
                 case StructureStorage:
                     if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
-                        energyTaken = Math.min(target.store[RESOURCE_ENERGY], this.carryCapacity - this.carry[RESOURCE_ENERGY]);
+                        energyTaken = Math.min(
+                            target.store[RESOURCE_ENERGY],
+                            this.carryCapacity - this.carry[RESOURCE_ENERGY]);
                         target.store[RESOURCE_ENERGY] -= energyTaken;
                     }
                     break;
                 case Resource:
                     if(this.pickup(target) == OK) {
-                        energyTaken = Math.min(target.amount, this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
+                        energyTaken = Math.min(target.amount,
+                            this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
                         target.amount -= energyTaken;
                     }
                     break;
                 case StructureLink:
                     if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
-                        energyTaken = Math.min(target.energy, this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
+                        energyTaken = Math.min(target.energy,
+                            this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
                         target.energy -= energyTaken;
                     }
                     break;

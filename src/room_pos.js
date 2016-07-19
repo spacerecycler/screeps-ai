@@ -43,9 +43,12 @@ RoomPosition.prototype.findNearestHurtStructure = function(types) {
     return this.findClosestByRange(FIND_STRUCTURES, {
         filter: (t) => {
             let max = t.hitsMax * 0.9;
-            if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART], t.structureType)) {
-                max = Math.min(t.hitsMax, Memory.rooms[this.roomName].wallsMax * 0.9);
-            } else if (!_.includes([STRUCTURE_ROAD,STRUCTURE_CONTAINER], t.structureType) && !t.my) {
+            if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART],
+                t.structureType)) {
+                max = Math.min(t.hitsMax,
+                    Memory.rooms[this.roomName].wallsMax * 0.9);
+            } else if (!_.includes([STRUCTURE_ROAD,STRUCTURE_CONTAINER],
+                t.structureType) && !t.my) {
                 return false;
             }
             if(_.includes(Memory.config.blacklist[this.roomName], t.id)) {

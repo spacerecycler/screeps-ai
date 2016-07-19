@@ -25,6 +25,7 @@
             - error
             - always
         no-case-declarations: warn
+        max-len: warn
     globals:
         _: false
         OK: false

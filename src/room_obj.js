@@ -4,7 +4,8 @@ RoomObject.prototype.tryRepair = function(mem) {
     // also cap hitpoints for walls since they have so many
     if(target != null) {
         let max = target.hitsMax;
-        if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART], target.structureType)) {
+        if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART],
+            target.structureType)) {
             max = Math.min(target.hitsMax, this.room.memory.wallsMax);
         }
         if(target.hits >= max) {
