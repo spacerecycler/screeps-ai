@@ -418,14 +418,14 @@ Creep.prototype.fillEnergy = function() {
                 case Resource:
                     if(this.pickup(target) == OK) {
                         energyTaken = Math.min(target.amount,
-                            this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
+                            this.carryCapacity - this.carry[RESOURCE_ENERGY]);
                         target.amount -= energyTaken;
                     }
                     break;
                 case StructureLink:
                     if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
                         energyTaken = Math.min(target.energy,
-                            this.carryCapacity - this.carryCapacity[RESOURCE_ENERGY]);
+                            this.carryCapacity - this.carry[RESOURCE_ENERGY]);
                         target.energy -= energyTaken;
                     }
                     break;

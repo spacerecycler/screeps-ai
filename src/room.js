@@ -8,7 +8,8 @@ Room.prototype.run = function() {
         }
     }
     if(this.controller != null) {
-        this.memory.controllerReserveSpots = this.controller.countReserveSpots();
+        this.memory.controllerReserveSpots =
+            this.controller.countReserveSpots();
     }
     let spawns = this.find(FIND_MY_STRUCTURES, {
         filter: (t) => t.structureType == STRUCTURE_SPAWN});

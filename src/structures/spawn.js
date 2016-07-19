@@ -109,10 +109,12 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
                     || room.controller.reservation == null) {
                     room.memory.needReserve = true;
                 } else {
-                    if(room.controller.reservation.ticksToEnd < sh.reservationMin) {
+                    if(room.controller.reservation.ticksToEnd <
+                        sh.reservationMin) {
                         room.memory.needReserve = true;
                     }
-                    if(room.controller.reservation.ticksToEnd > sh.reservationMax) {
+                    if(room.controller.reservation.ticksToEnd >
+                        sh.reservationMax) {
                         room.memory.needReserve = false;
                     }
                 }
@@ -159,7 +161,8 @@ StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
             });
             if(_.isString(result)) {
                 // console.log('body: ' + body);
-                console.log(this.name + ' Spawning new ' + role + ' for ' + name + ': ' + result);
+                console.log(this.name + ' Spawning new ' + role + ' for ' +
+                    name + ': ' + result);
                 return true;
             } else {
                 console.log(this.name + ' Spawn error: ' + result);
