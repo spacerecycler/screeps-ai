@@ -239,7 +239,11 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
                 this.addParts(body, div, WORK);
                 body.push(MOVE);
             } else {
-                div = Math.min(5, Math.trunc((energyCapAvail-50)/150));
+                let max = 5;
+                if(Memory.rooms[name].type == sh.ROOM_KEEPER_LAIR) {
+                    max = 7;
+                }
+                div = Math.min(max, Math.trunc((energyCapAvail-50)/150));
                 this.addParts(body, div, WORK);
                 this.addParts(body, div, MOVE);
             }
