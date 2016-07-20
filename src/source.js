@@ -33,3 +33,8 @@ Source.prototype.findHostileNearby = function() {
 Source.prototype.isHostileNearby = function() {
     return !_.isEmpty(this.findHostileNearby());
 };
+Source.prototype.findNearbyKiteFlag = function() {
+    return _.head(this.pos.findInRange(FIND_FLAGS, 10, {
+        filter: (f) => f.memory.type == sh.FLAG_KITE
+    }));
+};
