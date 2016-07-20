@@ -355,12 +355,6 @@ Creep.prototype.runHealer = function() {
     if(target == null) {
         target = this.pos.findNearestHurtCreep();
     }
-    if(target == null) {
-        target = this.pos.findClosestByRange(FIND_MY_CREEPS, {filter: (t) => {
-            return _.includes([sh.CREEP_WARRIOR,sh.CREEP_RANGER,sh.CREEP_TANK],
-                t.memory.role);
-        }});
-    }
     if(target != null) {
         if(this.pos.isNearTo(target)) {
             this.heal(target);

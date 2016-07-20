@@ -69,7 +69,11 @@ Room.prototype.hasHurtCreep = function() {
 Room.prototype.getContainerCount = function() {
     if(this.containerCount == null) {
         this.containerCount = _.size(this.find(FIND_STRUCTURES, {
-            filter: (t) => t.structureType == STRUCTURE_CONTAINER}));
+            filter: (t) => {
+                return t.structureType == STRUCTURE_CONTAINER
+                    && !t.isHostileNearby();
+            }
+        }));
     }
     return this.containerCount;
 };
@@ -90,13 +94,13 @@ Room.prototype.hasSpawn = function() {
 Room.prototype.findConstructionSites = function(types) {
     if(types == null) {
         return this.find(FIND_MY_CONSTRUCTION_SITES, {
-            filter: (t) => t.isHostileNearby()
+            filter: (t) => !t.isHostileNearby()
         });
     } else {
         return this.find(FIND_MY_CONSTRUCTION_SITES, {
             filter: (t) => {
                 return _.includes(types, t.structureType)
-                    && t.isHostileNearby();
+                    && !t.isHostileNearby();
             }
         });
     }

@@ -145,6 +145,9 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         }
     }
     if(Memory.rooms[name].type == sh.ROOM_KEEPER_LAIR) {
+        if(room != null && room.getContainerCount() > 0) {
+            expected.set(sh.CREEP_REPAIRER, 1);
+        }
         expected.set(sh.CREEP_TANK, 1);
         expected.set(sh.CREEP_HEALER, 1);
         expected.set(sh.CREEP_WARRIOR, 1);
