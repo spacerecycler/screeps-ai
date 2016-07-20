@@ -89,11 +89,14 @@ Room.prototype.hasSpawn = function() {
 };
 Room.prototype.findConstructionSites = function(types) {
     if(types == null) {
-        return this.find(FIND_MY_CONSTRUCTION_SITES);
+        return this.find(FIND_MY_CONSTRUCTION_SITES, {
+            filter: (t) => t.isHostileNearby()
+        });
     } else {
         return this.find(FIND_MY_CONSTRUCTION_SITES, {
             filter: (t) => {
-                return _.includes(types, t.structureType);
+                return _.includes(types, t.structureType)
+                    && t.isHostileNearby();
             }
         });
     }
