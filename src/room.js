@@ -14,7 +14,8 @@ Room.prototype.run = function() {
     let spawns = this.find(FIND_MY_STRUCTURES, {
         filter: (t) => t.structureType == STRUCTURE_SPAWN});
     if(!_.isEmpty(spawns) && _.isEmpty(this.findIdleFlags())) {
-        let result = this.createFlag(spawns[0].pos.x, spawns[0].pos.y-3);
+        let result = this.createFlag(spawns[0].pos.x, spawns[0].pos.y-3,
+            'Idle' + this.name);
         if(_.isString(result)) {
             Memory.flags[result] = {type: sh.FLAG_IDLE};
         } else {
