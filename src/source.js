@@ -25,11 +25,11 @@ Source.prototype.needsHarvester = function() {
     return !this.isHostileNearby() && workParts < 5
         && _.size(creeps) < this.countHarvestSpots();
 };
-Source.prototype.findHostileNearby = function() {
+Source.prototype.findNearbyHostile = function() {
     return this.pos.findInRange(FIND_HOSTILE_CREEPS, 5, {
         filter: (t) => t.hits > 100
     });
 };
 Source.prototype.isHostileNearby = function() {
-    return !_.isEmpty(this.findHostileNearby());
+    return !_.isEmpty(this.findNearbyHostile());
 };
