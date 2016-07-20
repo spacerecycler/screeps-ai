@@ -113,7 +113,7 @@ Room.prototype.findNotEmptyContainers = function() {
         }
     });
 };
-Room.prototype.findNotEmptyLink = function() {
+Room.prototype.findNotEmptyLinks = function() {
     return this.find(FIND_MY_STRUCTURES, {
         filter: (t) => {
             return t.structureType == STRUCTURE_LINK
