@@ -294,7 +294,7 @@ Creep.prototype.runWarrior = function() {
     let source = Game.getObjectById(this.memory.targetSource);
     if(source != null) {
         let target = _.head(source.findHostileNearby());
-        if(target != null && target.hits > 100) {
+        if(target != null) {
             if(this.pos.isNearTo(target)) {
                 this.attack(target);
             } else {
@@ -323,7 +323,7 @@ Creep.prototype.runRanger = function() {
     let source = Game.getObjectById(this.memory.targetSource);
     if(source != null) {
         let target = _.head(source.findHostileNearby());
-        if(target != null && target.hits > 100) {
+        if(target != null) {
             if(this.pos.inRangeTo(target, 3)) {
                 this.rangedAttack(target);
             } else {
@@ -382,7 +382,7 @@ Creep.prototype.runTank = function() {
     }
     let source = Game.getObjectById(this.memory.targetSource);
     let target = _.head(source.findHostileNearby());
-    if(target != null && target.hits > 100) {
+    if(target != null) {
         if(this.pos.isNearTo(target)) {
             this.attack(target);
         } else {
@@ -508,32 +508,32 @@ Creep.prototype.fillEnergy = function() {
         if(this.pos.isNearTo(target)) {
             let energyTaken = 0;
             if(target instanceof Source) {
-                    if(this.harvest(target) == OK) {
-                        energyTaken = Math.min(
-                            this.memory.numWorkParts*HARVEST_POWER,
-                            target.energy);
-                        target.energy -= energyTaken;
-                    }
+                if(this.harvest(target) == OK) {
+                    energyTaken = Math.min(
+                        this.memory.numWorkParts*HARVEST_POWER,
+                        target.energy);
+                    target.energy -= energyTaken;
+                }
             } else if (target instanceof StructureContainer
                 || target instanceof StructureStorage) {
-                    if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
-                        energyTaken = Math.min(
-                            target.store[RESOURCE_ENERGY],
-                            this.carryCapacity - this.carry[RESOURCE_ENERGY]);
-                        target.store[RESOURCE_ENERGY] -= energyTaken;
-                    }
+                if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
+                    energyTaken = Math.min(
+                        target.store[RESOURCE_ENERGY],
+                        this.carryCapacity - this.carry[RESOURCE_ENERGY]);
+                    target.store[RESOURCE_ENERGY] -= energyTaken;
+                }
             } else if (target instanceof Resource) {
-                    if(this.pickup(target) == OK) {
-                        energyTaken = Math.min(target.amount,
-                            this.carryCapacity - this.carry[RESOURCE_ENERGY]);
-                        target.amount -= energyTaken;
-                    }
+                if(this.pickup(target) == OK) {
+                    energyTaken = Math.min(target.amount,
+                        this.carryCapacity - this.carry[RESOURCE_ENERGY]);
+                    target.amount -= energyTaken;
+                }
             } else if (target instanceof StructureLink) {
-                    if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
-                        energyTaken = Math.min(target.energy,
-                            this.carryCapacity - this.carry[RESOURCE_ENERGY]);
-                        target.energy -= energyTaken;
-                    }
+                if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
+                    energyTaken = Math.min(target.energy,
+                        this.carryCapacity - this.carry[RESOURCE_ENERGY]);
+                    target.energy -= energyTaken;
+                }
             } else {
                 console.log('error unable to load energy: ' + target);
             }
