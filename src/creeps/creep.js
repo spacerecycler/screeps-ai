@@ -301,9 +301,7 @@ Creep.prototype.runWarrior = function() {
                 this.moveToS(target);
             }
         } else {
-            if(!this.pos.inRangeTo(source, 2)) {
-                this.moveToS(source);
-            }
+            this.idle();
         }
     } else {
         let target = this.pos.findNearestAttacker();
@@ -330,9 +328,7 @@ Creep.prototype.runRanger = function() {
                 this.moveToS(target);
             }
         } else {
-            if(!this.pos.inRangeTo(source, 2)) {
-                this.moveToS(source);
-            }
+            this.idle();
         }
     } else {
         let target = this.pos.findNearestAttacker();
@@ -389,9 +385,7 @@ Creep.prototype.runTank = function() {
             this.moveToS(target);
         }
     } else {
-        if(!this.pos.inRangeTo(source, 2)) {
-            this.moveToS(source);
-        }
+        this.idle();
     }
 };
 Creep.prototype.ensureRoom = function() {
