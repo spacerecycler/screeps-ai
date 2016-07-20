@@ -14,7 +14,6 @@ let sh = {
     CREEPS_WARLIKE: ['warrior','ranger','healer','tank'],
     FLAG_IDLE: 'idle',
     FLAG_RALLY: 'rally',
-    FLAG_KITE: 'kite',
     ROOM_EXPANSION: 'expansion',
     ROOM_KEEPER_LAIR: 'keeperLair',
     reservationMin: 1000,
