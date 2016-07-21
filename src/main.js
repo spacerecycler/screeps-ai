@@ -1,7 +1,7 @@
 'use strict';
 require('room');
-require('room_pos');
-require('room_obj');
+require('room-pos');
+require('room-obj');
 require('flag');
 require('source');
 require('controller');
