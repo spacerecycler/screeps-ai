@@ -17,8 +17,8 @@ let sh = {
     FLAG_RALLY: 'rally',
     ROOM_EXPANSION: 'expansion',
     ROOM_KEEPER_LAIR: 'keeperLair',
-    reservationMin: 1000,
-    reservationMax: 2000,
+    RESERVATION_MIN: 1000,
+    RESERVATION_MAX: 2000,
     ATTACKER_PARTS: new Set([RANGED_ATTACK,ATTACK,CLAIM])
 };
 module.exports = sh;

@@ -111,11 +111,11 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
                     room.memory.needReserve = true;
                 } else {
                     if(room.controller.reservation.ticksToEnd <
-                        sh.reservationMin) {
+                        sh.RESERVATION_MIN) {
                         room.memory.needReserve = true;
                     }
                     if(room.controller.reservation.ticksToEnd >
-                        sh.reservationMax) {
+                        sh.RESERVATION_MAX) {
                         room.memory.needReserve = false;
                     }
                 }
