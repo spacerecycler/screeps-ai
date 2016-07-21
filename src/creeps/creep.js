@@ -486,7 +486,8 @@ Creep.prototype.fillEnergy = function() {
         }
         if(target == null && this.room.storage == null
             && this.room.getContainerCount() == 0
-            && this.memory.role != sh.CREEP_FILLER) {
+            && this.memory.role != sh.CREEP_FILLER
+            && this.memory.role != sh.CREEP_TRANSPORTER) {
             target = this.pos.findClosestByPath(FIND_SOURCES);
         }
         if(target != null) {
