@@ -192,8 +192,8 @@ Creep.prototype.runTransporter = function() {
     }
 };
 Creep.prototype.runHarvester = function() {
+    let targetSource = Game.getObjectById(this.memory.targetSource);
     if(!this.isCreepWorking()) {
-        let targetSource = Game.getObjectById(this.memory.targetSource);
         if(this.pos.isNearTo(targetSource)) {
             let energyTaken = 0;
             if(this.harvest(targetSource) == OK) {
@@ -234,9 +234,9 @@ Creep.prototype.runHarvester = function() {
             this.moveToS(target);
         }
     } else {
-        if(target == null && this.room.getContainerCount() == 0) {
-            target = this.pos.findNearestConstructionSite([
-                STRUCTURE_CONTAINER]);
+        if(target == null) {
+            target = targetSource.pos.findInRange(
+                FIND_MY_CONSTRUCTION_SITES, 2);
         }
         if(target != null) {
             this.build(target);
@@ -526,7 +526,8 @@ Creep.prototype.fillEnergy = function() {
             } else {
                 console.log('error unable to load energy: ' + target);
             }
-            return this.carry[RESOURCE_ENERGY] + energyTaken >= this.carryCapacity;
+            return this.carry[RESOURCE_ENERGY] + energyTaken
+                >= this.carryCapacity;
         } else {
             this.moveToS(target);
         }
