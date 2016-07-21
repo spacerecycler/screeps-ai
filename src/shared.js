@@ -21,4 +21,4 @@ let sh = {
     RESERVATION_MAX: 2000,
     ATTACKER_PARTS: new Set([RANGED_ATTACK,ATTACK,CLAIM])
 };
-module.exports = sh;
+module.exports = Object.freeze(sh);

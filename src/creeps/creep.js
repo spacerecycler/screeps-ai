@@ -199,7 +199,7 @@ Creep.prototype.runHarvester = function() {
             if(this.harvest(targetSource) == OK) {
                 energyTaken = Math.min(this.memory.numWorkParts*HARVEST_POWER,
                     targetSource.energy);
-                targetSource.energy -= energyTaken;
+                // targetSource.energy -= energyTaken;
             }
             if(this.carry[RESOURCE_ENERGY] + energyTaken < this.carryCapacity) {
                 return;
@@ -502,7 +502,7 @@ Creep.prototype.fillEnergy = function() {
                     energyTaken = Math.min(
                         this.memory.numWorkParts*HARVEST_POWER,
                         target.energy);
-                    target.energy -= energyTaken;
+                    // target.energy -= energyTaken;
                 }
             } else if (target instanceof StructureContainer
                 || target instanceof StructureStorage) {
@@ -510,19 +510,19 @@ Creep.prototype.fillEnergy = function() {
                     energyTaken = Math.min(
                         target.store[RESOURCE_ENERGY],
                         this.carryCapacity - this.carry[RESOURCE_ENERGY]);
-                    target.store[RESOURCE_ENERGY] -= energyTaken;
+                    // target.store[RESOURCE_ENERGY] -= energyTaken;
                 }
             } else if (target instanceof Resource) {
                 if(this.pickup(target) == OK) {
                     energyTaken = Math.min(target.amount,
                         this.carryCapacity - this.carry[RESOURCE_ENERGY]);
-                    target.amount -= energyTaken;
+                    // target.amount -= energyTaken;
                 }
             } else if (target instanceof StructureLink) {
                 if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
                     energyTaken = Math.min(target.energy,
                         this.carryCapacity - this.carry[RESOURCE_ENERGY]);
-                    target.energy -= energyTaken;
+                    // target.energy -= energyTaken;
                 }
             } else {
                 console.log('error unable to load energy: ' + target);
