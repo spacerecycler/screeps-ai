@@ -16,7 +16,8 @@ Source.prototype.countHarvestSpots = function() {
 };
 Source.prototype.needsHarvester = function() {
     let creeps = _.filter(Game.creeps, (creep) => {
-        return creep.memory.role == sh.CREEP_HARVESTER
+        return creep.memory != null
+            && creep.memory.role == sh.CREEP_HARVESTER
             && creep.memory.targetSource == this.id;
     });
     let workParts = 0;

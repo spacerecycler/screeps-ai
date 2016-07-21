@@ -54,12 +54,13 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
     let room = Game.rooms[name];
     if(room != null) {
         if(_.isEmpty(_.filter(Game.creeps, (creep) => {
-            return creep.memory.role == sh.CREEP_HARVESTER
-                && creep.memory.room == name
-                && creep.memory.targetSource == null;}))) {
-            let harvesters = _.size(_.filter(Game.creeps, (creep) =>
-                creep.memory.role == sh.CREEP_HARVESTER
-                && creep.memory.room == name));
+            return Memory.creeps[creep.name].role == sh.CREEP_HARVESTER
+                && Memory.creeps[creep.name].room == name
+                && Memory.creeps[creep.name].targetSource == null;}))) {
+            let harvesters = _.size(_.filter(Game.creeps, (creep) => {
+                return creep.memory.role == sh.CREEP_HARVESTER
+                    && creep.memory.room == name;
+            }));
             if(room.checkNeedHarvester()) {
                 harvesters++;
             }
@@ -157,8 +158,10 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
     return expected;
 };
 StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
-    let roomCreeps = _.filter(Game.creeps, (creep) =>
-        creep.memory.role == role && creep.memory.room == name);
+    let roomCreeps = _.filter(Game.creeps, (creep) => {
+        return Memory.creeps[creep.name].role == role
+            && Memory.creeps[creep.name].room == name;
+    });
     if(_.size(roomCreeps) < count) {
         let body = this.chooseBody(role, name);
         if(this.canCreateCreep(body) == OK) {
@@ -182,7 +185,7 @@ StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
 };
 StructureSpawn.prototype.chooseBody = function(role, name) {
     let totalCreeps = _.filter(Game.creeps, (creep) =>
-        creep.memory.role == role);
+        Memory.creeps[creep.name].role == role);
     let energyCapAvail = this.room.energyCapacityAvailable;
     let body = [];
     let div = 0;

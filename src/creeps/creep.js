@@ -418,8 +418,10 @@ Creep.prototype.rally = function() {
     if(this.memory.ready) {
         return true;
     }
-    if(!_.isEmpty(_.filter(Game.creeps, (c) => c.memory.room == this.memory.room
-        && c.memory.ready))) {
+    if(!_.isEmpty(_.filter(Game.creeps, (c) => {
+        return c.memory != null && c.memory.room == this.memory.room
+            && c.memory.ready;
+    }))) {
         return true;
     }
     let flag = _.head(_.filter(Game.flags, (f) => f.isRally(this.memory.room)));
