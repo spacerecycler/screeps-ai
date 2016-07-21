@@ -1,3 +1,4 @@
+'use strict';
 StructureLink.prototype.run = function() {
     if(Memory.links[this.id] == null) {
         Memory.links[this.id] = {};

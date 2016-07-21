@@ -1,3 +1,4 @@
+'use strict';
 RoomObject.prototype.tryRepair = function(mem) {
     let target = Game.getObjectById(mem.targetId);
     // logic below to only repair things when they are 90% damaged

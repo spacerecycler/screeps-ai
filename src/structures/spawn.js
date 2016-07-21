@@ -1,3 +1,4 @@
+'use strict';
 let sh = require('shared');
 StructureSpawn.prototype.run = function() {
     if(this.room.mode == MODE_SIMULATION && !this.memory.roadsToSources) {

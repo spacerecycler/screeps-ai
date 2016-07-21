@@ -1,3 +1,4 @@
+'use strict';
 let sh = require('shared');
 Source.prototype.countHarvestSpots = function() {
     if(this.harvestSpots == null) {

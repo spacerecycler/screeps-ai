@@ -1,3 +1,4 @@
+'use strict';
 let sh = require('shared');
 let flatMap = _.compose(_.compact, _.flatten, _.map);
 Creep.prototype.run = function() {

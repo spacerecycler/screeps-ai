@@ -1,3 +1,4 @@
+'use strict';
 let sh = require('shared');
 Flag.prototype.isIdle = function() {
     return this.memory.type == sh.FLAG_IDLE;

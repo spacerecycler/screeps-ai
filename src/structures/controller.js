@@ -1,3 +1,4 @@
+'use strict';
 StructureController.prototype.countReserveSpots = function() {
     if(this.reserveSpots == null) {
         let count = 0;

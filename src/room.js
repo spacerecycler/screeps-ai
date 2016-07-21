@@ -1,3 +1,4 @@
+'use strict';
 let sh = require('shared');
 Room.prototype.run = function() {
     if(!this.isMine() && this.memory.type == null) {

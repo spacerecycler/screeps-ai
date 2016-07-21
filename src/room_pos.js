@@ -1,3 +1,4 @@
+'use strict';
 let sh = require('shared');
 RoomPosition.prototype.findNearestAttacker = function() {
     let attacker = this.findClosestByRange(FIND_HOSTILE_CREEPS, {

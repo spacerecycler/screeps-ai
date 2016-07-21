@@ -1,3 +1,4 @@
+'use strict';
 require('room');
 require('room_pos');
 require('room_obj');
