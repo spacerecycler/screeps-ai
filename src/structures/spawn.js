@@ -149,10 +149,10 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         if(room != null && room.getContainerCount() > 0) {
             expected.set(sh.CREEP_REPAIRER, 1);
         }
-        expected.set(sh.CREEP_TANK, 1);
+        // expected.set(sh.CREEP_TANK, 1);
         expected.set(sh.CREEP_HEALER, 1);
-        expected.set(sh.CREEP_WARRIOR, 1);
-        expected.set(sh.CREEP_RANGER, 1);
+        expected.set(sh.CREEP_WARRIOR, 4);
+        // expected.set(sh.CREEP_RANGER, 1);
     }
     return expected;
 };

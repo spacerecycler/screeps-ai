@@ -10,5 +10,5 @@ Flag.prototype.hasRallyGroup = function() {
     let creeps = this.pos.findInRange(FIND_MY_CREEPS, 1, {filter: (t) => {
         return _.includes(sh.CREEPS_WARLIKE, t.memory.role);
     }});
-    return _.size(creeps) == _.size(sh.CREEPS_WARLIKE);
+    return _.size(creeps) == 5;
 };
