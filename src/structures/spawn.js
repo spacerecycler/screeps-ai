@@ -216,16 +216,19 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
             return [MOVE];
         case sh.CREEP_WARRIOR:
             this.addParts(body, 2, TOUGH);
-            this.addParts(body, 6, MOVE);
+            this.addParts(body, 5, MOVE);
             this.addParts(body, 4, ATTACK);
+            body.push(MOVE);
             return body;
         case sh.CREEP_RANGER:
-            this.addParts(body, 5, MOVE);
+            this.addParts(body, 2, TOUGH);
+            this.addParts(body, 4, MOVE);
             this.addParts(body, 3, RANGED_ATTACK);
             body.push(MOVE);
             return body;
         case sh.CREEP_HEALER:
-            this.addParts(body, 3, MOVE);
+            this.addParts(body, 1, TOUGH);
+            this.addParts(body, 2, MOVE);
             this.addParts(body, 2, HEAL);
             body.push(MOVE);
             return body;
