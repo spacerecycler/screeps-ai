@@ -152,8 +152,8 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         }
         // expected.set(sh.CREEP_TANK, 1);
         expected.set(sh.CREEP_HEALER, 1);
-        expected.set(sh.CREEP_WARRIOR, 4);
-        // expected.set(sh.CREEP_RANGER, 1);
+        // expected.set(sh.CREEP_WARRIOR, 4);
+        expected.set(sh.CREEP_RANGER, 4);
     }
     return expected;
 };
