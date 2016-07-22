@@ -152,13 +152,15 @@ Creep.prototype.runTransporter = function() {
         target = null;
     }
     if(target == null) {
-        let curEnergy = STORAGE_CAPACITY;
+        let distance = 255;
         _.forEach(Memory.config.rooms, (name) => {
             let room = Game.rooms[name];
-            if(room != null && room.isMine() && room.isStorageNotFull()
-                && room.storage.store[RESOURCE_ENERGY] < curEnergy) {
-                target = room.storage;
-                curEnergy = room.storage.store[RESOURCE_ENERGY];
+            if(room != null && room.isMine() && room.isStorageNotFull()) {
+                let route = Game.map.findRoute(this.room.name, room.name);
+                if(route != ERR_NO_PATH && _.size(route) < distance) {
+                    distance = _.size(route);
+                    target = room.storage;
+                }
             }
         });
         if(target != null) {
