@@ -22,3 +22,6 @@ StructureLink.prototype.run = function() {
         }
     }
 };
+StructureLink.prototype.getEnergy = function() {
+    return this.energy;
+};

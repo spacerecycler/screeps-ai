@@ -27,3 +27,9 @@ Source.prototype.needsHarvester = function() {
     return !this.isHostileNearby() && workParts < 5
         && _.size(creeps) < this.countHarvestSpots();
 };
+Source.prototype.getEnergy = function() {
+    return this.energy;
+};
+Source.prototype.doGiveEnergy = function(creep) {
+    return creep.harvest(this);
+};

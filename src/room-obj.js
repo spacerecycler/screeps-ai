@@ -36,3 +36,27 @@ RoomObject.prototype.findNearbyHostile = function() {
 RoomObject.prototype.isHostileNearby = function() {
     return !_.isEmpty(this.findNearbyHostile());
 };
+RoomObject.prototype.getEnergy = function() {
+    return 0;
+};
+RoomObject.prototype.getProjectedEnergy = function() {
+    if(this.projectedEnergy == null) {
+        this.projectedEnergy = this.getEnergy();
+    }
+    return this.projectedEnergy;
+};
+RoomObject.prototype.giveEnergy = function(creep) {
+    let maxPull = creep.carryCapacity - creep.carry[RESOURCE_ENERGY];
+    if(this instanceof Source) {
+        maxPull = creep.memory.numWorkParts*HARVEST_POWER;
+    }
+    let ret = this.doGiveEnergy(creep);
+    if(ret == OK) {
+        let energyTaken = Math.min(maxPull, this.getProjectedEnergy());
+        this.projectedEnergy -= energyTaken;
+    }
+    return ret;
+};
+RoomObject.prototype.doGiveEnergy = function() {
+    return ERR_INVALID_TARGET;
+};

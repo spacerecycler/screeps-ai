@@ -30,6 +30,7 @@
         _: false
         OK: false
         ERR_NO_PATH: false
+        ERR_INVALID_TARGET: false
         ERR_NOT_IN_RANGE: false
         ERR_NOT_ENOUGH_RESOURCES: false
         FIND_MY_CREEPS: false

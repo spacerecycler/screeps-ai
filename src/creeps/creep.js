@@ -457,19 +457,7 @@ Creep.prototype.fillEnergy = function() {
     // most creeps must harvest
     let target = Game.getObjectById(this.memory.energyTarget);
     if(target != null) {
-        let energyLeft = 0;
-        switch(target.constructor) {
-            case StructureContainer:
-            case StructureStorage:
-                energyLeft = target.store[RESOURCE_ENERGY];
-                break;
-            case Source:
-            case StructureLink:
-                energyLeft = target.energy;
-                break;
-            case Resource:
-                energyLeft = target.amount;
-        }
+        let energyLeft = target.getProjectedEnergy();
         if(energyLeft == 0) {
             target = null;
             delete this.memory.energyTarget;
@@ -500,39 +488,15 @@ Creep.prototype.fillEnergy = function() {
     }
     if(target != null) {
         if(this.pos.isNearTo(target)) {
-            let energyTaken = 0;
-            if(target instanceof Source) {
-                if(this.harvest(target) == OK) {
-                    energyTaken = Math.min(
-                        this.memory.numWorkParts*HARVEST_POWER,
-                        target.energy);
-                    // target.energy -= energyTaken;
-                }
-            } else if (target instanceof StructureContainer
-                || target instanceof StructureStorage) {
-                if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
-                    energyTaken = Math.min(
-                        target.store[RESOURCE_ENERGY],
-                        this.carryCapacity - this.carry[RESOURCE_ENERGY]);
-                    // target.store[RESOURCE_ENERGY] -= energyTaken;
-                }
-            } else if (target instanceof Resource) {
-                if(this.pickup(target) == OK) {
-                    energyTaken = Math.min(target.amount,
-                        this.carryCapacity - this.carry[RESOURCE_ENERGY]);
-                    // target.amount -= energyTaken;
-                }
-            } else if (target instanceof StructureLink) {
-                if(this.withdraw(target, RESOURCE_ENERGY) == OK) {
-                    energyTaken = Math.min(target.energy,
-                        this.carryCapacity - this.carry[RESOURCE_ENERGY]);
-                    // target.energy -= energyTaken;
-                }
+            let energyTaken = target.giveEnergy(this);
+            if(this.carry[RESOURCE_ENERGY] + energyTaken
+                >= this.carryCapacity) {
+                this.memory.working = true;
+                delete this.memory.energyTarget;
+                return true;
             } else {
-                console.log('error unable to load energy: ' + target);
+                return false;
             }
-            return this.carry[RESOURCE_ENERGY] + energyTaken
-                >= this.carryCapacity;
         } else {
             this.moveToS(target);
         }
