@@ -30,7 +30,7 @@ RoomObject.prototype.tryRepair = function(mem) {
 };
 RoomObject.prototype.findNearbyHostile = function() {
     return this.pos.findInRange(FIND_HOSTILE_CREEPS, 5, {
-        filter: (t) => t.hits > 100
+        filter: (t) => t.owner.username != 'Source Keeper' || t.hits > 100
     });
 };
 RoomObject.prototype.isHostileNearby = function() {
