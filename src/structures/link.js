@@ -25,3 +25,6 @@ StructureLink.prototype.run = function() {
 StructureLink.prototype.getEnergy = function() {
     return this.energy;
 };
+StructureLink.prototype.doGiveEnergy = function(creep) {
+    return creep.withdraw(this, RESOURCE_ENERGY);
+};

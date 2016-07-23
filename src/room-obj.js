@@ -37,6 +37,7 @@ RoomObject.prototype.isHostileNearby = function() {
     return !_.isEmpty(this.findNearbyHostile());
 };
 RoomObject.prototype.getEnergy = function() {
+    console.log('get energy not implemented');
     return 0;
 };
 RoomObject.prototype.getProjectedEnergy = function() {
@@ -58,5 +59,6 @@ RoomObject.prototype.giveEnergy = function(creep) {
     return ret;
 };
 RoomObject.prototype.doGiveEnergy = function() {
+    console.log('do give energy not implemented');
     return ERR_INVALID_TARGET;
 };
