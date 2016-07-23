@@ -51,12 +51,12 @@ RoomObject.prototype.giveEnergy = function(creep) {
     if(this instanceof Source) {
         maxPull = creep.memory.numWorkParts*HARVEST_POWER;
     }
-    let ret = this.doGiveEnergy(creep);
-    if(ret == OK) {
-        let energyTaken = Math.min(maxPull, this.getProjectedEnergy());
+    let energyTaken = 0;
+    if(this.doGiveEnergy(creep) == OK) {
+        energyTaken = Math.min(maxPull, this.getProjectedEnergy());
         this.projectedEnergy -= energyTaken;
     }
-    return ret;
+    return energyTaken;
 };
 RoomObject.prototype.doGiveEnergy = function() {
     console.log('do give energy not implemented');
