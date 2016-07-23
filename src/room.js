@@ -72,6 +72,7 @@ Room.prototype.getContainerCount = function() {
         this.containerCount = _.size(this.find(FIND_STRUCTURES, {
             filter: (t) => {
                 return t.structureType == STRUCTURE_CONTAINER
+                    && !_.includes(Memory.config.blacklist[this.name], t.id)
                     && !t.isHostileNearby();
             }
         }));
