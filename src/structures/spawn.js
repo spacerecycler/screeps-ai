@@ -68,7 +68,11 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
         }
         let containerCount = room.getContainerCount();
         if(containerCount > 0 && !room.isMine()) {
-            expected.set(sh.CREEP_TRANSPORTER, Math.min(containerCount, 2));
+            if(room.memory.type == sh.ROOM_KEEPER_LAIR) {
+                expected.set(sh.CREEP_TRANSPORTER, containerCount * 2);
+            } else {
+                expected.set(sh.CREEP_TRANSPORTER, Math.min(containerCount, 2));
+            }
         }
         if(room.energyCapacityAvailable > 0) {
             if(room.energyCapacityAvailable > 400) {
