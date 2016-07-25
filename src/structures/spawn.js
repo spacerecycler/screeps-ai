@@ -163,7 +163,7 @@ StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
             && Memory.creeps[creep.name].room == name;
     });
     if(_.size(roomCreeps) < count) {
-        let body = this.chooseBody(role, name);
+        let body = this.chooseBody(role, name, _.size(roomCreeps));
         if(this.canCreateCreep(body) == OK) {
             let result = this.createCreep(body, null, {
                 role: role,
@@ -183,9 +183,7 @@ StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
     }
     return false;
 };
-StructureSpawn.prototype.chooseBody = function(role, name) {
-    let totalCreeps = _.filter(Game.creeps, (creep) =>
-        Memory.creeps[creep.name].role == role);
+StructureSpawn.prototype.chooseBody = function(role, name, roomCreepsCount) {
     let energyCapAvail = this.room.energyCapacityAvailable;
     let body = [];
     let div = 0;
@@ -201,7 +199,7 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
             return body;
         case sh.CREEP_FILLER:
             div = Math.min(5, Math.trunc(energyCapAvail/100));
-            if(totalCreeps == 0) {
+            if(roomCreepsCount == 0 && this.room.name == name) {
                 div = 3;
             }
             this.addParts(body, div, CARRY);
@@ -209,7 +207,7 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
             return body;
         case sh.CREEP_TRANSPORTER:
             div = Math.min(10, Math.trunc(energyCapAvail/100));
-            if(totalCreeps == 0) {
+            if(roomCreepsCount == 0 && this.room.name == name) {
                 div = 3;
             }
             this.addParts(body, div, CARRY);
@@ -241,7 +239,10 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
             body.push(ATTACK);
             return body;
         case sh.CREEP_HARVESTER:
-            if(this.room.name == name) {
+            if(roomCreepsCount == 0 && this.room.name == name) {
+                this.addParts(body, 2, WORK);
+                this.addParts(body, 1, MOVE);
+            } else if(this.room.name == name) {
                 div = Math.min(5, Math.trunc((energyCapAvail-100)/100));
                 this.addParts(body, div, WORK);
                 body.push(MOVE);
