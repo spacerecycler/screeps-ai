@@ -7,6 +7,7 @@ let sh = {
     CREEP_CAPTURER: 'capturer',
     CREEP_FILLER: 'filler',
     CREEP_TRANSPORTER: 'transporter',
+    CREEP_TRANSFER: 'transfer',
     CREEP_SCOUT: 'scout',
     CREEP_WARRIOR: 'warrior',
     CREEP_RANGER: 'ranger',

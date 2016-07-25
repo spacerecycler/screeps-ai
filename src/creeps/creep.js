@@ -8,6 +8,10 @@ Creep.prototype.run = function() {
             this.runHarvester();
             return;
         }
+        if(this.memory.role == sh.CREEP_TRANSFER) {
+            this.runTransfer();
+            return;
+        }
         if(this.carryCapacity > 0 && !this.isCreepWorking()) {
             if(this.memory.role == sh.CREEP_TRANSPORTER && !this.ensureRoom()) {
                 return;
@@ -191,6 +195,20 @@ Creep.prototype.runTransporter = function() {
         } else {
             this.moveToS(target);
         }
+    }
+};
+Creep.prototype.runTransfer = function() {
+    let tower = this.room.storage.pos.findInRange(FIND_MY_STRUCTURES, 2,
+        {filter: (t) => t.structureType == STRUCTURE_TOWER});
+    if(this.pos.isNearTo(this.room.storage)) {
+        if(this.pos.isNearTo(tower)) {
+            this.withdraw(this.room.storage, RESOURCE_ENERGY, 25);
+            this.transfer(tower, RESOURCE_ENERGY, 25);
+        } else {
+            this.moveToS(tower);
+        }
+    } else {
+        this.moveToS(this.room.storage);
     }
 };
 Creep.prototype.runHarvester = function() {

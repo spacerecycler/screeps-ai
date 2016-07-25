@@ -86,6 +86,12 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
             } else {
                 expected.set(sh.CREEP_UPGRADER, 1);
             }
+            if(room.storage != null) {
+                if(!_.isEmpty(room.storage.pos.findInRange(FIND_MY_STRUCTURES,
+                    2, {filter: (t) => t.structureType == STRUCTURE_TOWER}))) {
+                    expected.set(sh.CREEP_TRANSFER, 1);
+                }
+            }
         }
         let numConstructionSites = _.size(room.findConstructionSites());
         if(numConstructionSites > 1) {
@@ -213,6 +219,8 @@ StructureSpawn.prototype.chooseBody = function(role, name, roomCreepsCount) {
             this.addParts(body, div, CARRY);
             this.addParts(body, div, MOVE);
             return body;
+        case sh.CREEP_TRANSFER:
+            return [CARRY,MOVE];
         case sh.CREEP_SCOUT:
             return [MOVE];
         case sh.CREEP_WARRIOR:
