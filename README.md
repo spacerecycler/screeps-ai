@@ -9,4 +9,4 @@
 
 Herein lies my Screeps AI that I have spent way too long on :ok_hand:
 
-_ Warning: This code may or may not be my live running code. _
+_Warning: This code may or may not be my live running code._
