@@ -1,8 +1,8 @@
 # Screeps AI
 
-[![Travis branch](https://img.shields.io/travis/spacerecycler/screeps-ai/master.svg)]()
-[![node](https://img.shields.io/node/v/gh-badges.svg)]()
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
+[![Build Status](
+    https://travis-ci.org/spacerecycler/screeps-ai.svg?branch=master)](
+        https://travis-ci.org/spacerecycler/screeps-ai)
 
 Herein lies my Screeps AI that I have spent way too long on :ok_hand:
 
