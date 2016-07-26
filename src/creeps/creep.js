@@ -198,12 +198,21 @@ Creep.prototype.runTransporter = function() {
     }
 };
 Creep.prototype.runTransfer = function() {
-    let tower = this.room.storage.pos.findInRange(FIND_MY_STRUCTURES, 2,
-        {filter: (t) => t.structureType == STRUCTURE_TOWER});
+    let tower = _.head(this.room.storage.pos.findInRange(FIND_MY_STRUCTURES, 2,
+        {filter: (t) => t.structureType == STRUCTURE_TOWER}));
     if(this.pos.isNearTo(this.room.storage)) {
         if(this.pos.isNearTo(tower)) {
-            this.withdraw(this.room.storage, RESOURCE_ENERGY, 25);
-            this.transfer(tower, RESOURCE_ENERGY, 25);
+            if(!this.memory.working
+                && tower.energy < tower.energyCapacity * 0.9) {
+                this.memory.working = true;
+            }
+            if(this.memory.working && tower.energy == tower.energyCapacity) {
+                this.memory.working = false;
+            }
+            if(this.memory.working) {
+                this.withdraw(this.room.storage, RESOURCE_ENERGY, 25);
+                this.transfer(tower, RESOURCE_ENERGY);
+            }
         } else {
             this.moveToS(tower);
         }
