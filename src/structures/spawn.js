@@ -151,7 +151,7 @@ StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
             && Memory.creeps[creep.name].room == name;
     });
     if(_.size(roomCreeps) < count) {
-        let body = this.chooseBody(role, name, _.size(roomCreeps));
+        let body = this.chooseBody(role, name);
         if(this.canCreateCreep(body) == OK) {
             let result = this.createCreep(body, null, {
                 role: role,
@@ -171,7 +171,7 @@ StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
     }
     return false;
 };
-StructureSpawn.prototype.chooseBody = function(role, name, roomCreepsCount) {
+StructureSpawn.prototype.chooseBody = function(role, name) {
     let energyCapAvail = this.room.energyCapacityAvailable;
     let body = [];
     let div = 0;
