@@ -10,6 +10,7 @@ require('controller');
 require('link');
 require('spawn');
 require('tower');
+require('terminal');
 require('storage');
 require('container');
 require('creep');

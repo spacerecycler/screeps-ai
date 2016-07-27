@@ -81,5 +81,6 @@
         StructureLink: false
         StructureSpawn: false
         StructureStorage: false
+        StructureTerminal: false
         StructureTower: false
         StructureContainer: false
