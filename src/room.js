@@ -1,17 +1,6 @@
 'use strict';
 let sh = require('shared');
 Room.prototype.run = function() {
-    if(!this.isMine() && this.memory.type == null) {
-        if(this.isKeeperLairRoom()) {
-            this.memory.type = sh.ROOM_KEEPER_LAIR;
-        } else {
-            this.memory.type = sh.ROOM_EXPANSION;
-        }
-    }
-    if(this.controller != null) {
-        this.memory.controllerReserveSpots =
-            this.controller.countReserveSpots();
-    }
     let spawns = this.find(FIND_MY_STRUCTURES, {
         filter: (t) => t.structureType == STRUCTURE_SPAWN});
     if(!_.isEmpty(spawns) && _.isEmpty(this.findIdleFlags())) {
@@ -36,6 +25,44 @@ Room.prototype.run = function() {
     for(let link of links) {
         link.run();
     }
+};
+Room.prototype.setupMem = function() {
+    if(!this.isMine() && this.memory.type == null) {
+        if(this.isKeeperLairRoom()) {
+            this.memory.type = sh.ROOM_KEEPER_LAIR;
+        } else {
+            this.memory.type = sh.ROOM_EXPANSION;
+        }
+    }
+    if(this.controller != null) {
+        this.memory.controllerReserveSpots =
+            this.controller.countReserveSpots();
+    }
+    if(this.memory.type == sh.ROOM_EXPANSION && this.controller != null) {
+        if(this.controller.reservation == null) {
+            this.memory.needReserve = true;
+        } else {
+            if(this.controller.reservation.ticksToEnd <
+                sh.RESERVATION_MIN) {
+                this.memory.needReserve = true;
+            }
+            if(this.controller.reservation.ticksToEnd >
+                sh.RESERVATION_MAX) {
+                this.memory.needReserve = false;
+            }
+        }
+    }
+};
+Room.prototype.needsRecovery = function() {
+    if(this.needsRecovery == null) {
+        let roomCreeps = _.filter(Game.creeps, (creep) => {
+            return _.includes([sh.CREEP_HARVESTER,sh.CREEP_FILLER],
+                Memory.creeps[creep.name].role)
+                && Memory.creeps[creep.name].room == this.name;
+        });
+        this.needsRecovery = _.isEmpty(roomCreeps);
+    }
+    return this.needsRecovery;
 };
 Room.prototype.isMine = function() {
     return this.controller != null && this.controller.my;

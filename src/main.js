@@ -1,4 +1,5 @@
 'use strict';
+let sh = require('shared');
 require('room');
 require('room-pos');
 require('room-obj');
@@ -23,12 +24,14 @@ let m = {
             }
             m.setupMem();
             m.clearMem();
-            _.forEach(Memory.config.rooms, (name) => {
-                let room = Game.rooms[name];
-                if(room != null) {
-                    room.run();
-                }
-            });
+            let rooms = _.compact(_.map(Memory.config.rooms,
+                (name) => Game.rooms[name]));
+            for(let room of rooms) {
+                room.setupMem();
+            }
+            for(let room of rooms) {
+                room.run();
+            }
             _.forEach(Game.creeps, (creep) => {
                 creep.run();
             });
@@ -68,6 +71,9 @@ let m = {
             }
             if(Memory.config.blacklist[name] == null) {
                 Memory.config.blacklist[name] = [];
+            }
+            if(room == null && Memory.rooms[name].type == sh.ROOM_EXPANSION) {
+                Memory.rooms[name].needReserve = true;
             }
         });
         Memory.config.canClaim = mine < Game.gcl.level;

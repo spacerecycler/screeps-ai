@@ -111,29 +111,11 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
                 expected.set(sh.CREEP_RANGER, 1);
             }
         }
-        if(!room.isMine()) {
-            if(room.memory.type == sh.ROOM_EXPANSION) {
-                if(room.controller == null
-                    || room.controller.reservation == null) {
-                    room.memory.needReserve = true;
-                } else {
-                    if(room.controller.reservation.ticksToEnd <
-                        sh.RESERVATION_MIN) {
-                        room.memory.needReserve = true;
-                    }
-                    if(room.controller.reservation.ticksToEnd >
-                        sh.RESERVATION_MAX) {
-                        room.memory.needReserve = false;
-                    }
-                }
-            }
-        }
     } else {
-        if(Memory.rooms[name] == null || Memory.rooms[name].type == null) {
+        if(Memory.rooms[name].type == null) {
             expected.set(sh.CREEP_SCOUT, 1);
         } else if (Memory.rooms[name].type == sh.ROOM_EXPANSION) {
             expected.set(sh.CREEP_REPAIRER, 1);
-            Memory.rooms[name].needReserve = true;
         }
     }
     if(Memory.rooms[name].needReserve != null) {
@@ -194,6 +176,7 @@ StructureSpawn.prototype.chooseBody = function(role, name, roomCreepsCount) {
     let body = [];
     let div = 0;
     let numCarry = 0;
+    let room = Game.rooms[name];
     switch(role) {
         case sh.CREEP_CAPTURER:
             div = Math.min(2, Math.trunc(energyCapAvail/650));
@@ -205,7 +188,7 @@ StructureSpawn.prototype.chooseBody = function(role, name, roomCreepsCount) {
             return body;
         case sh.CREEP_FILLER:
             div = Math.min(5, Math.trunc(energyCapAvail/100));
-            if(roomCreepsCount == 0 && this.room.name == name) {
+            if(this.room.name == name && room.needsRecovery()) {
                 div = 3;
             }
             this.addParts(body, div, CARRY);
@@ -213,9 +196,6 @@ StructureSpawn.prototype.chooseBody = function(role, name, roomCreepsCount) {
             return body;
         case sh.CREEP_TRANSPORTER:
             div = Math.min(10, Math.trunc(energyCapAvail/100));
-            if(roomCreepsCount == 0 && this.room.name == name) {
-                div = 3;
-            }
             this.addParts(body, div, CARRY);
             this.addParts(body, div, MOVE);
             return body;
@@ -247,13 +227,15 @@ StructureSpawn.prototype.chooseBody = function(role, name, roomCreepsCount) {
             body.push(ATTACK);
             return body;
         case sh.CREEP_HARVESTER:
-            if(roomCreepsCount == 0 && this.room.name == name) {
-                this.addParts(body, 2, WORK);
-                this.addParts(body, 1, MOVE);
-            } else if(this.room.name == name) {
-                div = Math.min(5, Math.trunc((energyCapAvail-100)/100));
-                this.addParts(body, div, WORK);
-                body.push(MOVE);
+            if(this.room.name == name) {
+                if(room.needsRecovery()) {
+                    this.addParts(body, 2, WORK);
+                    this.addParts(body, 1, MOVE);
+                } else {
+                    div = Math.min(5, Math.trunc((energyCapAvail-100)/100));
+                    this.addParts(body, div, WORK);
+                    body.push(MOVE);
+                }
             } else {
                 let max = 5;
                 if(Memory.rooms[name].type == sh.ROOM_KEEPER_LAIR) {
