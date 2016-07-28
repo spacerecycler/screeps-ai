@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Screeps AI implementation",
   "homepage": "https://github.com/spacerecycler/screeps-ai",
-  "license": "Unlicense",
+  "license": "CC0-1.0",
   "engines": {
     "node": ">=6.0.0"
   },
