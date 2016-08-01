@@ -54,15 +54,12 @@ Room.prototype.setupMem = function() {
     }
 };
 Room.prototype.needsRecovery = function() {
-    if(this.needsRecovery == null) {
-        let roomCreeps = _.filter(Game.creeps, (creep) => {
-            return _.includes([sh.CREEP_HARVESTER,sh.CREEP_FILLER],
-                Memory.creeps[creep.name].role)
-                && Memory.creeps[creep.name].room == this.name;
-        });
-        this.needsRecovery = _.isEmpty(roomCreeps);
-    }
-    return this.needsRecovery;
+    let roomCreeps = _.filter(Game.creeps, (creep) => {
+        return _.includes([sh.CREEP_HARVESTER,sh.CREEP_FILLER],
+            Memory.creeps[creep.name].role)
+            && Memory.creeps[creep.name].room == this.name;
+    });
+    return _.isEmpty(roomCreeps);
 };
 Room.prototype.isMine = function() {
     return this.controller != null && this.controller.my;
