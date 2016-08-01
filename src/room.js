@@ -25,6 +25,15 @@ Room.prototype.run = function() {
     for(let link of links) {
         link.run();
     }
+    // if(this.isMine()) {
+    //     let road = _.head(this.find(FIND_STRUCTURES, {filter: (s) => {
+    //         return s.structureType == STRUCTURE_ROAD
+    //             && s.pos.lookFor(LOOK_TERRAIN) == 'plain';
+    //     }}));
+    //     if(road != null) {
+    //         road.destroy();
+    //     }
+    // }
 };
 Room.prototype.setupMem = function() {
     if(!this.isMine() && this.memory.type == null) {
