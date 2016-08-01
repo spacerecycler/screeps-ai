@@ -83,7 +83,8 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
                     Math.ceil(room.storage.store[RESOURCE_ENERGY]/100000);
                 expected.set(sh.CREEP_UPGRADER, count);
             } else {
-                expected.set(sh.CREEP_UPGRADER, 1);
+                expected.set(sh.CREEP_UPGRADER,
+                    Math.max(1, room.getContainerCount()));
             }
             if(room.storage != null) {
                 if(!_.isEmpty(room.storage.pos.findInRange(FIND_MY_STRUCTURES,
