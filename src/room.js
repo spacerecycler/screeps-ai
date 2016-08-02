@@ -61,6 +61,10 @@ Room.prototype.setupMem = function() {
             }
         }
     }
+    if(this.memory.type == sh.ROOM_EXPANSION
+        && this.memory.shouldClaim == null) {
+        this.memory.shouldClaim = true;
+    }
 };
 Room.prototype.needsRecovery = function() {
     let roomCreeps = _.filter(Game.creeps, (creep) => {
