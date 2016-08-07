@@ -267,6 +267,7 @@ Creep.prototype.runHarvester = function() {
             FIND_MY_CONSTRUCTION_SITES, 2));
         if(target != null) {
             this.build(target);
+            return;
         }
         this.idle();
     }
