@@ -239,8 +239,8 @@ Creep.prototype.runHarvester = function() {
         }
     }
     let target = null;
-    target = this.pos.findNearestNotFullLink();
-    if(target != null && !this.pos.isNearTo(target)) {
+    target = targetSource.pos.findNearestNotFullLink();
+    if(target != null && !targetSource.pos.inRangeTo(target, 2)) {
         target = null;
     }
     if(target == null && this.room.isStorageNotFull()
@@ -266,7 +266,11 @@ Creep.prototype.runHarvester = function() {
         target = _.head(targetSource.pos.findInRange(
             FIND_MY_CONSTRUCTION_SITES, 2));
         if(target != null) {
-            this.build(target);
+            if(this.isNearTo(target)) {
+                this.build(target);
+            } else {
+                this.moveToS(target);
+            }
             return;
         }
         this.idle();
