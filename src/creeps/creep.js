@@ -266,7 +266,7 @@ Creep.prototype.runHarvester = function() {
         target = _.head(targetSource.pos.findInRange(
             FIND_MY_CONSTRUCTION_SITES, 2));
         if(target != null) {
-            if(this.isNearTo(target)) {
+            if(this.pos.isNearTo(target)) {
                 this.build(target);
             } else {
                 this.moveToS(target);
