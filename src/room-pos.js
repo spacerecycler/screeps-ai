@@ -104,6 +104,16 @@ RoomPosition.prototype.findNearestNotFullContainer = function() {
         }
     });
 };
+RoomPosition.prototype.findNearbyNotFullContainer = function() {
+    return this.findClosestByRange(FIND_STRUCTURES, {
+        filter: (t) => {
+            return t.structureType == STRUCTURE_CONTAINER
+                && t.store[RESOURCE_ENERGY] < t.storeCapacity
+                && !_.includes(Memory.config.blacklist[this.roomName], t.id)
+                && this.inRangeTo(t, 3);
+        }
+    });
+};
 RoomPosition.prototype.findNearestNotEmptyContainer = function() {
     return this.findClosestByPath(FIND_STRUCTURES, {
         filter: (t) => {
