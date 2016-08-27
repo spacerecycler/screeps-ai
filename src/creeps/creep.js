@@ -248,7 +248,7 @@ Creep.prototype.runHarvester = function() {
         target = this.room.storage;
     }
     if(target == null) {
-        target = this.pos.findNearbyNotFullContainer();
+        target = targetSource.pos.findNearbyNotFullContainer();
     }
     if(target == null) {
         target = this.pos.findNearestFillTarget([STRUCTURE_EXTENSION]);
