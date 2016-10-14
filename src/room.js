@@ -190,3 +190,20 @@ Room.prototype.checkNeedHarvester = function() {
 Room.prototype.findIdleFlags = function() {
     return this.find(FIND_FLAGS, {filter: (f) => f.isIdle()});
 };
+Room.prototype.getDistanceToRoom = function(otherRoom) {
+    let name = null;
+    if(_.isString(otherRoom)) {
+        name = otherRoom;
+    } else {
+        name = otherRoom.name;
+    }
+    let distance = this.memory.distance[name];
+    if(distance == null) {
+        distance = _.size(Game.map.findRoute(this, name));
+        this.memory.distance[name] = distance;
+    }
+    return distance;
+};
+Room.prototype.isNearTo = function(otherRoom) {
+    return this.getDistanceToRoom(otherRoom) < 3;
+};

@@ -65,7 +65,8 @@ let m = {
                 Memory.rooms[name] = {};
             }
             _.defaults(Memory.rooms[name], {
-                wallsMax: 5000
+                wallsMax: 5000,
+                distance: {}
             });
             let room = Game.rooms[name];
             if(room != null && room.isMine()) {
