@@ -79,6 +79,7 @@ Creep.prototype.setupMem = function() {
     }
     if(_.includes([sh.CREEP_TANK,sh.CREEP_WARRIOR,sh.CREEP_RANGER],
         this.memory.role)
+        && Memory.rooms[this.memory.room].type == sh.ROOM_KEEPER_LAIR
         && this.memory.targetSource == null
         && Game.rooms[this.memory.room] != null) {
         let sources = Game.rooms[this.memory.room].findSourcesForTank();
