@@ -27,6 +27,7 @@ let m = {
             m.clearMem();
             let rooms = _.compact(_.map(Memory.config.rooms,
                 (name) => Game.rooms[name]));
+            rooms = _.sortBy(rooms, room => room.energyAvailable).reverse();
             for(let room of rooms) {
                 room.setupMem();
             }
