@@ -234,7 +234,9 @@ Creep.prototype.runHarvester = function() {
                 return;
             }
         } else {
-            this.moveToS(targetSource);
+            if(this.moveToI(targetSource) != OK) {
+                this.dismantleNearestWall();
+            }
             return;
         }
     }
@@ -308,7 +310,7 @@ Creep.prototype.runCapturer = function() {
             this.reserveController(this.room.controller);
         }
     } else {
-        this.moveToS(this.room.controller);
+        this.moveToI(this.room.controller);
     }
 };
 Creep.prototype.runScout = function() {
@@ -535,11 +537,20 @@ Creep.prototype.fillEnergy = function() {
     }
     return false;
 };
+Creep.prototype.moveToI = function(target) {
+    return this.moveTo(target, {reusePath: 4, maxRooms: 1});
+};
 Creep.prototype.moveToS = function(target) {
-    this.moveTo(target, {reusePath: 4});
+    return this.moveTo(target, {reusePath: 4});
 };
 Creep.prototype.doRepair = function(target) {
     if(this.repair(target) == ERR_NOT_IN_RANGE) {
         this.moveToS(target);
+    }
+};
+Creep.prototype.dismantleNearestWall = function() {
+    let wall = this.pos.findNearestWall();
+    if(this.dismantle(wall) == ERR_NOT_IN_RANGE) {
+        this.moveToI(wall);
     }
 };

@@ -125,3 +125,7 @@ RoomPosition.prototype.findNearestNotEmptyContainer = function() {
 RoomPosition.prototype.findNearestIdleFlag = function() {
     return this.findClosestByRange(FIND_FLAGS, {filter: (t) => t.isIdle()});
 };
+RoomPosition.prototype.findNearestWall = function() {
+    return this.findClosestByRange(FIND_STRUCTURES,
+        {filter: (t) => t.structureType == STRUCTURE_WALL});
+};
