@@ -117,7 +117,7 @@ Creep.prototype.runBuilder = function() {
     if(target != null) {
         this.memory.targetId = target.id;
         if(this.build(target) == ERR_NOT_IN_RANGE) {
-            this.moveToS(target);
+            this.moveToI(target);
         }
     } else {
         this.idle();
@@ -143,7 +143,7 @@ Creep.prototype.runFiller = function() {
         if(this.pos.isNearTo(target)) {
             this.transfer(target, RESOURCE_ENERGY);
         } else {
-            this.moveToS(target);
+            this.moveToI(target);
         }
     } else {
         this.idle();
@@ -215,10 +215,10 @@ Creep.prototype.runTransfer = function() {
                 this.transfer(tower, RESOURCE_ENERGY);
             }
         } else {
-            this.moveToS(tower);
+            this.moveToI(tower);
         }
     } else {
-        this.moveToS(this.room.storage);
+        this.moveToI(this.room.storage);
     }
 };
 Creep.prototype.runHarvester = function() {
@@ -263,7 +263,7 @@ Creep.prototype.runHarvester = function() {
         if(this.pos.isNearTo(target)) {
             this.transfer(target, RESOURCE_ENERGY);
         } else {
-            this.moveToS(target);
+            this.moveToI(target);
         }
     } else {
         target = _.head(targetSource.pos.findInRange(
@@ -272,7 +272,7 @@ Creep.prototype.runHarvester = function() {
             if(this.pos.isNearTo(target)) {
                 this.build(target);
             } else {
-                this.moveToS(target);
+                this.moveToI(target);
             }
             return;
         }
@@ -282,7 +282,7 @@ Creep.prototype.runHarvester = function() {
 Creep.prototype.runUpgrader = function() {
     let target = this.room.controller;
     if(this.upgradeController(target) == ERR_NOT_IN_RANGE) {
-        this.moveToS(target);
+        this.moveToI(target);
     }
 };
 Creep.prototype.runRepairer = function() {
@@ -293,7 +293,7 @@ Creep.prototype.runRepairer = function() {
         target = _.head(_.filter(objects, (t) => t != null
             && t instanceof Structure));
         if(target != null && this.dismantle(target) == ERR_NOT_IN_RANGE) {
-            this.moveToS(target);
+            this.moveToI(target);
         }
     }
     if(target == null) {
@@ -318,7 +318,7 @@ Creep.prototype.runScout = function() {
     let targets = this.room.find(FIND_SOURCES);
     let target = _.head(targets);
     if(!this.pos.isNearTo(target)) {
-        this.moveToS(target);
+        this.moveToI(target);
     } else {
         this.suicide();
     }
@@ -343,7 +343,7 @@ Creep.prototype.runWarrior = function() {
         let target = this.pos.findNearestAttacker();
         if(target != null) {
             if(this.attack(target) == ERR_NOT_IN_RANGE) {
-                this.moveToS(target);
+                this.moveToI(target);
             }
         } else {
             this.idle();
@@ -372,7 +372,7 @@ Creep.prototype.runRanger = function() {
             if(this.pos.inRangeTo(target, 3)) {
                 this.rangedAttack(target);
             } else {
-                this.moveToS(target);
+                this.moveToI(target);
             }
         } else {
             this.idle();
@@ -396,7 +396,7 @@ Creep.prototype.runHealer = function() {
             this.heal(target);
         } else {
             this.rangedHeal(target);
-            this.moveToS(target);
+            this.moveToI(target);
         }
     } else {
         this.idle();
@@ -446,7 +446,7 @@ Creep.prototype.ensureRoom = function() {
 Creep.prototype.idle = function() {
     let flag = this.pos.findNearestIdleFlag();
     if(!this.pos.isNearTo(flag)) {
-        this.moveToS(flag);
+        this.moveToI(flag);
     }
 };
 Creep.prototype.rally = function() {
@@ -531,7 +531,7 @@ Creep.prototype.fillEnergy = function() {
                 return false;
             }
         } else {
-            this.moveToS(target);
+            this.moveToI(target);
         }
     } else {
         this.idle();
@@ -546,7 +546,7 @@ Creep.prototype.moveToS = function(target) {
 };
 Creep.prototype.doRepair = function(target) {
     if(this.repair(target) == ERR_NOT_IN_RANGE) {
-        this.moveToS(target);
+        this.moveToI(target);
     }
 };
 Creep.prototype.dismantleNearestWall = function() {
