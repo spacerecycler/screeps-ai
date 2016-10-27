@@ -20,11 +20,14 @@ let m = {
     /** Main loop function for screeps **/
     loop: function() {
         profiler.wrap(function() {
-            if(Game.gcl.progress % 1000 < 10) {
-                console.log("GCL Progress: " + Game.gcl.progress);
-            }
             m.setupMem();
             m.clearMem();
+            let pct = Game.gcl.progress / Game.gcl.progressTotal * 100;
+            pct = pct.toFixed(1);
+            if(Memory.vars.lastPct != pct) {
+                console.log("GCL Progress: " + pct + "%");
+                Memory.vars.lastPct = pct;
+            }
             let rooms = _.compact(_.map(Memory.config.rooms,
                 (name) => Game.rooms[name]));
             rooms = _.sortBy(rooms, room => room.energyAvailable).reverse();
@@ -40,6 +43,9 @@ let m = {
         });
     },
     setupMem: function() {
+        if(Memory.vars == null) {
+            Memory.vars = {};
+        }
         if(Memory.towers == null) {
             Memory.towers = {};
         }
