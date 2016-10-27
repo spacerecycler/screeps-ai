@@ -249,7 +249,11 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
             body.push(CARRY);
             return body;
         case sh.CREEP_BUILDER:
-            return [WORK,CARRY,CARRY,MOVE,MOVE,MOVE];
+            if(energyCapAvail == 300) {
+                return [WORK,CARRY,CARRY,MOVE,MOVE];
+            } else {
+                return [WORK,CARRY,CARRY,MOVE,MOVE,MOVE];
+            }
         case sh.CREEP_UPGRADER:
         case sh.CREEP_REPAIRER:
             numCarry = 1;
