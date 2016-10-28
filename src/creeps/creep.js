@@ -8,6 +8,10 @@ Creep.prototype.run = function() {
             this.runHarvester();
             return;
         }
+        if(this.memory.role == sh.CREEP_MINERAL_HARVESTER) {
+            this.runMineralHarvester();
+            return;
+        }
         if(this.memory.role == sh.CREEP_TRANSFER) {
             this.runTransfer();
             return;
@@ -75,6 +79,18 @@ Creep.prototype.setupMem = function() {
             this.suicide();
         } else {
             this.memory.targetSource = _.head(sources).id;
+        }
+    }
+    if(this.memory.role == sh.CREEP_MINERAL_HARVESTER
+        && this.memory.targetExtractor == null
+        && Game.rooms[this.memory.room] != null) {
+        let extractor = Game.rooms[this.memory.room]
+            .findExtractorForHarvester();
+        if(extractor == null) {
+            this.suicide();
+        } else {
+            this.memory.targetExtractor = extractor.id;
+            this.memory.targetMineral = extractor.getMineral().id;
         }
     }
     if(_.includes([sh.CREEP_TANK,sh.CREEP_WARRIOR,sh.CREEP_RANGER],
@@ -291,6 +307,42 @@ Creep.prototype.runHarvester = function() {
         this.idle();
     }
 };
+Creep.prototype.runMineralHarvester = function() {
+    let targetExtractor = Game.getObjectById(this.memory.targetExtractor);
+    let targetMineral = Game.getObjectById(this.memory.targetMineral);
+    if(targetMineral == null) {
+        console.log(this.name + " error mineral");
+        return;
+    }
+    if(!this.isCreepWorking()) {
+        if(this.pos.isNearTo(targetMineral)) {
+            let mineralTaken = 0;
+            if(this.harvest(targetMineral) == OK) {
+                mineralTaken = Math.min(this.memory.numWorkParts*HARVEST_POWER,
+                    targetMineral.mineralAmount);
+                // targetSource.energy -= energyTaken;
+            }
+            if(this.carry[targetMineral.mineralType] + mineralTaken
+                < this.carryCapacity) {
+                return;
+            }
+        } else {
+            if(this.moveToI(targetMineral) != OK) {
+                this.dismantleNearestWall();
+            }
+            return;
+        }
+    }
+    let target = null;
+    target = targetExtractor.room.terminal;
+    if(target != null) {
+        if(this.pos.isNearTo(target)) {
+            this.transfer(target, targetMineral.mineralType);
+        } else {
+            this.moveToI(target);
+        }
+    }
+};
 Creep.prototype.runUpgrader = function() {
     let target = this.room.controller;
     if(this.upgradeController(target) == ERR_NOT_IN_RANGE) {
@@ -488,11 +540,11 @@ Creep.prototype.rally = function() {
 };
 Creep.prototype.isCreepWorking = function() {
     // work until we have no more energy
-    if(this.memory.working && this.carry[RESOURCE_ENERGY] == 0) {
+    if(this.memory.working && _.sum(this.carry) == 0) {
         this.memory.working = false;
     }
     if(!this.memory.working
-        && this.carry[RESOURCE_ENERGY] == this.carryCapacity) {
+        && _.sum(this.carry) == this.carryCapacity) {
         this.memory.working = true;
         delete this.memory.energyTarget;
     }

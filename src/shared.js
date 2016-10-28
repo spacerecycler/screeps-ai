@@ -13,6 +13,7 @@ let sh = {
     CREEP_RANGER: 'ranger',
     CREEP_HEALER: 'healer',
     CREEP_TANK: 'tank',
+    CREEP_MINERAL_HARVESTER: 'mineralHarvester',
     CREEPS_WARLIKE: ['warrior','ranger','healer','tank'],
     FLAG_IDLE: 'idle',
     FLAG_RALLY: 'rally',

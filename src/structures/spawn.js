@@ -112,6 +112,11 @@ StructureSpawn.prototype.getExpectedCreeps = function(name) {
                 expected.set(sh.CREEP_RANGER, 1);
             }
         }
+        if(room.isMine() && room.terminal != null) {
+            if(room.findExtractorForHarvester() != null) {
+                expected.set(sh.CREEP_MINERAL_HARVESTER, 1);
+            }
+        }
     } else {
         if(Memory.rooms[name].type == null) {
             expected.set(sh.CREEP_SCOUT, 1);
@@ -247,6 +252,11 @@ StructureSpawn.prototype.chooseBody = function(role, name) {
                 this.addParts(body, div, MOVE);
             }
             body.push(CARRY);
+            return body;
+        case sh.CREEP_MINERAL_HARVESTER:
+            this.addParts(body, 5, WORK);
+            this.addParts(body, 1, CARRY);
+            this.addParts(body, 5, MOVE);
             return body;
         case sh.CREEP_BUILDER:
             if(energyCapAvail == 300) {

@@ -41,6 +41,7 @@
         FIND_MY_STRUCTURES: false
         FIND_FLAGS: false
         FIND_MY_CONSTRUCTION_SITES: false
+        LOOK_MINERALS: false
         LOOK_TERRAIN: false
         MOVE: false
         WORK: false
@@ -61,6 +62,7 @@
         STRUCTURE_LINK: false
         STRUCTURE_STORAGE: false
         STRUCTURE_TOWER: false
+        STRUCTURE_EXTRACTOR: false
         STRUCTURE_CONTAINER: false
         STORAGE_CAPACITY: false
         MODE_SIMULATION: false
@@ -78,6 +80,7 @@
         Source: false
         Structure: false
         StructureController: false
+        StructureExtractor: false
         StructureLink: false
         StructureSpawn: false
         StructureStorage: false

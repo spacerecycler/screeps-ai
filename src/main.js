@@ -7,6 +7,7 @@ require('flag');
 require('source');
 require('resource');
 require('controller');
+require('extractor');
 require('link');
 require('spawn');
 require('tower');

@@ -184,6 +184,10 @@ Room.prototype.findSourcesForHarvester = function() {
     return this.find(FIND_SOURCES, {filter: (t) => t.needsHarvester()
         && !_.includes(Memory.config.blacklist[this.name], t.id)});
 };
+Room.prototype.findExtractorForHarvester = function() {
+    return _.head(this.find(FIND_MY_STRUCTURES,
+        {filter: (t) => t.structureType == STRUCTURE_EXTRACTOR}));
+};
 Room.prototype.checkNeedHarvester = function() {
     return !_.isEmpty(this.findSourcesForHarvester());
 };
