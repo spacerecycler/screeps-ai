@@ -201,24 +201,36 @@ Creep.prototype.runTransporter = function() {
 Creep.prototype.runTransfer = function() {
     let tower = _.head(this.room.storage.pos.findInRange(FIND_MY_STRUCTURES, 2,
         {filter: (t) => t.structureType == STRUCTURE_TOWER}));
-    if(this.pos.isNearTo(this.room.storage)) {
-        if(this.pos.isNearTo(tower)) {
-            if(!this.memory.working
-                && tower.energy < tower.energyCapacity * 0.9) {
-                this.memory.working = true;
-            }
-            if(this.memory.working && tower.energy == tower.energyCapacity) {
-                this.memory.working = false;
-            }
-            if(this.memory.working) {
-                this.withdraw(this.room.storage, RESOURCE_ENERGY, 25);
-                this.transfer(tower, RESOURCE_ENERGY);
-            }
-        } else {
-            this.moveToI(tower);
-        }
-    } else {
+    if(!this.memory.shouldFillTower
+        && tower.energy < tower.energyCapacity * 0.9) {
+        this.memory.shouldFillTower = true;
+    }
+    if(this.memory.shouldFillTower && tower.energy == tower.energyCapacity) {
+        this.memory.shouldFillTower = false;
+    }
+    let link = _.head(this.room.storage.pos.findInRange(FIND_MY_STRUCTURES, 2,
+        {filter: (t) => t.structureType == STRUCTURE_LINK}));
+    if(!this.pos.isNearTo(this.room.storage)) {
         this.moveToI(this.room.storage);
+        return;
+    }
+    if(!this.pos.isNearTo(tower)) {
+        this.moveToI(tower);
+        return;
+    }
+    if(link != null && !this.pos.isNearTo(link)) {
+        this.moveToI(link);
+        return;
+    }
+    if(link != null) {
+        this.withdraw(link, RESOURCE_ENERGY, 25);
+    } else {
+        this.withdraw(this.room.storage, RESOURCE_ENERGY, 25);
+    }
+    if(this.memory.shouldFillTower) {
+        this.transfer(tower, RESOURCE_ENERGY);
+    } else if (link != null) {
+        this.transfer(this.room.storage, RESOURCE_ENERGY);
     }
 };
 Creep.prototype.runHarvester = function() {
