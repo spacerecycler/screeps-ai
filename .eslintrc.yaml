@@ -36,7 +36,7 @@
         FIND_MY_CREEPS: false
         FIND_HOSTILE_CREEPS: false
         FIND_SOURCES: false
-        FIND_DROPPED_ENERGY: false
+        FIND_DROPPED_RESOURCES: false
         FIND_STRUCTURES: false
         FIND_MY_STRUCTURES: false
         FIND_FLAGS: false
@@ -65,7 +65,6 @@
         STRUCTURE_EXTRACTOR: false
         STRUCTURE_CONTAINER: false
         STORAGE_CAPACITY: false
-        MODE_SIMULATION: false
         CONTAINER_CAPACITY: false
         RESOURCE_ENERGY: false
         Game: false

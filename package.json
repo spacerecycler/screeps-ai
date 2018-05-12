@@ -5,7 +5,7 @@
   "homepage": "https://github.com/spacerecycler/screeps-ai",
   "license": "CC0-1.0",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.9.3"
   },
   "repository": {
     "type": "git",
@@ -17,15 +17,18 @@
   },
   "private": true,
   "devDependencies": {
-    "eslint": "^3.7.1",
+    "eslint": "^4.19.1",
     "grunt": "^1.0.1",
-    "grunt-eslint": "^19.0.0",
+    "grunt-eslint": "^20.1.0",
     "grunt-gitinfo": "^0.1.8",
     "grunt-screeps": "^1.2.1",
-    "load-grunt-tasks": "^3.5.0",
-    "screeps-profiler": "^1.1.2"
+    "load-grunt-tasks": "^4.0.0",
+    "screeps-profiler": "^2.0.1"
   },
   "scripts": {
     "test": "grunt test"
+  },
+  "dependencies": {
+    "npm-check-updates": "^2.14.2"
   }
 }

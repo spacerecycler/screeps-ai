@@ -1,7 +1,7 @@
 'use strict';
 let sh = require('shared');
 StructureSpawn.prototype.run = function() {
-    if(this.room.mode == MODE_SIMULATION && !this.memory.roadsToSources) {
+    if(Memory.testing && !this.memory.roadsToSources) {
         for(let source of this.room.find(FIND_SOURCES)) {
             let vals = PathFinder.search(this.pos, {pos: source.pos, range: 1});
             for(let val of vals.path) {
@@ -158,20 +158,24 @@ StructureSpawn.prototype.doSpawnCreep = function(name, role, count) {
     });
     if(_.size(roomCreeps) < count) {
         let body = this.chooseBody(role, name);
-        if(this.canCreateCreep(body) == OK) {
-            let result = this.createCreep(body, null, {
-                role: role,
-                room: name
+        let newCreepName = this.getRandomName();
+        let dryRunResult = this.spawnCreep(body, newCreepName, {dryRun: true});
+        if(dryRunResult == OK) {
+            let result = this.spawnCreep(body, newCreepName, {
+                memory: {role: role, room: name}
             });
-            if(_.isString(result)) {
+            if(result == OK) {
                 // console.log('body: ' + body);
                 console.log(this.name + ' Spawning new ' + role + ' for ' +
-                    name + ': ' + result);
+                    name + ': ' + newCreepName);
                 return true;
             } else {
                 console.log(this.name + ' Spawn error: ' + result);
             }
+        } else if(dryRunResult == ERR_NOT_ENOUGH_RESOURCES) {
+            return true;
         } else {
+            console.log(dryRunResult);
             return true;
         }
     }
@@ -284,4 +288,13 @@ StructureSpawn.prototype.addParts = function(body, times, part) {
     _.times(times, () => {
         body.push(part);
     });
+};
+// TODO: needs to be optimized to find an unused name
+StructureSpawn.prototype.getRandomName = function(){ 
+    if(Memory.creepindex == null || Memory.creepindex >= sh.namesCombined.length) {
+        Memory.creepindex = 0;
+    } else {
+        Memory.creepindex++;
+    }
+    return sh.namesCombined[Memory.creepindex % sh.namesCombined.length];
 };

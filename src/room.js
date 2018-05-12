@@ -9,7 +9,7 @@ Room.prototype.run = function() {
         if(_.isString(result)) {
             Memory.flags[result] = {type: sh.FLAG_IDLE};
         } else {
-            console.error('error creating flag');
+            console.log('error creating flag');
         }
     }
     for(let spawn of spawns) {

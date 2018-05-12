@@ -15,7 +15,7 @@ require('terminal');
 require('storage');
 require('container');
 require('creep');
-var profiler = require('screeps-profiler');
+const profiler = require('screeps-profiler');
 profiler.enable();
 let m = {
     /** Main loop function for screeps **/
@@ -44,6 +44,9 @@ let m = {
         });
     },
     setupMem: function() {
+        if(Memory.testing == null) {
+            Memory.testing = false;
+        }
         if(Memory.vars == null) {
             Memory.vars = {};
         }
@@ -55,6 +58,12 @@ let m = {
         }
         if(Memory.config == null) {
             Memory.config = {};
+        }
+        if(Memory.rooms == null) {
+            Memory.rooms = {};
+        }
+        if(Memory.flags == null) {
+            Memory.flags = {};
         }
         _.defaults(Memory.config, {
             canClaim: false,

@@ -562,7 +562,9 @@ Creep.prototype.fillEnergy = function() {
     }
     if(target == null) {
         if(!this.room.hasHostileAttacker()) {
-            target = this.pos.findClosestByPath(FIND_DROPPED_ENERGY);
+            target = this.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
+                filter: { resourceType: RESOURCE_ENERGY}
+            });
         }
         if(target == null) {
             target = this.pos.findNearestNotEmptyLink();
@@ -603,10 +605,10 @@ Creep.prototype.fillEnergy = function() {
     return false;
 };
 Creep.prototype.moveToI = function(target) {
-    return this.moveTo(target, {reusePath: 4, maxRooms: 1});
+    return this.moveTo(target, {reusePath: 4, maxRooms: 1, visualizePathStyle: {}});
 };
 Creep.prototype.moveToS = function(target) {
-    return this.moveTo(target, {reusePath: 4});
+    return this.moveTo(target, {reusePath: 4, visualizePathStyle: {}});
 };
 Creep.prototype.doRepair = function(target) {
     if(this.repair(target) == ERR_NOT_IN_RANGE) {
