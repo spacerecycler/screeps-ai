@@ -2,33 +2,44 @@
   "name": "screeps-ai",
   "version": "0.0.1",
   "description": "Screeps AI implementation",
-  "homepage": "https://github.com/spacerecycler/screeps-ai",
-  "license": "CC0-1.0",
-  "engines": {
-    "node": ">=8.9.3"
+  "main": "index.js",
+  "//": "If you add or change the names of destinations in screeps.json, make sure you update these scripts to reflect the changes",
+  "scripts": {
+    "lint": "tslint \"src/**/*.ts\"",
+    "push-main": "rollup -c --environment DEST:main",
+    "push-pserver": "rollup -c --environment DEST:pserver",
+    "push-sim": "rollup -c --environment DEST:sim",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch-main": "rollup -cw --environment DEST:main",
+    "watch-pserver": "rollup -cw --environment DEST:pserver",
+    "watch-sim": "rollup -cw --environment DEST:sim"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/spacerecycler/screeps-ai.git"
+    "url": "git+https://github.com/spacerecycler/screeps-ai.git"
   },
   "author": "Spacerecycler <spacerecycler@gmail.com>",
+  "license": "CC0-1.0",
   "bugs": {
     "url": "https://github.com/spacerecycer/screeps-ai/issues"
   },
+  "homepage": "https://github.com/spacerecycler/screeps-ai",
   "private": true,
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "grunt": "^1.0.1",
-    "grunt-eslint": "^20.1.0",
-    "grunt-gitinfo": "^0.1.8",
-    "grunt-screeps": "^1.2.1",
-    "load-grunt-tasks": "^4.0.0",
-    "screeps-profiler": "^2.0.1"
-  },
-  "scripts": {
-    "test": "grunt test"
+    "@types/lodash": "^3.10.1",
+    "@types/node": "^6.0.110",
+    "@types/screeps": "^2.2.1",
+    "rollup": "^0.57.1",
+    "rollup-plugin-clean": "^1.0.0",
+    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-screeps": "^0.1.2",
+    "rollup-plugin-typescript2": "^0.12.0",
+    "tslint": "^5.9.1",
+    "typescript": "^2.8.1"
   },
   "dependencies": {
-    "npm-check-updates": "^2.14.2"
+    "screeps-profiler": "^2.0.1",
+    "source-map": "~0.6.1"
   }
 }

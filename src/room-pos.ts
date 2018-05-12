@@ -1,30 +1,29 @@
-'use strict';
-let sh = require('shared');
+import { ATTACKER_PARTS } from "shared";
 RoomPosition.prototype.findNearestAttacker = function() {
-    let attacker = this.findClosestByRange(FIND_HOSTILE_CREEPS, {
+    const attacker = this.findClosestByRange(FIND_HOSTILE_CREEPS, {
         filter: (t) => {
-            for(let part of t.body) {
-                if(sh.ATTACKER_PARTS.has(part.type)) {
+            for (const part of t.body) {
+                if (ATTACKER_PARTS.has(part.type)) {
                     return true;
                 }
             }
             return false;
         }
     });
-    if(attacker == null) {
+    if (attacker == null) {
         return null;
     }
-    let healer = this.findClosestByRange(FIND_HOSTILE_CREEPS, {
+    const healer = this.findClosestByRange(FIND_HOSTILE_CREEPS, {
         filter: (t) => {
-            for(let part of t.body) {
-                if(part.type == HEAL) {
+            for (const part of t.body) {
+                if (part.type == HEAL) {
                     return true;
                 }
             }
             return false;
         }
     });
-    if(healer != null) {
+    if (healer != null) {
         return healer;
     } else {
         return attacker;
@@ -33,41 +32,43 @@ RoomPosition.prototype.findNearestAttacker = function() {
 RoomPosition.prototype.findNearestHurtCreep = function(roles) {
     return this.findClosestByRange(FIND_MY_CREEPS, {
         filter: (t) => {
-            if(roles == null) {
+            if (roles == null) {
                 return t.hits < t.hitsMax;
             } else {
                 return _.includes(roles, t.memory.role) && t.hits < t.hitsMax;
             }
-        }});
+        }
+    });
 };
-RoomPosition.prototype.findNearestHurtStructure = function(types) {
+RoomPosition.prototype.findNearestHurtStructure = function(types?) {
     return this.findClosestByRange(FIND_STRUCTURES, {
-        filter: (t) => {
+        filter: (t: AnyStructure) => {
             let max = t.hitsMax * 0.9;
-            if(_.includes([STRUCTURE_WALL,STRUCTURE_RAMPART],
+            if (_.includes([STRUCTURE_WALL, STRUCTURE_RAMPART],
                 t.structureType)) {
                 max = Math.min(t.hitsMax,
                     Memory.rooms[this.roomName].wallsMax * 0.9);
-            } else if (!_.includes([STRUCTURE_ROAD,STRUCTURE_CONTAINER],
+            } else if (!_.includes([STRUCTURE_ROAD, STRUCTURE_CONTAINER],
                 t.structureType) && !t.my) {
                 return false;
             }
-            if(_.includes(Memory.config.blacklist[this.roomName], t.id)) {
+            if (_.includes(Memory.config.blacklist[this.roomName], t.id)) {
                 return false;
             }
-            if(types != null && !_.includes(types, t.structureType)) {
+            if (types != null && !_.includes(types, t.structureType)) {
                 return false;
             }
             return t.hits < max;
         }
     });
 };
-RoomPosition.prototype.findNearestConstructionSite = function(types) {
-    if(types == null) {
+RoomPosition.prototype.findNearestConstructionSite = function(types?) {
+    if (types == null) {
         return this.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
     } else {
         return this.findClosestByPath(FIND_MY_CONSTRUCTION_SITES, {
-            filter: (t) => _.includes(types, t.structureType)});
+            filter: (t) => _.includes(types, t.structureType)
+        });
     }
 };
 RoomPosition.prototype.findNearestFillTarget = function(types) {
@@ -123,9 +124,9 @@ RoomPosition.prototype.findNearestNotEmptyContainer = function() {
     });
 };
 RoomPosition.prototype.findNearestIdleFlag = function() {
-    return this.findClosestByRange(FIND_FLAGS, {filter: (t) => t.isIdle()});
+    return this.findClosestByRange(FIND_FLAGS, { filter: (t) => t.isIdle() });
 };
 RoomPosition.prototype.findNearestWall = function() {
     return this.findClosestByRange(FIND_STRUCTURES,
-        {filter: (t) => t.structureType == STRUCTURE_WALL});
+        { filter: (t) => t.structureType == STRUCTURE_WALL });
 };

@@ -1,7 +1,6 @@
-'use strict';
 Resource.prototype.getEnergy = function() {
     return this.amount;
 };
-Resource.prototype.doGiveEnergy = function(creep) {
+Resource.prototype.doGiveEnergy = function(creep: Creep) {
     return creep.pickup(this);
 };

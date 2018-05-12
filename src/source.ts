@@ -1,12 +1,11 @@
-'use strict';
-let sh = require('shared');
+import { CreepType } from "shared";
 Source.prototype.countHarvestSpots = function() {
-    if(this.harvestSpots == null) {
+    if (this.harvestSpots == null) {
         let count = 0;
-        let tiles = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y-1,
-            this.pos.x-1, this.pos.y+1, this.pos.x+1, true);
-        for(let tile of tiles) {
-            if(tile.terrain != 'wall') {
+        const tiles = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y - 1,
+            this.pos.x - 1, this.pos.y + 1, this.pos.x + 1, true);
+        for (const tile of tiles) {
+            if (tile.terrain != "wall") {
                 count++;
             }
         }
@@ -15,13 +14,13 @@ Source.prototype.countHarvestSpots = function() {
     return this.harvestSpots;
 };
 Source.prototype.needsHarvester = function() {
-    let creeps = _.filter(Game.creeps, (creep) => {
+    const creeps = _.filter(Game.creeps, (creep) => {
         return creep.memory != null
-            && creep.memory.role == sh.CREEP_HARVESTER
+            && creep.memory.role == CreepType.CREEP_HARVESTER
             && creep.memory.targetSource == this.id;
     });
     let workParts = 0;
-    for(let creep of creeps) {
+    for (const creep of creeps) {
         workParts += creep.memory.numWorkParts;
     }
     return !this.isHostileNearby() && workParts < 5
