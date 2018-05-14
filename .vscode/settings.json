@@ -11,5 +11,6 @@
     "typings/**": true
   },
   "typescript.tsdk": "./node_modules/typescript/lib",
-  "typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false
+  "typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+  "tslint.ignoreDefinitionFiles": false
 }

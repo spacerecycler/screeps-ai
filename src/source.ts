@@ -1,6 +1,6 @@
 import { CreepType } from "shared";
-Source.prototype.countHarvestSpots = function() {
-    if (this.harvestSpots == null) {
+Source.prototype.harvestSpots = function() {
+    if (this._harvestSpots == null) {
         let count = 0;
         const tiles = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y - 1,
             this.pos.x - 1, this.pos.y + 1, this.pos.x + 1, true);
@@ -9,9 +9,9 @@ Source.prototype.countHarvestSpots = function() {
                 count++;
             }
         }
-        this.harvestSpots = count;
+        this._harvestSpots = count;
     }
-    return this.harvestSpots;
+    return this._harvestSpots;
 };
 Source.prototype.needsHarvester = function() {
     const creeps = _.filter(Game.creeps, (creep) => {
@@ -24,7 +24,7 @@ Source.prototype.needsHarvester = function() {
         workParts += creep.memory.numWorkParts;
     }
     return !this.isHostileNearby() && workParts < 5
-        && _.size(creeps) < this.countHarvestSpots();
+        && _.size(creeps) < this.harvestSpots();
 };
 Source.prototype.getEnergy = function() {
     return this.energy;

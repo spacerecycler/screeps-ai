@@ -8,8 +8,8 @@ Flag.prototype.isRally = function(toRoom) {
 Flag.prototype.hasRallyGroup = function() {
     const creeps = this.pos.findInRange(FIND_MY_CREEPS, 1, {
         filter: (t: Creep) => {
-            return _.includes(CREEPS_WARLIKE, t.memory.role);
+            return CREEPS_WARLIKE.includes(t.memory.role);
         }
     });
-    return _.size(creeps) == 5;
+    return creeps.length == 5;
 };

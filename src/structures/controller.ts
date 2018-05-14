@@ -1,5 +1,5 @@
-StructureController.prototype.countReserveSpots = function() {
-    if (this.reserveSpots == null) {
+StructureController.prototype.reserveSpots = function() {
+    if (this._reserveSpots == null) {
         let count = 0;
         const tiles = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y - 1,
             this.pos.x - 1, this.pos.y + 1, this.pos.x + 1, true);
@@ -8,7 +8,7 @@ StructureController.prototype.countReserveSpots = function() {
                 count++;
             }
         }
-        this.reserveSpots = count;
+        this._reserveSpots = count;
     }
-    return this.reserveSpots;
+    return this._reserveSpots;
 };

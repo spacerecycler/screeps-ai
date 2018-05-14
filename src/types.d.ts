@@ -30,7 +30,6 @@ interface CreepMemory {
     shouldFillTower?: boolean;
     ready?: boolean;
     working?: boolean;
-    exit?: RoomPosition;
 }
 interface FlagMemory {
     type?: FlagTypeConstant;
@@ -38,54 +37,58 @@ interface FlagMemory {
 }
 interface RoomMemory {
     wallsMax: number;
-    distance: {};
+    distance: { [index: string]: number };
     type?: RoomTypeConstant;
-    needReserve: boolean;
+    needReserve?: boolean;
     controllerReserveSpots?: number;
     shouldClaim?: boolean;
 }
 interface SpawnMemory {
     roadsToSources?: boolean;
 }
-interface TowerMemory { }
+interface TowerMemory {
+    targetId?: string;
+}
 interface LinkMemory {
     nearSource: boolean;
 }
-
 interface Flag {
     isIdle(): boolean;
     isRally(toRoom: string): boolean;
     hasRallyGroup(): boolean;
 }
-interface Resource {
-    getEnergy(): number;
-}
 interface RoomObject {
-    projectedEnergy?: number;
-    tryRepair(mem: any): {};
-    doRepair?(target: {}): void;
+    _projectedEnergy?: number;
+    projectedEnergy(): number;
+    tryRepair(mem: CreepMemory | TowerMemory): Structure | null;
+    doRepair(target: Structure): void;
     findNearbyHostile(): Creep[];
     isHostileNearby(): boolean;
     getEnergy(): number;
-    getProjectedEnergy(): number;
     giveEnergy(creep: Creep): number;
     doGiveEnergy(creep: Creep): ScreepsReturnCode;
 }
 interface RoomPosition {
     findNearestAttacker(): Creep | null;
-    findNearestHurtCreep(roles?: string[]): Creep;
-    findNearestHurtStructure(types?: string[]): Structure;
-    findNearestConstructionSite(types?: string[]): ConstructionSite;
-    findNearestFillTarget(types: string[]): AnyStructure;
-    findNearestNotFullLink(): AnyOwnedStructure;
-    findNearestNotEmptyLink(): AnyOwnedStructure;
-    findNearestNotFullContainer(): AnyStructure;
-    findNearbyNotFullContainer(): AnyStructure;
-    findNearestNotEmptyContainer(): AnyStructure;
-    findNearestIdleFlag(): Flag;
-    findNearestWall(): AnyStructure;
+    findNearestHurtCreep(roles?: CreepTypeConstant[]): Creep | null;
+    findNearestHurtStructure(types?: StructureConstant[]): Structure | null;
+    findNearestConstructionSite(types?: StructureConstant[]): ConstructionSite | null;
+    findNearestFillTarget(type: FillTargetConstants): FillTarget | null;
+    findNearestNotFullLink(): StructureLink | null;
+    findNearestNotEmptyLink(): StructureLink | null;
+    findNearestNotFullContainer(): StructureContainer | null;
+    findNearbyNotFullContainer(): StructureContainer | null;
+    findNearestNotEmptyContainer(): StructureContainer | null;
+    findNearestIdleFlag(): Flag | null;
+    findNearestWall(): StructureWall | null;
 }
 interface Room {
+    _containerCount?: number;
+    _hasTower?: boolean;
+    _hasSpawn?: boolean;
+    _hostileAttacker?: boolean;
+    _hurtCreep?: boolean;
+    containerCount(): number;
     run(): void;
     setupMem(): void;
     needsRecovery(): boolean;
@@ -93,13 +96,12 @@ interface Room {
     isKeeperLairRoom(): boolean;
     hasHostileAttacker(): boolean;
     hasHurtCreep(): boolean;
-    getContainerCount(): number;
     hasTower(): boolean;
     hasSpawn(): boolean;
-    findConstructionSites(): ConstructionSite[];
-    findNotFullContainers(): StructureContainer;
-    findNotEmptyContainers(): StructureContainer;
-    findNotEmptyLinks(): StructureLink;
+    findConstructionSites(types?: StructureConstant): ConstructionSite[];
+    findNotFullContainers(): StructureContainer[];
+    findNotEmptyContainers(): StructureContainer[];
+    findNotEmptyLinks(): StructureLink[];
     isStorageNotFull(): boolean;
     isStorageNotEmpty(): boolean;
     findSourcesForTank(): Source[];
@@ -111,8 +113,8 @@ interface Room {
     isNearTo(otherRoom: Room | string): boolean;
 }
 interface Source {
-    harvestSpots?: number;
-    countHarvestSpots(): number;
+    _harvestSpots?: number;
+    harvestSpots(): number;
     needsHarvester(): boolean;
     getEnergy(): number;
 }
@@ -120,7 +122,7 @@ interface Creep {
     run(): void;
     setupMem(): void;
     ensureRoom(): void;
-    isCreepWorking(): boolean;
+    isCreepWorking(): boolean | undefined;
     fillEnergy(): boolean;
     runHarvester(): void;
     runMineralHarvester(): void;
@@ -136,8 +138,8 @@ interface Creep {
     runRanger(): void;
     runHealer(): void;
     runTank(): void;
-    moveToI(target: {}): CreepMoveReturnCode;
-    moveToS(target: {}): CreepMoveReturnCode;
+    moveToI(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND;
+    moveToS(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND;
     idle(): void;
     rally(): boolean;
     dismantleNearestWall(): void;
@@ -155,15 +157,31 @@ interface StructureExtractor {
     getMineral(): Mineral<MineralConstant>;
 }
 interface StructureController {
-    reserveSpots?: number;
-    countReserveSpots(): number;
+    _reserveSpots?: number;
+    reserveSpots(): number;
 }
 interface StructureSpawn {
     run(): void;
     spawnMissingCreep(roomName: string): boolean;
-    getExpectedCreeps(roomName: string): Map<string, number>;
-    doSpawnCreep(roomName: string, role: string, count: number): boolean;
-    chooseBody(role: string, roomName: string): BodyPartConstant[];
+    getExpectedCreeps(roomName: string): Map<CreepTypeConstant, number>;
+    doSpawnCreep(roomName: string, role: CreepTypeConstant, count: number): boolean;
+    chooseBody(role: CreepTypeConstant, roomName: string): BodyPartConstant[];
     addParts(body: BodyPartConstant[], times: number, part: BodyPartConstant): void;
     getRandomName(): string;
 }
+type RoomTypeConstant = "expansion" | "keeperLair";
+type FlagTypeConstant = "idle" | "rally";
+type CreepTypeConstant = "harvester" | "upgrader" | "builder" | "repairer" |
+    "capturer" | "filler" | "transporter" | "transfer" |
+    "scout" | "warrior" | "ranger" | "healer" | "tank" | "mineralHarvester";
+type WarlikeCreepTypes = "warrior" | "ranger" | "healer" | "tank";
+type AttackerBodyParts = RANGED_ATTACK | ATTACK | CLAIM;
+type DefenseStructure = StructureWall | StructureRampart;
+type FillTargetConstants = STRUCTURE_SPAWN | STRUCTURE_EXTENSION | STRUCTURE_TOWER;
+type FillTarget = StructureExtension | StructureSpawn | StructureTower;
+type EnergyTarget = Resource | StructureLink | StructureContainer | StructureStorage | Source;
+
+// Workarounds until pr merged
+interface NukeConstructor extends _Constructor<Nuke>, _ConstructorById<Nuke> { }
+interface ResourceConstructor extends _Constructor<Resource>, _ConstructorById<Resource> { }
+interface RoomConstructor extends _Constructor<Room> { }

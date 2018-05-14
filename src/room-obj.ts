@@ -1,12 +1,11 @@
 RoomObject.prototype.tryRepair = function(mem) {
-    let target = Game.getObjectById(mem.targetId);
+    let target = Game.getObjectById<Structure>(mem.targetId);
     // logic below to only repair things when they are 90% damaged
     // also cap hitpoints for walls since they have so many
     if (target != null) {
         let max = target.hitsMax;
-        if (_.includes([STRUCTURE_WALL, STRUCTURE_RAMPART],
-            target.structureType)) {
-            max = Math.min(target.hitsMax, this.room.memory.wallsMax);
+        if (Array<StructureConstant>(STRUCTURE_WALL, STRUCTURE_RAMPART).includes(target.structureType)) {
+            max = this.room == null ? target.hitsMax : Math.min(target.hitsMax, this.room.memory.wallsMax);
         }
         if (target.hits >= max) {
             delete mem.targetId;
@@ -37,11 +36,11 @@ RoomObject.prototype.getEnergy = () => {
     console.log("get energy not implemented");
     return 0;
 };
-RoomObject.prototype.getProjectedEnergy = function() {
-    if (this.projectedEnergy == null) {
-        this.projectedEnergy = this.getEnergy();
+RoomObject.prototype.projectedEnergy = function() {
+    if (this._projectedEnergy == null) {
+        this._projectedEnergy = this.getEnergy();
     }
-    return this.projectedEnergy;
+    return this._projectedEnergy;
 };
 RoomObject.prototype.giveEnergy = function(creep) {
     let maxPull = creep.carryCapacity - creep.carry[RESOURCE_ENERGY];
@@ -50,8 +49,8 @@ RoomObject.prototype.giveEnergy = function(creep) {
     }
     let energyTaken = 0;
     if (this.doGiveEnergy(creep) == OK) {
-        energyTaken = Math.min(maxPull, this.getProjectedEnergy());
-        this.projectedEnergy -= energyTaken;
+        energyTaken = Math.min(maxPull, this.projectedEnergy());
+        this._projectedEnergy = this.projectedEnergy() - energyTaken;
     }
     return energyTaken;
 };

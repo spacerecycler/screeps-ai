@@ -2,14 +2,21 @@ import * as profiler from "screeps-profiler";
 import { RoomType } from "shared";
 import { ErrorMapper } from "utils/ErrorMapper";
 
-import "creeps/*";
+import "creeps/creep";
 import "flag";
 import "resource";
 import "room";
 import "room-obj";
 import "room-pos";
 import "source";
-import "structures/*";
+import "structures/container";
+import "structures/controller";
+import "structures/extractor";
+import "structures/link";
+import "structures/spawn";
+import "structures/storage";
+import "structures/terminal";
+import "structures/tower";
 
 profiler.enable();
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
@@ -57,7 +64,7 @@ export const setupMem = () => {
       blacklist: {},
       canClaim: false,
       rooms: []
-    } as ConfigMemory;
+    };
   }
   if (Memory.rooms == null) {
     Memory.rooms = {};
@@ -76,7 +83,7 @@ export const setupMem = () => {
       Memory.rooms[name] = {
         distance: {},
         wallsMax: 5000
-      } as RoomMemory;
+      };
     }
     const room = Game.rooms[name];
     if (room != null && room.isMine()) {

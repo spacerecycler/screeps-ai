@@ -1,4 +1,4 @@
-import { ATTACKER_PARTS } from "shared";
+import { ATTACKER_PARTS, CreepTypeConstant } from "shared";
 RoomPosition.prototype.findNearestAttacker = function() {
     const attacker = this.findClosestByRange(FIND_HOSTILE_CREEPS, {
         filter: (t) => {
@@ -15,12 +15,7 @@ RoomPosition.prototype.findNearestAttacker = function() {
     }
     const healer = this.findClosestByRange(FIND_HOSTILE_CREEPS, {
         filter: (t) => {
-            for (const part of t.body) {
-                if (part.type == HEAL) {
-                    return true;
-                }
-            }
-            return false;
+            return t.body.map((p) => p.type).includes(HEAL);
         }
     });
     if (healer != null) {
@@ -35,52 +30,49 @@ RoomPosition.prototype.findNearestHurtCreep = function(roles) {
             if (roles == null) {
                 return t.hits < t.hitsMax;
             } else {
-                return _.includes(roles, t.memory.role) && t.hits < t.hitsMax;
+                return roles.includes(t.memory.role) && t.hits < t.hitsMax;
             }
         }
     });
 };
-RoomPosition.prototype.findNearestHurtStructure = function(types?) {
-    return this.findClosestByRange(FIND_STRUCTURES, {
-        filter: (t: AnyStructure) => {
+RoomPosition.prototype.findNearestHurtStructure = function(types) {
+    return this.findClosestByRange<Structure>(FIND_STRUCTURES, {
+        filter: (t) => {
             let max = t.hitsMax * 0.9;
-            if (_.includes([STRUCTURE_WALL, STRUCTURE_RAMPART],
-                t.structureType)) {
-                max = Math.min(t.hitsMax,
-                    Memory.rooms[this.roomName].wallsMax * 0.9);
-            } else if (!_.includes([STRUCTURE_ROAD, STRUCTURE_CONTAINER],
-                t.structureType) && !t.my) {
+            if (t instanceof StructureWall || t instanceof StructureRampart) {
+                max = Math.min(t.hitsMax, Memory.rooms[this.roomName].wallsMax * 0.9);
+            } else if (t instanceof OwnedStructure && !t.my) {
                 return false;
             }
-            if (_.includes(Memory.config.blacklist[this.roomName], t.id)) {
+            if (Memory.config.blacklist[this.roomName].includes(t.id)) {
                 return false;
             }
-            if (types != null && !_.includes(types, t.structureType)) {
+            if (types != null && !types.includes(t.structureType)) {
                 return false;
             }
             return t.hits < max;
         }
     });
 };
-RoomPosition.prototype.findNearestConstructionSite = function(types?) {
+RoomPosition.prototype.findNearestConstructionSite = function(types) {
     if (types == null) {
         return this.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
     } else {
         return this.findClosestByPath(FIND_MY_CONSTRUCTION_SITES, {
-            filter: (t) => _.includes(types, t.structureType)
+            filter: (t) => types.includes(t.structureType)
         });
     }
 };
-RoomPosition.prototype.findNearestFillTarget = function(types) {
-    return this.findClosestByRange(FIND_MY_STRUCTURES, {
+RoomPosition.prototype.findNearestFillTarget = function(type) {
+    return this.findClosestByRange<FillTarget>(FIND_MY_STRUCTURES, {
         filter: (t) => {
-            return _.includes(types, t.structureType)
-                && t.energy < t.energyCapacity;
+            const ft = t as FillTarget;
+            return type == t.structureType && ft.energy < ft.energyCapacity;
         }
     });
 };
 RoomPosition.prototype.findNearestNotFullLink = function() {
-    return this.findClosestByRange(FIND_MY_STRUCTURES, {
+    return this.findClosestByRange<StructureLink>(FIND_MY_STRUCTURES, {
         filter: (t) => {
             return t.structureType == STRUCTURE_LINK
                 && t.energy < t.energyCapacity;
@@ -88,7 +80,7 @@ RoomPosition.prototype.findNearestNotFullLink = function() {
     });
 };
 RoomPosition.prototype.findNearestNotEmptyLink = function() {
-    return this.findClosestByPath(FIND_MY_STRUCTURES, {
+    return this.findClosestByPath<StructureLink>(FIND_MY_STRUCTURES, {
         filter: (t) => {
             return t.structureType == STRUCTURE_LINK
                 && t.energy > 0
@@ -97,26 +89,26 @@ RoomPosition.prototype.findNearestNotEmptyLink = function() {
     });
 };
 RoomPosition.prototype.findNearestNotFullContainer = function() {
-    return this.findClosestByRange(FIND_STRUCTURES, {
+    return this.findClosestByRange<StructureContainer>(FIND_STRUCTURES, {
         filter: (t) => {
             return t.structureType == STRUCTURE_CONTAINER
                 && t.store[RESOURCE_ENERGY] < t.storeCapacity
-                && !_.includes(Memory.config.blacklist[this.roomName], t.id);
+                && Memory.config.blacklist[this.roomName].includes(t.id);
         }
     });
 };
 RoomPosition.prototype.findNearbyNotFullContainer = function() {
-    return this.findClosestByRange(FIND_STRUCTURES, {
+    return this.findClosestByRange<StructureContainer>(FIND_STRUCTURES, {
         filter: (t) => {
             return t.structureType == STRUCTURE_CONTAINER
                 && t.store[RESOURCE_ENERGY] < t.storeCapacity
-                && !_.includes(Memory.config.blacklist[this.roomName], t.id)
+                && Memory.config.blacklist[this.roomName].includes(t.id)
                 && this.inRangeTo(t, 3);
         }
     });
 };
 RoomPosition.prototype.findNearestNotEmptyContainer = function() {
-    return this.findClosestByPath(FIND_STRUCTURES, {
+    return this.findClosestByPath<StructureContainer>(FIND_STRUCTURES, {
         filter: (t) => {
             return t.structureType == STRUCTURE_CONTAINER
                 && t.store[RESOURCE_ENERGY] > 0;
@@ -127,6 +119,6 @@ RoomPosition.prototype.findNearestIdleFlag = function() {
     return this.findClosestByRange(FIND_FLAGS, { filter: (t) => t.isIdle() });
 };
 RoomPosition.prototype.findNearestWall = function() {
-    return this.findClosestByRange(FIND_STRUCTURES,
+    return this.findClosestByRange<StructureWall>(FIND_STRUCTURES,
         { filter: (t) => t.structureType == STRUCTURE_WALL });
 };
