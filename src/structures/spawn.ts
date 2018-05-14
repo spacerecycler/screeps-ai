@@ -12,7 +12,7 @@ StructureSpawn.prototype.run = function() {
     let spawnedOrMissing = false;
     spawnedOrMissing = this.spawnMissingCreep(this.room.name);
     if (!spawnedOrMissing) {
-        for (const name in Memory.config.rooms) {
+        for (const name of Memory.config.rooms) {
             const room = Game.rooms[name];
             if (name != this.room.name && room != null && room.isMine()
                 && this.room.isNearTo(room)) {
@@ -22,7 +22,7 @@ StructureSpawn.prototype.run = function() {
         }
     }
     if (!spawnedOrMissing) {
-        for (const name in Memory.config.rooms) {
+        for (const name of Memory.config.rooms) {
             const room = Game.rooms[name];
             if ((room == null || !room.isMine()) && this.room.isNearTo(name)) {
                 spawnedOrMissing = this.spawnMissingCreep(name);

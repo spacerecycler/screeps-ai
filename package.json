@@ -39,7 +39,6 @@
     "typescript": "^2.8.1"
   },
   "dependencies": {
-    "screeps-profiler": "^2.0.1",
     "source-map": "~0.6.1"
   }
 }

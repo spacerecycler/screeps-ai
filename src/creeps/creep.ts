@@ -163,7 +163,7 @@ Creep.prototype.runTransporter = function() {
     }
     if (target == null) {
         let distance = 255;
-        for (const name in Memory.config.rooms) {
+        for (const name of Memory.config.rooms) {
             const room = Game.rooms[name];
             if (room != null && room.isMine() && room.isStorageNotFull()) {
                 const route = Game.map.findRoute(this.room.name, room.name);
@@ -563,6 +563,10 @@ Creep.prototype.fillEnergy = function() {
             target = this.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
                 filter: (r) => r.resourceType == RESOURCE_ENERGY
             });
+            // TODO:
+            //if (target == null) {
+            //    target = this.pos.findClosestByPath(FIND_TOMBSTONES);
+            //}
         }
         if (target == null) {
             target = this.pos.findNearestNotEmptyLink();
@@ -603,10 +607,10 @@ Creep.prototype.fillEnergy = function() {
     return false;
 };
 Creep.prototype.moveToI = function(target) {
-    return this.moveTo(target, { reusePath: 4, maxRooms: 1, visualizePathStyle: {} });
+    return this.moveTo(target, { reusePath: 5, maxRooms: 1, visualizePathStyle: {} });
 };
 Creep.prototype.moveToS = function(target) {
-    return this.moveTo(target, { reusePath: 4, visualizePathStyle: {} });
+    return this.moveTo(target, { reusePath: 5, visualizePathStyle: {} });
 };
 Creep.prototype.doRepair = function(target) {
     if (this.repair(target) == ERR_NOT_IN_RANGE) {

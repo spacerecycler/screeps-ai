@@ -1,4 +1,3 @@
-import * as profiler from "screeps-profiler";
 import { RoomType } from "shared";
 import { ErrorMapper } from "utils/ErrorMapper";
 
@@ -18,32 +17,29 @@ import "structures/storage";
 import "structures/terminal";
 import "structures/tower";
 
-profiler.enable();
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
 // This utility uses source maps to get the line numbers and file names of the original, TS source code
 export const loop = ErrorMapper.wrapLoop(() => {
-  profiler.wrap(() => {
-    console.log(`Current game tick is ${Game.time}`);
-    setupMem();
-    clearMem();
-    const pct = Game.gcl.progress / Game.gcl.progressTotal * 100;
-    const pctStr = pct.toFixed(1);
-    if (Memory.vars.lastPct != pctStr) {
-      console.log("GCL Progress: " + pctStr + "%");
-      Memory.vars.lastPct = pctStr;
-    }
-    const rooms = Memory.config.rooms.map((name) => Game.rooms[name]).filter((item) => item != null);
-    rooms.sort((room) => room.energyAvailable).reverse();
-    for (const room of rooms) {
-      room.setupMem();
-    }
-    for (const room of rooms) {
-      room.run();
-    }
-    for (const creep in Game.creeps) {
-      Game.creeps[creep].run();
-    }
-  });
+  console.log(`Current game tick is ${Game.time}`);
+  setupMem();
+  clearMem();
+  const pct = Game.gcl.progress / Game.gcl.progressTotal * 100;
+  const pctStr = pct.toFixed(1);
+  if (Memory.vars.lastPct != pctStr) {
+    console.log("GCL Progress: " + pctStr + "%");
+    Memory.vars.lastPct = pctStr;
+  }
+  const rooms = Memory.config.rooms.map((name) => Game.rooms[name]).filter((item) => item != null);
+  rooms.sort((room) => room.energyAvailable).reverse();
+  for (const room of rooms) {
+    room.setupMem();
+  }
+  for (const room of rooms) {
+    room.run();
+  }
+  for (const creep in Game.creeps) {
+    Game.creeps[creep].run();
+  }
 });
 
 export const setupMem = () => {
@@ -78,7 +74,7 @@ export const setupMem = () => {
     }
   }
   let mine = 0;
-  for (const name in Memory.config.rooms) {
+  for (const name of Memory.config.rooms) {
     if (Memory.rooms[name] == null) {
       Memory.rooms[name] = {
         distance: {},

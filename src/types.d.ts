@@ -1,8 +1,3 @@
-declare module "screeps-profiler" {
-    export function wrap(callback: () => void): () => void;
-    export function enable(): void;
-}
-
 interface Memory {
     testing: boolean;
     config: ConfigMemory;
@@ -13,7 +8,7 @@ interface Memory {
 interface ConfigMemory {
     canClaim: boolean;
     rooms: string[];
-    blacklist: { [index: string]: string[] };
+    blacklist: { [roomName: string]: string[] };
 }
 interface VarsMemory {
     lastPct?: string;
@@ -30,6 +25,7 @@ interface CreepMemory {
     shouldFillTower?: boolean;
     ready?: boolean;
     working?: boolean;
+    _move?: any;
 }
 interface FlagMemory {
     type?: FlagTypeConstant;
@@ -37,7 +33,7 @@ interface FlagMemory {
 }
 interface RoomMemory {
     wallsMax: number;
-    distance: { [index: string]: number };
+    distance: { [roomName: string]: number };
     type?: RoomTypeConstant;
     needReserve?: boolean;
     controllerReserveSpots?: number;
@@ -179,7 +175,7 @@ type AttackerBodyParts = RANGED_ATTACK | ATTACK | CLAIM;
 type DefenseStructure = StructureWall | StructureRampart;
 type FillTargetConstants = STRUCTURE_SPAWN | STRUCTURE_EXTENSION | STRUCTURE_TOWER;
 type FillTarget = StructureExtension | StructureSpawn | StructureTower;
-type EnergyTarget = Resource | StructureLink | StructureContainer | StructureStorage | Source;
+type EnergyTarget = Resource | StructureLink | StructureContainer | StructureStorage | Source | Tombstone;
 
 // Workarounds until pr merged
 interface NukeConstructor extends _Constructor<Nuke>, _ConstructorById<Nuke> { }
