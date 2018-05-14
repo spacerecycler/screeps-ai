@@ -93,7 +93,7 @@ RoomPosition.prototype.findNearestNotFullContainer = function() {
         filter: (t) => {
             return t.structureType == STRUCTURE_CONTAINER
                 && t.store[RESOURCE_ENERGY] < t.storeCapacity
-                && Memory.config.blacklist[this.roomName].includes(t.id);
+                && !Memory.config.blacklist[this.roomName].includes(t.id);
         }
     });
 };
@@ -102,7 +102,7 @@ RoomPosition.prototype.findNearbyNotFullContainer = function() {
         filter: (t) => {
             return t.structureType == STRUCTURE_CONTAINER
                 && t.store[RESOURCE_ENERGY] < t.storeCapacity
-                && Memory.config.blacklist[this.roomName].includes(t.id)
+                && !Memory.config.blacklist[this.roomName].includes(t.id)
                 && this.inRangeTo(t, 3);
         }
     });
