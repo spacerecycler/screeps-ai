@@ -3,5 +3,3 @@ dist: trusty
 sudo: false
 node_js:
     - node
-before_script:
-    - npm install -g grunt-cli
