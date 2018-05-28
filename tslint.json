@@ -1,21 +1,29 @@
 {
-  "extends" : [
-    "tslint:recommended"
-  ],
+  "extends": "tslint:recommended",
   "rules": {
     "forin": false,
-    "interface-name": [true, "never-prefix"],
-    "member-ordering": [false],
-    "no-console": [false],
-    "no-namespace": [true, "allow-declarations"],
-    "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
+    "interface-name": {
+      "options": "never-prefix"
+    },
+    "member-ordering": false,
+    "no-console": false,
+    "no-namespace": {
+      "options": "allow-declarations"
+    },
+    "trailing-comma": {
+      "options": {
+        "multiline": "never",
+        "singleline": "never"
+      }
+    },
     "triple-equals": false,
-    "variable-name": [
-      true,
-      "ban-keywords",
-      "check-format",
-      "allow-pascal-case",
-      "allow-leading-underscore"
-    ]
+    "variable-name": {
+      "options": [
+        "ban-keywords",
+        "check-format",
+        "allow-pascal-case",
+        "allow-leading-underscore"
+      ]
+    }
   }
 }
