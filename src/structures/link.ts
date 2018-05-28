@@ -7,10 +7,8 @@ StructureLink.prototype.run = function() {
     if (this.cooldown <= 0 && this.energy >= this.energyCapacity * 0.9) {
         const links = this.room.find<StructureLink>(FIND_MY_STRUCTURES, {
             filter: (t) => {
-                return t.structureType == STRUCTURE_LINK
-                    && Memory.links[t.id] != null
-                    && !Memory.links[t.id].nearSource
-                    && t.energy < t.energyCapacity;
+                return t.structureType == STRUCTURE_LINK && Memory.links[t.id] != null
+                    && !Memory.links[t.id].nearSource && t.energy < t.energyCapacity;
             }
         });
         if (!_.isEmpty(links)) {

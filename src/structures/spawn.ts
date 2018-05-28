@@ -14,8 +14,7 @@ StructureSpawn.prototype.run = function() {
     if (!spawnedOrMissing) {
         for (const name of Memory.config.rooms) {
             const room = Game.rooms[name];
-            if (name != this.room.name && room != null && room.isMine()
-                && this.room.isNearTo(room)) {
+            if (name != this.room.name && room != null && room.isMine() && this.room.isNearTo(room)) {
                 spawnedOrMissing = this.spawnMissingCreep(name);
                 break;
             }
@@ -59,8 +58,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
                 && Memory.creeps[creep.name].targetSource == null;
         }))) {
             let harvesters = _.size(_.filter(Game.creeps, (creep) => {
-                return creep.memory.role == CreepType.CREEP_HARVESTER
-                    && creep.memory.room == roomName;
+                return creep.memory.role == CreepType.CREEP_HARVESTER && creep.memory.room == roomName;
             }));
             if (room.checkNeedHarvester()) {
                 harvesters++;
@@ -80,16 +78,14 @@ StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
         }
         if (room.isMine()) {
             if (room.storage != null) {
-                const count = Math.max(1,
-                    Math.ceil(room.storage.store[RESOURCE_ENERGY] / 100000));
+                const count = Math.max(1, Math.ceil(room.storage.store[RESOURCE_ENERGY] / 100000));
                 expected.set(CreepType.CREEP_UPGRADER, count);
             } else {
-                expected.set(CreepType.CREEP_UPGRADER,
-                    Math.max(1, room.containerCount()));
+                expected.set(CreepType.CREEP_UPGRADER, Math.max(1, room.containerCount()));
             }
             if (room.storage != null) {
-                if (!_.isEmpty(room.storage.pos.findInRange<OwnedStructure>(FIND_MY_STRUCTURES,
-                    2, { filter: (t) => t.structureType == STRUCTURE_TOWER }))) {
+                if (!_.isEmpty(room.storage.pos.findInRange<OwnedStructure>(FIND_MY_STRUCTURES, 2,
+                    { filter: (t) => t.structureType == STRUCTURE_TOWER }))) {
                     expected.set(CreepType.CREEP_TRANSFER, 1);
                 }
             }

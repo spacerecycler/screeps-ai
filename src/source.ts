@@ -15,16 +15,14 @@ Source.prototype.harvestSpots = function() {
 };
 Source.prototype.needsHarvester = function() {
     const creeps = _.filter(Game.creeps, (creep) => {
-        return creep.memory != null
-            && creep.memory.role == CreepType.CREEP_HARVESTER
+        return creep.memory != null && creep.memory.role == CreepType.CREEP_HARVESTER
             && creep.memory.targetSource == this.id;
     });
     let workParts = 0;
     for (const creep of creeps) {
         workParts += creep.memory.numWorkParts;
     }
-    return !this.isHostileNearby() && workParts < 5
-        && _.size(creeps) < this.harvestSpots();
+    return !this.isHostileNearby() && workParts < 5 && _.size(creeps) < this.harvestSpots();
 };
 Source.prototype.getEnergy = function() {
     return this.energy;

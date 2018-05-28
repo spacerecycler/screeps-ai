@@ -13,11 +13,8 @@ RoomPosition.prototype.findNearestAttacker = function() {
     if (attacker == null) {
         return null;
     }
-    const healer = this.findClosestByRange(FIND_HOSTILE_CREEPS, {
-        filter: (t) => {
-            return t.body.map((p) => p.type).includes(HEAL);
-        }
-    });
+    const healer = this.findClosestByRange(FIND_HOSTILE_CREEPS,
+        { filter: (t) => t.body.map((p) => p.type).includes(HEAL) });
     if (healer != null) {
         return healer;
     } else {
@@ -58,9 +55,8 @@ RoomPosition.prototype.findNearestConstructionSite = function(types) {
     if (types == null) {
         return this.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
     } else {
-        return this.findClosestByPath(FIND_MY_CONSTRUCTION_SITES, {
-            filter: (t) => types.includes(t.structureType)
-        });
+        return this.findClosestByPath(FIND_MY_CONSTRUCTION_SITES,
+            { filter: (t) => types.includes(t.structureType) });
     }
 };
 RoomPosition.prototype.findNearestFillTarget = function(type) {
@@ -72,27 +68,17 @@ RoomPosition.prototype.findNearestFillTarget = function(type) {
     });
 };
 RoomPosition.prototype.findNearestNotFullLink = function() {
-    return this.findClosestByRange<StructureLink>(FIND_MY_STRUCTURES, {
-        filter: (t) => {
-            return t.structureType == STRUCTURE_LINK
-                && t.energy < t.energyCapacity;
-        }
-    });
+    return this.findClosestByRange<StructureLink>(FIND_MY_STRUCTURES,
+        { filter: (t) => t.structureType == STRUCTURE_LINK && t.energy < t.energyCapacity });
 };
 RoomPosition.prototype.findNearestNotEmptyLink = function() {
-    return this.findClosestByPath<StructureLink>(FIND_MY_STRUCTURES, {
-        filter: (t) => {
-            return t.structureType == STRUCTURE_LINK
-                && t.energy > 0
-                && !Memory.links[t.id].nearSource;
-        }
-    });
+    return this.findClosestByPath<StructureLink>(FIND_MY_STRUCTURES,
+        { filter: (t) => t.structureType == STRUCTURE_LINK && t.energy > 0 && !Memory.links[t.id].nearSource });
 };
 RoomPosition.prototype.findNearestNotFullContainer = function() {
     return this.findClosestByRange<StructureContainer>(FIND_STRUCTURES, {
         filter: (t) => {
-            return t.structureType == STRUCTURE_CONTAINER
-                && t.store[RESOURCE_ENERGY] < t.storeCapacity
+            return t.structureType == STRUCTURE_CONTAINER && t.store[RESOURCE_ENERGY] < t.storeCapacity
                 && !Memory.config.blacklist[this.roomName].includes(t.id);
         }
     });
@@ -100,20 +86,14 @@ RoomPosition.prototype.findNearestNotFullContainer = function() {
 RoomPosition.prototype.findNearbyNotFullContainer = function() {
     return this.findClosestByRange<StructureContainer>(FIND_STRUCTURES, {
         filter: (t) => {
-            return t.structureType == STRUCTURE_CONTAINER
-                && t.store[RESOURCE_ENERGY] < t.storeCapacity
-                && !Memory.config.blacklist[this.roomName].includes(t.id)
-                && this.inRangeTo(t, 3);
+            return t.structureType == STRUCTURE_CONTAINER && t.store[RESOURCE_ENERGY] < t.storeCapacity
+                && !Memory.config.blacklist[this.roomName].includes(t.id) && this.inRangeTo(t, 3);
         }
     });
 };
 RoomPosition.prototype.findNearestNotEmptyContainer = function() {
-    return this.findClosestByPath<StructureContainer>(FIND_STRUCTURES, {
-        filter: (t) => {
-            return t.structureType == STRUCTURE_CONTAINER
-                && t.store[RESOURCE_ENERGY] > 0;
-        }
-    });
+    return this.findClosestByPath<StructureContainer>(FIND_STRUCTURES,
+        { filter: (t) => t.structureType == STRUCTURE_CONTAINER && t.store[RESOURCE_ENERGY] > 0 });
 };
 RoomPosition.prototype.findNearestIdleFlag = function() {
     return this.findClosestByRange(FIND_FLAGS, { filter: (t) => t.isIdle() });
