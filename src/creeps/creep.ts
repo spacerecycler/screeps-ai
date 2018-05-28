@@ -2,18 +2,18 @@ import { CREEPS_WARLIKE, CreepType, RoomType } from "shared";
 Creep.prototype.run = function() {
     this.setupMem();
     if (this.memory.role == CreepType.CREEP_TRANSPORTER || this.ensureRoom()) {
-        if (this.memory.role == CreepType.CREEP_HARVESTER) {
+        switch (this.memory.role) {
+            case CreepType.CREEP_HARVESTER:
             this.runHarvester();
             return;
-        }
-        if (this.memory.role == CreepType.CREEP_MINERAL_HARVESTER) {
+            case CreepType.CREEP_MINERAL_HARVESTER:
             this.runMineralHarvester();
             return;
-        }
-        if (this.memory.role == CreepType.CREEP_TRANSFER) {
+            case CreepType.CREEP_TRANSFER:
             this.runTransfer();
             return;
         }
+        // Most creeps need energy to work, creeps above are either specialized or too simple
         if (this.carryCapacity > 0 && !this.isCreepWorking()) {
             if (this.memory.role == CreepType.CREEP_TRANSPORTER && !this.ensureRoom()) {
                 return;
