@@ -302,7 +302,7 @@ Creep.prototype.runMineralHarvester = function() {
         return;
     }
     if (targetMineral == null) {
-        console.log(this.name + " error mineral");
+        console.log(`${this.name} error mineral`);
         return;
     }
     if (!this.isCreepWorking()) {
@@ -313,8 +313,7 @@ Creep.prototype.runMineralHarvester = function() {
                 // targetSource.energy -= energyTaken;
             }
             const curCarry = this.carry[targetMineral.mineralType];
-            if (curCarry != null && curCarry + mineralTaken
-                < this.carryCapacity) {
+            if (curCarry != null && curCarry + mineralTaken < this.carryCapacity) {
                 return;
             }
         } else {
@@ -480,8 +479,7 @@ Creep.prototype.runTank = function() {
     }
 };
 Creep.prototype.ensureRoom = function() {
-    if (CREEPS_WARLIKE.includes(this.memory.role)
-        && Memory.rooms[this.memory.room].type == RoomType.ROOM_KEEPER_LAIR) {
+    if (CREEPS_WARLIKE.includes(this.memory.role) && Memory.rooms[this.memory.room].type == RoomType.ROOM_KEEPER_LAIR) {
         if (!this.rally()) {
             return false;
         }

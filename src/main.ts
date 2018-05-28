@@ -20,17 +20,16 @@ import "structures/tower";
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
 // This utility uses source maps to get the line numbers and file names of the original, TS source code
 export const loop = ErrorMapper.wrapLoop(() => {
-  console.log(`Current game tick is ${Game.time}`);
   setupMem();
   clearMem();
   const pct = Game.gcl.progress / Game.gcl.progressTotal * 100;
   const pctStr = pct.toFixed(1);
   if (Memory.vars.lastPct != pctStr) {
-    console.log("GCL Progress: " + pctStr + "%");
+    console.log(`GCL Progress: ${pctStr}%`);
     Memory.vars.lastPct = pctStr;
   }
-  const rooms = Memory.config.rooms.map((name) => Game.rooms[name]).filter((item) => item != null);
-  rooms.sort((room) => room.energyAvailable).reverse();
+  const rooms = Memory.config.rooms.map((name) => Game.rooms[name]).filter((r) => r != null);
+  rooms.sort((r) => r.energyAvailable).reverse();
   for (const room of rooms) {
     room.setupMem();
   }
