@@ -30,7 +30,7 @@
     "@types/lodash": "^3.10.1",
     "@types/node": "^8.9.3",
     "@types/screeps": "^2.4.0",
-    "node-random-name": "^1.0.1",
+    "haikunator": "^2.0.0",
     "rollup": "^0.61.2",
     "rollup-plugin-clean": "^1.0.0",
     "rollup-plugin-commonjs": "^9.1.0",

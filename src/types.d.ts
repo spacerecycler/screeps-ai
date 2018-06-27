@@ -1,3 +1,12 @@
+declare module "haikunator" {
+    class Haikunator {
+        constructor(options?: {adjectives?: [string], nouns?: [string], seed?: any,
+            defaults?: {delimiter?: string, tokenLength?: number, tokenHex?: boolean, tokenChars?: string}})
+        public haikunate(options?: {delimiter?: string, tokenLength?: number, tokenHex?: boolean,
+            tokenChars?: string}): string;
+    }
+    export = Haikunator;
+}
 interface Memory {
     testing: boolean;
     config: ConfigMemory;

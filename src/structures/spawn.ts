@@ -1,4 +1,5 @@
-import { CreepType, NAMES, RoomType } from "shared";
+import Haikunator from "haikunator";
+import { CreepType, RoomType } from "shared";
 StructureSpawn.prototype.run = function() {
     if (Memory.testing && !this.memory.roadsToSources) {
         for (const source of this.room.find(FIND_SOURCES)) {
@@ -284,10 +285,5 @@ StructureSpawn.prototype.addParts = (body, times, part) => {
 };
 // TODO: needs to be optimized to find an unused name
 StructureSpawn.prototype.getRandomName = () => {
-    if (Memory.creepindex == null || Memory.creepindex >= NAMES.length) {
-        Memory.creepindex = 0;
-    } else {
-        Memory.creepindex++;
-    }
-    return NAMES[Memory.creepindex % NAMES.length];
+    return new Haikunator().haikunate();
 };
