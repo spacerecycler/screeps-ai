@@ -134,8 +134,10 @@ interface Creep {
     runRanger(): void;
     runHealer(): void;
     runTank(): void;
-    moveToI(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND;
-    moveToS(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND;
+    moveToI(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
+        | ERR_NOT_FOUND;
+    moveToS(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
+        | ERR_NOT_FOUND;
     idle(): void;
     rally(): boolean;
     dismantleNearestWall(): void;
@@ -176,8 +178,3 @@ type DefenseStructure = StructureWall | StructureRampart;
 type FillTargetConstants = STRUCTURE_SPAWN | STRUCTURE_EXTENSION | STRUCTURE_TOWER;
 type FillTarget = StructureExtension | StructureSpawn | StructureTower;
 type EnergyTarget = Resource | StructureLink | StructureContainer | StructureStorage | Source | Tombstone;
-
-// Workarounds until pr merged
-interface NukeConstructor extends _Constructor<Nuke>, _ConstructorById<Nuke> { }
-interface ResourceConstructor extends _Constructor<Resource>, _ConstructorById<Resource> { }
-interface RoomConstructor extends _Constructor<Room> { }
