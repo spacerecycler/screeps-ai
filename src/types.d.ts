@@ -122,6 +122,7 @@ interface Source {
     harvestSpots(): number;
     needsHarvester(): boolean;
     getEnergy(): number;
+    findContainerSpot(): void;
 }
 interface Creep {
     run(): void;

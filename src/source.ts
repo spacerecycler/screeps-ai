@@ -1,15 +1,9 @@
 import { CreepType } from "shared";
 Source.prototype.harvestSpots = function() {
     if (this._harvestSpots == null) {
-        let count = 0;
         const tiles = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y - 1, this.pos.x - 1,
-            this.pos.y + 1, this.pos.x + 1, true);
-        for (const tile of tiles) {
-            if (tile.terrain != "wall") {
-                count++;
-            }
-        }
-        this._harvestSpots = count;
+            this.pos.y + 1, this.pos.x + 1, true).filter((tile) => tile.terrain != "wall");
+        this._harvestSpots = tiles.length;
     }
     return this._harvestSpots;
 };
@@ -23,6 +17,30 @@ Source.prototype.needsHarvester = function() {
         workParts += creep.memory.numWorkParts;
     }
     return !this.isHostileNearby() && workParts < 5 && _.size(creeps) < this.harvestSpots();
+};
+Source.prototype.findContainerSpot = function() {
+    const tiles = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y - 1, this.pos.x - 1,
+        this.pos.y + 1, this.pos.x + 1, true).filter((tile) => tile.terrain != "wall");
+    if (tiles.length == 1) {
+        return new RoomPosition(tiles[0].x, tiles[0].y, this.room.name);
+    } else {
+        let x = 0;
+        let y = 0;
+        for (const tile of tiles) {
+            x += tile.x;
+            y += tile.y;
+        }
+        x /= tiles.length;
+        y /= tiles.length;
+        if (tiles.length < 5) {
+            x = Math.round(x);
+            y = Math.round(y);
+        } else {
+            x = Math.ceil(x);
+            y = Math.ceil(y);
+        }
+        return new RoomPosition(x, y, this.room.name);
+    }
 };
 Source.prototype.getEnergy = function() {
     return this.energy;
