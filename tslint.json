@@ -1,15 +1,11 @@
 {
   "extends": "tslint:recommended",
   "rules": {
-    "forin": false,
     "interface-name": {
       "options": "never-prefix"
     },
     "member-ordering": false,
     "no-console": false,
-    "no-namespace": {
-      "options": "allow-declarations"
-    },
     "trailing-comma": {
       "options": {
         "multiline": "never",

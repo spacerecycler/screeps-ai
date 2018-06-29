@@ -36,9 +36,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
   for (const room of rooms) {
     room.run();
   }
-  for (const creep in Game.creeps) {
-    Game.creeps[creep].run();
-  }
+  _.forOwn(Game.creeps, (creep) => {
+    creep.run();
+  });
 });
 
 export const setupMem = () => {
@@ -68,13 +68,13 @@ export const setupMem = () => {
     Memory.flags = {};
   }
   if (_.isEmpty(Memory.config.rooms)) {
-    for (const spawn in Game.spawns) {
-      Memory.config.rooms.push(Game.spawns[spawn].room.name);
-    }
+    _.forOwn(Game.spawns, (spawn) => {
+      Memory.config.rooms.push(spawn.room.name);
+    });
   }
   let mine = 0;
   for (const name of Memory.config.rooms) {
-    if (Memory.rooms[name] == null) {
+    if (!Memory.rooms[name]) {
       Memory.rooms[name] = {
         distance: {},
         wallsMax: 5000
@@ -111,7 +111,7 @@ export const clearMem = () => {
     }
   }
   for (const name in Memory.config.blacklist) {
-    if (Game.rooms[name] != null) {
+    if (!Game.rooms[name]) {
       const ids = Memory.config.blacklist[name];
       ids.filter((id) => Game.getObjectById(id) != null);
     }
