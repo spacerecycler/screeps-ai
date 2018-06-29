@@ -166,7 +166,7 @@ StructureSpawn.prototype.doSpawnCreep = function(roomName, newRole, count) {
             } else {
                 console.log(`${this.name} Spawn error: ${result}`);
             }
-        } else if (dryRunResult == ERR_NOT_ENOUGH_RESOURCES) {
+        } else if (Array<ScreepsReturnCode>(ERR_NOT_ENOUGH_RESOURCES, ERR_BUSY).includes(dryRunResult)) {
             return true;
         } else {
             console.log(dryRunResult);
