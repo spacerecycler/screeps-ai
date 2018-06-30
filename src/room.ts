@@ -9,6 +9,19 @@ Room.prototype.run = function() {
             console.log("error creating flag");
         }
     }
+    const sources = this.find(FIND_SOURCES);
+    for (const source of sources) {
+        if (!source.hasContainer()) {
+            const sites = source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1,
+                {filter: (t: ConstructionSite) => t.structureType == STRUCTURE_CONTAINER});
+            if (sites.length == 0) {
+                const result = source.findContainerSpot().createConstructionSite(STRUCTURE_CONTAINER);
+                if (result != OK) {
+                    console.log(`error creating container construction site: ${result}`);
+                }
+            }
+        }
+    }
     for (const spawn of spawns) {
         spawn.run();
     }

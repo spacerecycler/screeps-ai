@@ -42,6 +42,13 @@ Source.prototype.findContainerSpot = function() {
         return new RoomPosition(x, y, this.room.name);
     }
 };
+Source.prototype.hasContainer = function() {
+    if (this._hasContainer == null) {
+        this._hasContainer =  this.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1,
+            { filter: (t) => t.structureType == STRUCTURE_CONTAINER}).length > 0;
+    }
+    return this._hasContainer;
+};
 Source.prototype.getEnergy = function() {
     return this.energy;
 };
