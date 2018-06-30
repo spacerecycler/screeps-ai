@@ -44,8 +44,11 @@ Source.prototype.findContainerSpot = function() {
 };
 Source.prototype.hasContainer = function() {
     if (this._hasContainer == null) {
-        this._hasContainer =  this.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1,
-            { filter: (t) => t.structureType == STRUCTURE_CONTAINER}).length > 0;
+        const containers = this.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1,
+            { filter: (t) => t.structureType == STRUCTURE_CONTAINER});
+        const sites = this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1,
+            {filter: (t: ConstructionSite) => t.structureType == STRUCTURE_CONTAINER});
+        this._hasContainer = containers.length > 0 || sites.length > 0;
     }
     return this._hasContainer;
 };

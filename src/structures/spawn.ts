@@ -1,15 +1,6 @@
 import Haikunator from "haikunator";
 import { CreepType, RoomType } from "shared";
 StructureSpawn.prototype.run = function() {
-    if (Memory.testing && !this.memory.roadsToSources) {
-        for (const source of this.room.find(FIND_SOURCES)) {
-            const vals = PathFinder.search(this.pos, { pos: source.pos, range: 1 });
-            for (const val of vals.path) {
-                this.room.createConstructionSite(val, STRUCTURE_ROAD);
-            }
-        }
-        this.memory.roadsToSources = true;
-    }
     let spawnedOrMissing = false;
     spawnedOrMissing = this.spawnMissingCreep(this.room.name);
     const nearbyRooms = Memory.config.rooms.filter((name) => name != this.room.name && this.room.isNearTo(name));
@@ -30,6 +21,11 @@ StructureSpawn.prototype.run = function() {
                 break;
             }
         }
+    }
+};
+StructureSpawn.prototype.setupMem = function() {
+    if (this.memory.roadTo == null) {
+        this.memory.roadTo = {};
     }
 };
 StructureSpawn.prototype.spawnMissingCreep = function(roomName) {

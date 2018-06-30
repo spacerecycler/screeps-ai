@@ -49,7 +49,7 @@ interface RoomMemory {
     shouldClaim?: boolean;
 }
 interface SpawnMemory {
-    roadsToSources?: boolean;
+    roadTo: { [id: string]: boolean };
 }
 interface TowerMemory {
     targetId?: string;
@@ -173,6 +173,7 @@ interface StructureController {
 }
 interface StructureSpawn {
     run(): void;
+    setupMem(): void;
     spawnMissingCreep(roomName: string): boolean;
     getExpectedCreeps(roomName: string): Map<CreepTypeConstant, number>;
     doSpawnCreep(roomName: string, role: CreepTypeConstant, count: number): boolean;

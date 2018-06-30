@@ -12,17 +12,27 @@ Room.prototype.run = function() {
     const sources = this.find(FIND_SOURCES);
     for (const source of sources) {
         if (!source.hasContainer()) {
-            const sites = source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1,
-                {filter: (t: ConstructionSite) => t.structureType == STRUCTURE_CONTAINER});
-            if (sites.length == 0) {
-                const result = source.findContainerSpot().createConstructionSite(STRUCTURE_CONTAINER);
-                if (result != OK) {
-                    console.log(`error creating container construction site: ${result}`);
-                }
+            const result = source.findContainerSpot().createConstructionSite(STRUCTURE_CONTAINER);
+            if (result != OK) {
+                console.log(`error creating container construction site: ${result}`);
+            } else {
+                source._hasContainer = true;
             }
         }
     }
     for (const spawn of spawns) {
+        spawn.setupMem();
+        if (Memory.testing) {
+            for (const source of this.find(FIND_SOURCES)) {
+                if (!spawn.memory.roadTo[source.id] && source.hasContainer()) {
+                    const vals = PathFinder.search(spawn.pos, { pos: source.pos, range: 1 });
+                    for (const val of vals.path) {
+                        val.createConstructionSite(STRUCTURE_ROAD);
+                    }
+                    spawn.memory.roadTo[source.id] = true;
+                }
+            }
+        }
         spawn.run();
     }
     const towers = this.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (t) => t.structureType == STRUCTURE_TOWER });
