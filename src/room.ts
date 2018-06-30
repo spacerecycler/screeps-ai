@@ -95,12 +95,8 @@ Room.prototype.hasHurtCreep = function() {
 };
 Room.prototype.containerCount = function() {
     if (this._containerCount == null) {
-        this._containerCount = _.size(this.find(FIND_STRUCTURES, {
-            filter: (t) => {
-                return t.structureType == STRUCTURE_CONTAINER && !_.includes(Memory.config.blacklist[this.name], t.id)
-                    && !t.isHostileNearby();
-            }
-        }));
+        this._containerCount = this.find(FIND_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_CONTAINER &&
+            !_.includes(Memory.config.blacklist[this.name], t.id) && !t.isHostileNearby()}).length;
     }
     return this._containerCount;
 };
