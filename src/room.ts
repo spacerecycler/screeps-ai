@@ -22,15 +22,13 @@ Room.prototype.run = function() {
     }
     for (const spawn of spawns) {
         spawn.setupMem();
-        if (Memory.testing) {
-            for (const source of this.find(FIND_SOURCES)) {
-                if (!spawn.memory.roadTo[source.id] && source.hasContainer()) {
-                    const vals = PathFinder.search(spawn.pos, { pos: source.pos, range: 1 });
-                    for (const val of vals.path) {
-                        val.createConstructionSite(STRUCTURE_ROAD);
-                    }
-                    spawn.memory.roadTo[source.id] = true;
+        for (const source of this.find(FIND_SOURCES)) {
+            if (!spawn.memory.roadTo[source.id] && source.hasContainer()) {
+                const vals = PathFinder.search(spawn.pos, { pos: source.pos, range: 1 });
+                for (const val of vals.path) {
+                    val.createConstructionSite(STRUCTURE_ROAD);
                 }
+                spawn.memory.roadTo[source.id] = true;
             }
         }
         spawn.run();
