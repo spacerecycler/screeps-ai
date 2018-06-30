@@ -8,14 +8,7 @@ import "room";
 import "room-obj";
 import "room-pos";
 import "source";
-import "structures/container";
-import "structures/controller";
-import "structures/extractor";
-import "structures/link";
-import "structures/spawn";
-import "structures/storage";
-import "structures/terminal";
-import "structures/tower";
+import "structures/structure";
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
 // This utility uses source maps to get the line numbers and file names of the original, TS source code
@@ -87,7 +80,7 @@ export const setupMem = () => {
     if (Memory.config.blacklist[name] == null) {
       Memory.config.blacklist[name] = Array<string>();
     }
-    if (room == null && Memory.rooms[name].type == RoomType.ROOM_EXPANSION) {
+    if (room == null && Memory.rooms[name].type == RoomType.EXPANSION) {
       Memory.rooms[name].needReserve = true;
     }
   }

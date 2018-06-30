@@ -1,26 +1,26 @@
 export const enum CreepType {
-    CREEP_HARVESTER = "harvester",
-    CREEP_UPGRADER = "upgrader",
-    CREEP_BUILDER = "builder",
-    CREEP_REPAIRER = "repairer",
-    CREEP_CAPTURER = "capturer",
-    CREEP_FILLER = "filler",
-    CREEP_TRANSPORTER = "transporter",
-    CREEP_TRANSFER = "transfer",
-    CREEP_SCOUT = "scout",
-    CREEP_WARRIOR = "warrior",
-    CREEP_RANGER = "ranger",
-    CREEP_HEALER = "healer",
-    CREEP_TANK = "tank",
-    CREEP_MINERAL_HARVESTER = "mineralHarvester"
+    HARVESTER = "harvester",
+    UPGRADER = "upgrader",
+    BUILDER = "builder",
+    REPAIRER = "repairer",
+    CAPTURER = "capturer",
+    FILLER = "filler",
+    TRANSPORTER = "transporter",
+    TRANSFER = "transfer",
+    SCOUT = "scout",
+    WARRIOR = "warrior",
+    RANGER = "ranger",
+    HEALER = "healer",
+    TANK = "tank",
+    MINERAL_HARVESTER = "mineralHarvester"
 }
 export const enum FlagType {
-    FLAG_IDLE = "idle",
-    FLAG_RALLY = "rally"
+    IDLE = "idle",
+    RALLY = "rally"
 }
 export const enum RoomType {
-    ROOM_EXPANSION = "expansion",
-    ROOM_KEEPER_LAIR = "keeperLair"
+    EXPANSION = "expansion",
+    KEEPER_LAIR = "keeperLair"
 }
 
 export const CREEPS_WARLIKE = ["warrior", "ranger", "healer", "tank"];

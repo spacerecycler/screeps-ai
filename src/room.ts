@@ -4,7 +4,7 @@ Room.prototype.run = function() {
     if (!_.isEmpty(spawns) && _.isEmpty(this.findIdleFlags())) {
         const result = this.createFlag(spawns[0].pos.x, spawns[0].pos.y - 3, "Idle" + this.name);
         if (_.isString(result)) {
-            Memory.flags[result] = { type: FlagType.FLAG_IDLE };
+            Memory.flags[result] = { type: FlagType.IDLE };
         } else {
             console.log("error creating flag");
         }
@@ -33,15 +33,15 @@ Room.prototype.run = function() {
 Room.prototype.setupMem = function() {
     if (!this.isMine() && this.memory.type == null) {
         if (this.isKeeperLairRoom()) {
-            this.memory.type = RoomType.ROOM_KEEPER_LAIR;
+            this.memory.type = RoomType.KEEPER_LAIR;
         } else {
-            this.memory.type = RoomType.ROOM_EXPANSION;
+            this.memory.type = RoomType.EXPANSION;
         }
     }
     if (this.controller != null) {
         this.memory.controllerReserveSpots = this.controller.reserveSpots();
     }
-    if (this.memory.type == RoomType.ROOM_EXPANSION && this.controller != null) {
+    if (this.memory.type == RoomType.EXPANSION && this.controller != null) {
         if (this.controller.reservation == null) {
             this.memory.needReserve = true;
         } else {
@@ -53,14 +53,14 @@ Room.prototype.setupMem = function() {
             }
         }
     }
-    if (this.memory.type == RoomType.ROOM_EXPANSION && this.memory.shouldClaim == null) {
+    if (this.memory.type == RoomType.EXPANSION && this.memory.shouldClaim == null) {
         this.memory.shouldClaim = true;
     }
 };
 Room.prototype.needsRecovery = function() {
     const roomCreeps = _.filter(Game.creeps, (creep) => {
-        return Array<CreepTypeConstant>(CreepType.CREEP_HARVESTER,
-            CreepType.CREEP_FILLER).includes(creep.memory.role)
+        return Array<CreepTypeConstant>(CreepType.HARVESTER,
+            CreepType.FILLER).includes(creep.memory.role)
             && creep.memory.room == this.name;
     });
     return _.isEmpty(roomCreeps);

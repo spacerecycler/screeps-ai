@@ -9,7 +9,7 @@ Source.prototype.harvestSpots = function() {
 };
 Source.prototype.needsHarvester = function() {
     const creeps = _.filter(Game.creeps, (creep) => {
-        return creep.memory != null && creep.memory.role == CreepType.CREEP_HARVESTER
+        return creep.memory != null && creep.memory.role == CreepType.HARVESTER
             && creep.memory.targetSource == this.id;
     });
     let workParts = 0;
