@@ -24,6 +24,7 @@ Room.prototype.run = function() {
         spawn.setupMem();
         for (const source of this.find(FIND_SOURCES)) {
             if (!spawn.memory.roadTo[source.id] && source.hasContainer()) {
+                console.log(`building road to source ${source.id}`);
                 const vals = PathFinder.search(spawn.pos, { pos: source.pos, range: 1 });
                 for (const val of vals.path) {
                     val.createConstructionSite(STRUCTURE_ROAD);
