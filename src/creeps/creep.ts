@@ -173,10 +173,9 @@ Creep.prototype.fillEnergy = function() {
         if (!this.room.hasHostileAttacker()) {
             target = this.pos.findClosestByPath(FIND_DROPPED_RESOURCES,
                 { filter: (r) => r.resourceType == RESOURCE_ENERGY });
-            // TODO:
-            // if (target == null) {
-            //    target = this.pos.findClosestByPath(FIND_TOMBSTONES);
-            // }
+            if (target == null) {
+                target = this.pos.findClosestByPath(FIND_TOMBSTONES);
+            }
         }
         if (target == null) {
             target = this.pos.findNearestNotEmptyLink();
