@@ -32,6 +32,21 @@ Room.prototype.run = function() {
                 spawn.memory.roadTo[source.id] = true;
             }
         }
+        if (this.controller && !spawn.memory.roadTo[this.controller.id]) {
+            console.log(`building road to controller`);
+            const vals = PathFinder.search(spawn.pos, { pos: this.controller.pos, range: 1 });
+            for (const val of vals.path) {
+                val.createConstructionSite(STRUCTURE_ROAD);
+            }
+            spawn.memory.roadTo[this.controller.id] = true;
+        }
+        if (!spawn.memory.initRoad) {
+            this.createConstructionSite(spawn.pos.x - 1, spawn.pos.y, STRUCTURE_ROAD);
+            this.createConstructionSite(spawn.pos.x + 1, spawn.pos.y, STRUCTURE_ROAD);
+            this.createConstructionSite(spawn.pos.x, spawn.pos.y - 1, STRUCTURE_ROAD);
+            this.createConstructionSite(spawn.pos.x, spawn.pos.y + 1, STRUCTURE_ROAD);
+            spawn.memory.initRoad = true;
+        }
         spawn.run();
     }
     const towers = this.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (t) => t.structureType == STRUCTURE_TOWER });

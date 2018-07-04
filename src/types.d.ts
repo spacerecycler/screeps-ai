@@ -50,6 +50,7 @@ interface RoomMemory {
 }
 interface SpawnMemory {
     roadTo: { [id: string]: boolean };
+    initRoad?: boolean;
 }
 interface TowerMemory {
     targetId?: string;
