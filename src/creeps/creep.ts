@@ -12,73 +12,131 @@ import "creeps/war/healer";
 import "creeps/war/ranger";
 import "creeps/war/tank";
 import "creeps/war/warrior";
-import { CREEPS_WARLIKE, CreepType, RoomType } from "shared";
+import { CREEPS_WARLIKE, CreepState, CreepType, RoomType } from "shared";
 Creep.prototype.run = function() {
     this.setupMem();
-    if (this.memory.role == CreepType.TRANSPORTER || this.ensureRoom()) {
-        switch (this.memory.role) {
-            case CreepType.HARVESTER:
-                this.runHarvester();
-                return;
-            case CreepType.MINERAL_HARVESTER:
-                this.runMineralHarvester();
-                return;
-            case CreepType.TRANSFER:
-                this.runTransfer();
-                return;
-        }
-        // Most creeps need energy to work, creeps above are either specialized or too simple
-        if (this.carryCapacity > 0 && !this.isCreepWorking()) {
-            if (this.memory.role == CreepType.TRANSPORTER && !this.ensureRoom()) {
-                return;
+    let actionDone = false;
+    while (!actionDone) {
+        actionDone = this.performAction();
+    }
+};
+Creep.prototype.performAction = function() {
+    switch (this.memory.state) {
+        case CreepState.Spawning:
+            if (CREEPS_WARLIKE.includes(this.memory.role) &&
+                Memory.rooms[this.memory.room].type == RoomType.KEEPER_LAIR) {
+                this.memory.state = CreepState.Rally;
+            } else {
+                this.memory.state = CreepState.MoveToHomeRoom;
             }
-            const full = this.fillEnergy();
-            if (!full) {
-                return;
+            return false;
+        case CreepState.Rally:
+            if (this.rally()) {
+                this.memory.state = CreepState.MoveToHomeRoom;
+                return false;
+            } else {
+                return true;
             }
-        }
-        switch (this.memory.role) {
-            case CreepType.UPGRADER:
-                this.runUpgrader();
-                return;
-            case CreepType.BUILDER:
-                this.runBuilder();
-                return;
-            case CreepType.REPAIRER:
-                this.runRepairer();
-                return;
-            case CreepType.CAPTURER:
-                this.runCapturer();
-                return;
-            case CreepType.FILLER:
-                this.runFiller();
-                return;
-            case CreepType.TRANSPORTER:
-                this.runTransporter();
-                return;
-            case CreepType.SCOUT:
-                this.runScout();
-                return;
-            case CreepType.WARRIOR:
-                this.runWarrior();
-                return;
-            case CreepType.RANGER:
-                this.runRanger();
-                return;
-            case CreepType.HEALER:
-                this.runHealer();
-                return;
-            case CreepType.TANK:
-                this.runTank();
-                return;
-        }
+        case CreepState.MoveToHomeRoom:
+            if (this.moveToHomeRoom()) {
+                if (this.shouldGetResource()) {
+                    this.memory.state = CreepState.GetResource;
+                } else {
+                    this.memory.state = CreepState.Work;
+                }
+                return false;
+            } else {
+                return true;
+            }
+        case CreepState.GetResource:
+            if (this.fillResource()) {
+                this.memory.state = CreepState.Work;
+                return false;
+            } else {
+                return true;
+            }
+        case CreepState.Work:
+            // todo: remove this section after projecting work energy levels
+            if (this.shouldGetResource() && _.sum(this.carry) == 0) {
+                this.memory.state = CreepState.GetResource;
+                return false;
+            }
+            this.doWork();
+            // todo: project energy levels after working
+            if (this.shouldGetResource() && _.sum(this.carry) == 0) {
+                this.memory.state = CreepState.GetResource;
+                return false;
+            } else {
+                return true;
+            }
+        default:
+            throw new Error("Invalid state");
+    }
+};
+Creep.prototype.shouldGetResource = function() {
+    return this.carryCapacity > 0 && this.memory.role != CreepType.TRANSFER;
+};
+Creep.prototype.fillResource = function() {
+    switch (this.memory.role) {
+        case CreepType.HARVESTER:
+            return this.harvestEnergy();
+        case CreepType.MINERAL_HARVESTER:
+            return this.harvestMineral();
+        default:
+            return this.fillEnergy();
+    }
+};
+Creep.prototype.doWork = function() {
+    switch (this.memory.role) {
+        case CreepType.HARVESTER:
+            this.runHarvester();
+            return;
+        case CreepType.MINERAL_HARVESTER:
+            this.runMineralHarvester();
+            return;
+        case CreepType.TRANSFER:
+            this.runTransfer();
+            return;
+        case CreepType.UPGRADER:
+            this.runUpgrader();
+            return;
+        case CreepType.BUILDER:
+            this.runBuilder();
+            return;
+        case CreepType.REPAIRER:
+            this.runRepairer();
+            return;
+        case CreepType.CAPTURER:
+            this.runCapturer();
+            return;
+        case CreepType.FILLER:
+            this.runFiller();
+            return;
+        case CreepType.TRANSPORTER:
+            this.runTransporter();
+            return;
+        case CreepType.SCOUT:
+            this.runScout();
+            return;
+        case CreepType.WARRIOR:
+            this.runWarrior();
+            return;
+        case CreepType.RANGER:
+            this.runRanger();
+            return;
+        case CreepType.HEALER:
+            this.runHealer();
+            return;
+        case CreepType.TANK:
+            this.runTank();
+            return;
     }
 };
 Creep.prototype.setupMem = function() {
     if (this.memory.role == CreepType.HARVESTER && this.memory.targetSource == null
         && Game.rooms[this.memory.room] != null) {
         const sources = Game.rooms[this.memory.room].findSourcesForHarvester();
-        if (_.isEmpty(sources)) {
+        if (sources.length == 0) {
             this.suicide();
         } else {
             this.memory.targetSource = _.head(sources).id;
@@ -99,19 +157,14 @@ Creep.prototype.setupMem = function() {
         && Memory.rooms[this.memory.room].type == RoomType.KEEPER_LAIR && this.memory.targetSource == null
         && Game.rooms[this.memory.room] != null) {
         const sources = Game.rooms[this.memory.room].findSourcesForTank();
-        if (!_.isEmpty(sources)) {
+        if (sources.length > 0) {
             this.memory.targetSource = _.head(sources).id;
         }
     }
 };
-Creep.prototype.ensureRoom = function() {
-    if (CREEPS_WARLIKE.includes(this.memory.role) && Memory.rooms[this.memory.room].type == RoomType.KEEPER_LAIR) {
-        if (!this.rally()) {
-            return false;
-        }
-    }
+Creep.prototype.moveToHomeRoom = function() {
     if (this.room.name != this.memory.room) {
-        this.moveToS(new RoomPosition(25, 25, this.memory.room));
+        this.moveToS(new RoomPosition(24, 24, this.memory.room));
         return false;
     } else {
         return true;
@@ -123,41 +176,24 @@ Creep.prototype.idle = function() {
         this.moveToI(flag);
     }
 };
+Creep.prototype.hasRallied = function() {
+    return this.memory.state != CreepState.Spawning && this.memory.state != CreepState.Rally;
+};
 Creep.prototype.rally = function() {
-    if (this.memory.ready) {
-        return true;
-    }
-    if (!_.isEmpty(_.filter(Game.creeps, (c) => {
-        return c.memory != null && c.memory.room == this.memory.room && c.memory.ready;
-    }))) {
+    if (_.filter(Game.creeps, (c) => c.memory.room == this.memory.room && c.hasRallied()).length > 0) {
         return true;
     }
     const flag = _.head(_.filter(Game.flags, (f) => f.isRally(this.memory.room)));
     if (flag != null) {
         if (this.pos.isNearTo(flag)) {
             if (flag.hasRallyGroup()) {
-                this.memory.ready = true;
                 return true;
-            } else {
-                return false;
             }
         } else {
             this.moveToS(flag);
-            return false;
         }
     }
     return false;
-};
-Creep.prototype.isCreepWorking = function() {
-    // work until we have no more energy
-    if (this.memory.working && _.sum(this.carry) == 0) {
-        this.memory.working = false;
-    }
-    if (!this.memory.working && _.sum(this.carry) == this.carryCapacity) {
-        this.memory.working = true;
-        delete this.memory.energyTarget;
-    }
-    return this.memory.working;
 };
 Creep.prototype.fillEnergy = function() {
     // most creeps must harvest
@@ -174,7 +210,7 @@ Creep.prototype.fillEnergy = function() {
             target = this.pos.findClosestByPath(FIND_DROPPED_RESOURCES,
                 { filter: (r) => r.resourceType == RESOURCE_ENERGY });
             if (target == null) {
-                target = this.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (t) => t.getEnergy() > 0});
+                target = this.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (t) => t.getEnergy() > 0 });
             }
         }
         if (target == null) {
@@ -198,11 +234,8 @@ Creep.prototype.fillEnergy = function() {
         if (this.pos.isNearTo(target)) {
             const energyTaken = target.giveEnergy(this);
             if (this.carry[RESOURCE_ENERGY] + energyTaken >= this.carryCapacity) {
-                this.memory.working = true;
                 delete this.memory.energyTarget;
                 return true;
-            } else {
-                return false;
             }
         } else {
             this.moveToI(target);

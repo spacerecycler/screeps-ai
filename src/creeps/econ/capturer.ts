@@ -1,3 +1,4 @@
+// Capturer: Reserves or Claims controllers
 Creep.prototype.runCapturer = function() {
     if (this.room.controller == null) {
         return;

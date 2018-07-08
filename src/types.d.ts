@@ -26,14 +26,13 @@ interface CreepMemory {
     role: CreepTypeConstant;
     room: string;
     numWorkParts: number;
+    state: CreepStateConstant;
     targetSource?: string;
     targetExtractor?: string;
     targetMineral?: string;
     targetId?: string;
     energyTarget?: string;
     shouldFillTower?: boolean;
-    ready?: boolean;
-    working?: boolean;
     _move?: any;
 }
 interface FlagMemory {
@@ -131,10 +130,24 @@ interface Source {
 interface Creep {
     run(): void;
     setupMem(): void;
-    ensureRoom(): void;
-    isCreepWorking(): boolean | undefined;
+    performAction(): boolean;
+    moveToHomeRoom(): void;
+    shouldGetResource(): boolean;
+    fillResource(): boolean;
+    isCreepWorking2(): boolean | undefined;
     fillEnergy(): boolean;
+    doWork(): void;
+    idle(): void;
+    rally(): boolean;
+    hasRallied(): boolean;
+    dismantleNearestWall(): void;
+    moveToI(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
+        | ERR_NOT_FOUND;
+    moveToS(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
+        | ERR_NOT_FOUND;
+    harvestEnergy(): boolean;
     runHarvester(): void;
+    harvestMineral(): boolean;
     runMineralHarvester(): void;
     runTransfer(): void;
     runUpgrader(): void;
@@ -148,13 +161,6 @@ interface Creep {
     runRanger(): void;
     runHealer(): void;
     runTank(): void;
-    moveToI(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
-        | ERR_NOT_FOUND;
-    moveToS(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
-        | ERR_NOT_FOUND;
-    idle(): void;
-    rally(): boolean;
-    dismantleNearestWall(): void;
 }
 interface StructureTower {
     run(): void;
@@ -187,6 +193,7 @@ type FlagTypeConstant = "idle" | "rally";
 type CreepTypeConstant = "harvester" | "upgrader" | "builder" | "repairer" |
     "capturer" | "filler" | "transporter" | "transfer" |
     "scout" | "warrior" | "ranger" | "healer" | "tank" | "mineralHarvester";
+type CreepStateConstant = "spawning" | "rally" | "moveToHomeRoom" | "getResource" | "work";
 type WarlikeCreepTypes = "warrior" | "ranger" | "healer" | "tank";
 type AttackerBodyParts = RANGED_ATTACK | ATTACK | CLAIM;
 type DefenseStructure = StructureWall | StructureRampart;

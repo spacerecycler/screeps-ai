@@ -1,5 +1,5 @@
 import Haikunator from "haikunator";
-import { CreepType, RoomType } from "shared";
+import { CreepState, CreepType, RoomType } from "shared";
 StructureSpawn.prototype.run = function() {
     let spawnedOrMissing = false;
     spawnedOrMissing = this.spawnMissingCreep(this.room.name);
@@ -153,7 +153,8 @@ StructureSpawn.prototype.doSpawnCreep = function(roomName, newRole, count) {
             const newMem: CreepMemory = {
                 numWorkParts: body.filter((p) => p == WORK).length,
                 role: newRole,
-                room: roomName
+                room: roomName,
+                state: CreepState.Spawning
             };
             const result = this.spawnCreep(body, newCreepName, { memory: newMem });
             if (result == OK) {

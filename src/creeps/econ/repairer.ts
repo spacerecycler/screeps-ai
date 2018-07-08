@@ -1,3 +1,4 @@
+// Repairer: Repairs objects in a room
 Creep.prototype.runRepairer = function() {
     let target = this.tryRepair(this.memory);
     if (target == null) {

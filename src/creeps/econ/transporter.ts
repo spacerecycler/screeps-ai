@@ -1,3 +1,4 @@
+// Transporter: Transports energy from expansions to owned rooms
 Creep.prototype.runTransporter = function() {
     let target = Game.getObjectById<StructureStorage | StructureContainer>(this.memory.targetId);
     if (target != null && target.store[RESOURCE_ENERGY] == target.storeCapacity) {

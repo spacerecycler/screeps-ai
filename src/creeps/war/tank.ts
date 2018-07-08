@@ -1,7 +1,5 @@
+// Tank: Unit designed to soak damage
 Creep.prototype.runTank = function() {
-    if (!this.memory.ready) {
-        this.memory.ready = true;
-    }
     const source = Game.getObjectById<Source>(this.memory.targetSource);
     if (source == null) {
         return;

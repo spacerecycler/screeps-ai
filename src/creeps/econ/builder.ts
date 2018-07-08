@@ -1,3 +1,4 @@
+// Builder: Builds any objects
 Creep.prototype.runBuilder = function() {
     let target = Game.getObjectById<ConstructionSite>(this.memory.targetId);
     if (target == null) {

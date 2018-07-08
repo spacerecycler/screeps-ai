@@ -1,7 +1,5 @@
+// Ranger: Ranged attack unit
 Creep.prototype.runRanger = function() {
-    if (!this.memory.ready) {
-        this.memory.ready = true;
-    }
     const source = Game.getObjectById<Source>(this.memory.targetSource);
     if (source != null) {
         const target = _.head(source.findNearbyHostile());

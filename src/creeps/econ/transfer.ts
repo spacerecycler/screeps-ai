@@ -1,3 +1,4 @@
+// Transfer: specialized creep that transferes energy from a storage to a link and a tower next to the storage
 Creep.prototype.runTransfer = function() {
     if (this.room.storage == null) {
         return;

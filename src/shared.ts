@@ -22,6 +22,13 @@ export const enum RoomType {
     EXPANSION = "expansion",
     KEEPER_LAIR = "keeperLair"
 }
+export const enum CreepState {
+    Spawning = "spawning",
+    Rally = "rally",
+    MoveToHomeRoom = "moveToHomeRoom",
+    GetResource = "getResource",
+    Work = "work"
+}
 
 export const CREEPS_WARLIKE = ["warrior", "ranger", "healer", "tank"];
 export const RESERVATION_MIN = 1000;

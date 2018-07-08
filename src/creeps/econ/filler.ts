@@ -1,3 +1,4 @@
+// Filler: Fills objects in room that need energy from containers
 Creep.prototype.runFiller = function() {
     let target = null;
     if (!this.room.hasHostileAttacker()) {
