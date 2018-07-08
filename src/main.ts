@@ -1,4 +1,3 @@
-import { RoomType } from "shared";
 import { ErrorMapper } from "utils/ErrorMapper";
 
 import "creeps/creep";
@@ -7,6 +6,7 @@ import "resource";
 import "room";
 import "room-obj";
 import "room-pos";
+import { RoomType } from "shared";
 import "source";
 import "structures/structure";
 import "tombstone";
