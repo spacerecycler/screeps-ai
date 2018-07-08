@@ -174,7 +174,7 @@ Creep.prototype.fillEnergy = function() {
             target = this.pos.findClosestByPath(FIND_DROPPED_RESOURCES,
                 { filter: (r) => r.resourceType == RESOURCE_ENERGY });
             if (target == null) {
-                target = this.pos.findClosestByPath(FIND_TOMBSTONES);
+                target = this.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (t) => t.getEnergy() > 0});
             }
         }
         if (target == null) {
