@@ -28,7 +28,7 @@
   "private": true,
   "devDependencies": {
     "@types/lodash": "^3.10.1",
-    "@types/node": "^8.9.3",
+    "@types/node": "^8.10.21",
     "@types/screeps": "^2.4.0",
     "haikunator": "^2.0.0",
     "rollup": "^0.62.0",
