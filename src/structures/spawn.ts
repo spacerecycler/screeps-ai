@@ -1,26 +1,31 @@
 import Haikunator from "haikunator";
 import { CreepState, CreepType, RoomType } from "shared";
 StructureSpawn.prototype.run = function() {
-    let spawnedOrMissing = false;
-    spawnedOrMissing = this.spawnMissingCreep(this.room.name);
-    const nearbyRooms = Memory.config.rooms.filter((name) => name != this.room.name && this.room.isNearTo(name));
-    if (!spawnedOrMissing) {
-        for (const name of nearbyRooms) {
-            const room = Game.rooms[name];
-            if (room != null && room.isMine()) {
-                spawnedOrMissing = this.spawnMissingCreep(name);
-                break;
+    if (!this.spawning) {
+        let spawnedOrMissing = false;
+        spawnedOrMissing = this.spawnMissingCreep(this.room.name);
+        const nearbyRooms = Memory.config.rooms.filter((name) => name != this.room.name && this.room.isNearTo(name));
+        if (!spawnedOrMissing) {
+            for (const name of nearbyRooms) {
+                const room = Game.rooms[name];
+                if (room != null && room.isMine()) {
+                    spawnedOrMissing = this.spawnMissingCreep(name);
+                    break;
+                }
             }
         }
-    }
-    if (!spawnedOrMissing) {
-        for (const name of nearbyRooms) {
-            const room = Game.rooms[name];
-            if (room == null || !room.isMine()) {
-                spawnedOrMissing = this.spawnMissingCreep(name);
-                break;
+        if (!spawnedOrMissing) {
+            for (const name of nearbyRooms) {
+                const room = Game.rooms[name];
+                if (room == null || !room.isMine()) {
+                    spawnedOrMissing = this.spawnMissingCreep(name);
+                    break;
+                }
             }
         }
+    } else {
+        this.room.visual.text(`🛠️ ${Memory.creeps[this.spawning.name].role} ${this.spawning.name}`, this.pos.x + 1,
+            this.pos.y, {align: "left"});
     }
 };
 StructureSpawn.prototype.setupMem = function() {
@@ -48,13 +53,10 @@ StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
     const expected = new Map<CreepTypeConstant, number>();
     const room = Game.rooms[roomName];
     if (room != null) {
-        if (_.isEmpty(_.filter(Game.creeps, (creep) => {
-            return creep.memory.role == CreepType.HARVESTER && creep.memory.room == roomName
-                && creep.memory.targetSource == null;
-        }))) {
-            let harvesters = _.size(_.filter(Game.creeps, (creep) => {
-                return creep.memory.role == CreepType.HARVESTER && creep.memory.room == roomName;
-            }));
+        if (_.filter(Game.creeps, (creep) => creep.memory.role == CreepType.HARVESTER
+            && creep.memory.room == roomName && creep.memory.targetSource == null).length == 0) {
+            let harvesters = _.size(_.filter(Game.creeps, (creep) => creep.memory.role == CreepType.HARVESTER
+                && creep.memory.room == roomName));
             if (room.checkNeedHarvester()) {
                 harvesters++;
             }
@@ -79,8 +81,8 @@ StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
                 expected.set(CreepType.UPGRADER, Math.max(1, room.containerCount()));
             }
             if (room.storage != null) {
-                if (!_.isEmpty(room.storage.pos.findInRange<OwnedStructure>(FIND_MY_STRUCTURES, 2,
-                    { filter: (t) => t.structureType == STRUCTURE_TOWER }))) {
+                if (room.storage.pos.findInRange<OwnedStructure>(FIND_MY_STRUCTURES, 2,
+                    { filter: (t) => t.structureType == STRUCTURE_TOWER }).length == 0) {
                     expected.set(CreepType.TRANSFER, 1);
                 }
             }
@@ -91,8 +93,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
         } else if (numConstructionSites > 0) {
             expected.set(CreepType.BUILDER, 1);
         }
-        if ((room.isMine() || room.memory.type == RoomType.EXPANSION)
-            && !room.hasTower()) {
+        if ((room.isMine() || room.memory.type == RoomType.EXPANSION) && !room.hasTower()) {
             expected.set(CreepType.REPAIRER, 1);
             if (room.hasHurtCreep()) {
                 expected.set(CreepType.HEALER, 1);
@@ -142,10 +143,8 @@ StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
     return expected;
 };
 StructureSpawn.prototype.doSpawnCreep = function(roomName, newRole, count) {
-    const roomCreeps = _.filter(Game.creeps, (creep) => {
-        return creep.memory.role == newRole && creep.memory.room == roomName;
-    });
-    if (_.size(roomCreeps) < count) {
+    const roomCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == newRole && creep.memory.room == roomName);
+    if (roomCreeps.length < count) {
         const body = this.chooseBody(newRole, roomName);
         const newCreepName = this.getRandomName();
         const dryRunResult = this.spawnCreep(body, newCreepName, { dryRun: true });
