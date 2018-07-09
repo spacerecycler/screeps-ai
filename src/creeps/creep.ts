@@ -246,10 +246,11 @@ Creep.prototype.fillEnergy = function() {
     return false;
 };
 Creep.prototype.moveToI = function(target) {
-    return this.moveTo(target, {reusePath: 5, maxRooms: 1, visualizePathStyle: {}});
+    return this.moveTo(target, {ignoreRoads: this.memory.ignoreRoads, maxRooms: 1, reusePath: 5,
+        visualizePathStyle: {}});
 };
 Creep.prototype.moveToS = function(target) {
-    return this.moveTo(target, {reusePath: 5, visualizePathStyle: {}});
+    return this.moveTo(target, {ignoreRoads: this.memory.ignoreRoads, reusePath: 5, visualizePathStyle: {}});
 };
 Creep.prototype.doRepair = function(target) {
     if (this.repair(target) == ERR_NOT_IN_RANGE) {

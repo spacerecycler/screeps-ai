@@ -150,6 +150,7 @@ StructureSpawn.prototype.doSpawnCreep = function(roomName, newRole, count) {
         const dryRunResult = this.spawnCreep(body, newCreepName, {dryRun: true});
         if (dryRunResult == OK) {
             const newMem: CreepMemory = {
+                ignoreRoads: body.length <= body.filter((p) => p == MOVE).length * 2,
                 numWorkParts: body.filter((p) => p == WORK).length,
                 role: newRole,
                 room: roomName,

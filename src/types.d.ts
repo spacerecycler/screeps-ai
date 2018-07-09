@@ -30,6 +30,7 @@ interface CreepMemory {
     room: string;
     numWorkParts: number;
     state: CreepStateConstant;
+    ignoreRoads: boolean;
     targetSource?: string;
     targetExtractor?: string;
     targetMineral?: string;
