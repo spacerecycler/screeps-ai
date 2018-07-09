@@ -1,5 +1,5 @@
 import Haikunator from "haikunator";
-import { CreepState, CreepType, RoomType } from "shared";
+import {CreepState, CreepType, RoomState, RoomType} from "shared";
 StructureSpawn.prototype.run = function() {
     if (!this.spawning) {
         let spawnedOrMissing = false;
@@ -82,7 +82,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
             }
             if (room.storage != null) {
                 if (room.storage.pos.findInRange<OwnedStructure>(FIND_MY_STRUCTURES, 2,
-                    { filter: (t) => t.structureType == STRUCTURE_TOWER }).length == 0) {
+                    {filter: (t) => t.structureType == STRUCTURE_TOWER}).length == 0) {
                     expected.set(CreepType.TRANSFER, 1);
                 }
             }
@@ -116,15 +116,15 @@ StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
             expected.set(CreepType.REPAIRER, 1);
         }
     }
-    if (Memory.rooms[roomName].needReserve != null) {
+    if (Memory.rooms[roomName].type == RoomType.EXPANSION) {
         let num = (3 - Math.min(2, Math.trunc(this.room.energyCapacityAvailable / 650))) % 3;
         if (Memory.rooms[roomName].controllerReserveSpots == 1) {
             num = 1;
         }
-        if (Memory.config.canClaim) {
+        if (Memory.rooms[roomName].state == RoomState.Claiming) {
             expected.set(CreepType.CAPTURER, 1);
         } else {
-            if (Memory.rooms[roomName].needReserve) {
+            if (Memory.rooms[roomName].state == RoomState.Reserving) {
                 expected.set(CreepType.CAPTURER, num);
             } else {
                 expected.set(CreepType.CAPTURER, num - 1);
@@ -147,7 +147,7 @@ StructureSpawn.prototype.doSpawnCreep = function(roomName, newRole, count) {
     if (roomCreeps.length < count) {
         const body = this.chooseBody(newRole, roomName);
         const newCreepName = this.getRandomName();
-        const dryRunResult = this.spawnCreep(body, newCreepName, { dryRun: true });
+        const dryRunResult = this.spawnCreep(body, newCreepName, {dryRun: true});
         if (dryRunResult == OK) {
             const newMem: CreepMemory = {
                 numWorkParts: body.filter((p) => p == WORK).length,
@@ -155,7 +155,7 @@ StructureSpawn.prototype.doSpawnCreep = function(roomName, newRole, count) {
                 room: roomName,
                 state: CreepState.Spawning
             };
-            const result = this.spawnCreep(body, newCreepName, { memory: newMem });
+            const result = this.spawnCreep(body, newCreepName, {memory: newMem});
             if (result == OK) {
                 // console.log(`body: ${body}`);
                 console.log(`${this.name} Spawning new ${newRole} for ${roomName}: ${newCreepName}`);

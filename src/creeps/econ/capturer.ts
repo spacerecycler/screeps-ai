@@ -4,11 +4,9 @@ Creep.prototype.runCapturer = function() {
         return;
     }
     if (this.pos.isNearTo(this.room.controller)) {
-        if (Memory.config.canClaim && this.room.memory.shouldClaim) {
+        if (this.room.shouldClaim()) {
             this.claimController(this.room.controller);
             delete this.room.memory.type;
-            delete this.room.memory.needReserve;
-            Memory.config.canClaim = false;
         } else {
             this.reserveController(this.room.controller);
         }

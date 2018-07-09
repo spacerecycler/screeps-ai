@@ -1,4 +1,4 @@
-import { CreepType } from "shared";
+import {CreepType} from "shared";
 Source.prototype.harvestSpots = function() {
     if (this._harvestSpots == null) {
         const tiles = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y - 1, this.pos.x - 1,
@@ -45,7 +45,7 @@ Source.prototype.findContainerSpot = function() {
 Source.prototype.hasContainer = function() {
     if (this._hasContainer == null) {
         const containers = this.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1,
-            { filter: (t) => t.structureType == STRUCTURE_CONTAINER});
+            {filter: (t) => t.structureType == STRUCTURE_CONTAINER});
         const sites = this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1,
             {filter: (t: ConstructionSite) => t.structureType == STRUCTURE_CONTAINER});
         this._hasContainer = containers.length > 0 || sites.length > 0;

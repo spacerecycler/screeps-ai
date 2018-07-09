@@ -1,4 +1,4 @@
-import { ATTACKER_PARTS, CreepTypeConstant } from "shared";
+import {ATTACKER_PARTS, CreepTypeConstant} from "shared";
 RoomPosition.prototype.findNearestAttacker = function() {
     const attacker = this.findClosestByRange(FIND_HOSTILE_CREEPS, {
         filter: (t) => {
@@ -14,7 +14,7 @@ RoomPosition.prototype.findNearestAttacker = function() {
         return null;
     }
     const healer = this.findClosestByRange(FIND_HOSTILE_CREEPS,
-        { filter: (t) => t.body.map((p) => p.type).includes(HEAL) });
+        {filter: (t) => t.body.map((p) => p.type).includes(HEAL)});
     if (healer != null) {
         return healer;
     } else {
@@ -55,8 +55,7 @@ RoomPosition.prototype.findNearestConstructionSite = function(types) {
     if (types == null) {
         return this.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
     } else {
-        return this.findClosestByPath(FIND_MY_CONSTRUCTION_SITES,
-            { filter: (t) => types.includes(t.structureType) });
+        return this.findClosestByPath(FIND_MY_CONSTRUCTION_SITES, {filter: (t) => types.includes(t.structureType)});
     }
 };
 RoomPosition.prototype.findNearestFillTarget = function(type) {
@@ -69,11 +68,11 @@ RoomPosition.prototype.findNearestFillTarget = function(type) {
 };
 RoomPosition.prototype.findNearestNotFullLink = function() {
     return this.findClosestByRange<StructureLink>(FIND_MY_STRUCTURES,
-        { filter: (t) => t.structureType == STRUCTURE_LINK && t.energy < t.energyCapacity });
+        {filter: (t) => t.structureType == STRUCTURE_LINK && t.energy < t.energyCapacity});
 };
 RoomPosition.prototype.findNearestNotEmptyLink = function() {
     return this.findClosestByPath<StructureLink>(FIND_MY_STRUCTURES,
-        { filter: (t) => t.structureType == STRUCTURE_LINK && t.energy > 0 && !Memory.links[t.id].nearSource });
+        {filter: (t) => t.structureType == STRUCTURE_LINK && t.energy > 0 && !Memory.links[t.id].nearSource});
 };
 RoomPosition.prototype.findNearestNotFullContainer = function() {
     return this.findClosestByRange<StructureContainer>(FIND_STRUCTURES, {
@@ -93,12 +92,11 @@ RoomPosition.prototype.findNearbyNotFullContainer = function() {
 };
 RoomPosition.prototype.findNearestNotEmptyContainer = function() {
     return this.findClosestByPath<StructureContainer>(FIND_STRUCTURES,
-        { filter: (t) => t.structureType == STRUCTURE_CONTAINER && t.store[RESOURCE_ENERGY] > 0 });
+        {filter: (t) => t.structureType == STRUCTURE_CONTAINER && t.store[RESOURCE_ENERGY] > 0});
 };
 RoomPosition.prototype.findNearestIdleFlag = function() {
-    return this.findClosestByRange(FIND_FLAGS, { filter: (t) => t.isIdle() });
+    return this.findClosestByRange(FIND_FLAGS, {filter: (t) => t.isIdle()});
 };
 RoomPosition.prototype.findNearestWall = function() {
-    return this.findClosestByRange<StructureWall>(FIND_STRUCTURES,
-        { filter: (t) => t.structureType == STRUCTURE_WALL });
+    return this.findClosestByRange<StructureWall>(FIND_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_WALL});
 };

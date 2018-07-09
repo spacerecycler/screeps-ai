@@ -12,7 +12,7 @@ import "creeps/war/healer";
 import "creeps/war/ranger";
 import "creeps/war/tank";
 import "creeps/war/warrior";
-import { CREEPS_WARLIKE, CreepState, CreepType, RoomType } from "shared";
+import {CREEPS_WARLIKE, CreepState, CreepType, RoomType} from "shared";
 Creep.prototype.run = function() {
     this.setupMem();
     let actionDone = false;
@@ -208,9 +208,9 @@ Creep.prototype.fillEnergy = function() {
     if (target == null) {
         if (!this.room.hasHostileAttacker()) {
             target = this.pos.findClosestByPath(FIND_DROPPED_RESOURCES,
-                { filter: (r) => r.resourceType == RESOURCE_ENERGY });
+                {filter: (r) => r.resourceType == RESOURCE_ENERGY});
             if (target == null) {
-                target = this.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (t) => t.getEnergy() > 0 });
+                target = this.pos.findClosestByPath(FIND_TOMBSTONES, {filter: (t) => t.getEnergy() > 0});
             }
         }
         if (target == null) {
@@ -246,10 +246,10 @@ Creep.prototype.fillEnergy = function() {
     return false;
 };
 Creep.prototype.moveToI = function(target) {
-    return this.moveTo(target, { reusePath: 5, maxRooms: 1, visualizePathStyle: {} });
+    return this.moveTo(target, {reusePath: 5, maxRooms: 1, visualizePathStyle: {}});
 };
 Creep.prototype.moveToS = function(target) {
-    return this.moveTo(target, { reusePath: 5, visualizePathStyle: {} });
+    return this.moveTo(target, {reusePath: 5, visualizePathStyle: {}});
 };
 Creep.prototype.doRepair = function(target) {
     if (this.repair(target) == ERR_NOT_IN_RANGE) {

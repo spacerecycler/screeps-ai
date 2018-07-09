@@ -1,4 +1,4 @@
-import { CreepType } from "shared";
+import {CreepType} from "shared";
 // Healer: Heals creeps
 Creep.prototype.runHealer = function() {
     if (this.hits < this.hitsMax * 0.9) {

@@ -3,7 +3,7 @@ StructureLink.prototype.run = function() {
         const source = this.pos.findClosestByRange(FIND_SOURCES);
         if (source != null) {
             const isNearSource = this.pos.inRangeTo(source, 2);
-            Memory.links[this.id] = { nearSource: isNearSource };
+            Memory.links[this.id] = {nearSource: isNearSource};
         }
     }
     if (this.cooldown <= 0 && this.energy >= this.energyCapacity * 0.9) {

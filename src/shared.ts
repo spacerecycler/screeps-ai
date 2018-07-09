@@ -14,6 +14,13 @@ export const enum CreepType {
     TANK = "tank",
     MINERAL_HARVESTER = "mineralHarvester"
 }
+export const enum CreepState {
+    Spawning = "spawning",
+    Rally = "rally",
+    MoveToHomeRoom = "moveToHomeRoom",
+    GetResource = "getResource",
+    Work = "work"
+}
 export const enum FlagType {
     IDLE = "idle",
     RALLY = "rally"
@@ -22,12 +29,12 @@ export const enum RoomType {
     EXPANSION = "expansion",
     KEEPER_LAIR = "keeperLair"
 }
-export const enum CreepState {
-    Spawning = "spawning",
-    Rally = "rally",
-    MoveToHomeRoom = "moveToHomeRoom",
-    GetResource = "getResource",
-    Work = "work"
+export const enum RoomState {
+    Startup = "startup",
+    Normal = "normal",
+    Building = "building",
+    Reserving = "reserving",
+    Claiming = "claiming"
 }
 
 export const CREEPS_WARLIKE = ["warrior", "ranger", "healer", "tank"];

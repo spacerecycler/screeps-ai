@@ -1,4 +1,4 @@
-import { ErrorMapper } from "utils/ErrorMapper";
+import {ErrorMapper} from "utils/ErrorMapper";
 
 import "creeps/creep";
 import "flag";
@@ -6,7 +6,7 @@ import "resource";
 import "room";
 import "room-obj";
 import "room-pos";
-import { RoomType } from "shared";
+import {RoomState, RoomType} from "shared";
 import "source";
 import "structures/structure";
 import "tombstone";
@@ -24,9 +24,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
   }
   const rooms = Memory.config.rooms.map((name) => Game.rooms[name]).filter((r) => r != null);
   rooms.sort((r) => r.energyAvailable).reverse();
-  for (const room of rooms) {
-    room.setupMem();
-  }
   for (const room of rooms) {
     room.run();
   }
@@ -51,7 +48,6 @@ export const setupMem = () => {
   if (Memory.config == null) {
     Memory.config = {
       blacklist: {},
-      canClaim: false,
       rooms: []
     };
   }
@@ -71,6 +67,7 @@ export const setupMem = () => {
     if (!Memory.rooms[name]) {
       Memory.rooms[name] = {
         distance: {},
+        state: RoomState.Startup,
         wallsMax: 5000
       };
     }
@@ -82,10 +79,11 @@ export const setupMem = () => {
       Memory.config.blacklist[name] = Array<string>();
     }
     if (room == null && Memory.rooms[name].type == RoomType.EXPANSION) {
-      Memory.rooms[name].needReserve = true;
+      Memory.rooms[name].state = RoomState.Reserving;
     }
   }
-  Memory.config.canClaim = mine < Game.gcl.level;
+  // todo: trigger room claiming
+  // Memory.config.canClaim = mine < Game.gcl.level;
 };
 
 export const clearMem = () => {

@@ -1,23 +1,26 @@
 declare module "haikunator" {
     class Haikunator {
-        constructor(options?: {adjectives?: [string], nouns?: [string], seed?: any,
-            defaults?: {delimiter?: string, tokenLength?: number, tokenHex?: boolean, tokenChars?: string}})
-        public haikunate(options?: {delimiter?: string, tokenLength?: number, tokenHex?: boolean,
-            tokenChars?: string}): string;
+        constructor(options?: {
+            adjectives?: [string], nouns?: [string], seed?: any,
+            defaults?: {delimiter?: string, tokenLength?: number, tokenHex?: boolean, tokenChars?: string}
+        })
+        public haikunate(options?: {
+            delimiter?: string, tokenLength?: number, tokenHex?: boolean,
+            tokenChars?: string
+        }): string;
     }
     export = Haikunator;
 }
 interface Memory {
     testing: boolean;
     config: ConfigMemory;
-    towers: { [name: string]: TowerMemory };
-    links: { [name: string]: LinkMemory };
+    towers: {[name: string]: TowerMemory};
+    links: {[name: string]: LinkMemory};
     vars: VarsMemory;
 }
 interface ConfigMemory {
-    canClaim: boolean;
     rooms: string[];
-    blacklist: { [roomName: string]: string[] };
+    blacklist: {[roomName: string]: string[]};
 }
 interface VarsMemory {
     lastPct?: string;
@@ -41,14 +44,13 @@ interface FlagMemory {
 }
 interface RoomMemory {
     wallsMax: number;
-    distance: { [roomName: string]: number };
+    distance: {[roomName: string]: number};
+    state: RoomStateConstant;
     type?: RoomTypeConstant;
-    needReserve?: boolean;
     controllerReserveSpots?: number;
-    shouldClaim?: boolean;
 }
 interface SpawnMemory {
-    roadTo: { [id: string]: boolean };
+    roadTo: {[id: string]: boolean};
     initRoad?: boolean;
 }
 interface TowerMemory {
@@ -117,6 +119,10 @@ interface Room {
     findIdleFlags(): Flag[];
     getDistanceToRoom(otherRoom: Room | string): number;
     isNearTo(otherRoom: Room | string): boolean;
+    shouldClaim(): boolean;
+    shouldBuild(): boolean;
+    buildInfra(): void;
+    doneBuilding(): boolean;
 }
 interface Source {
     _harvestSpots?: number;
@@ -141,9 +147,9 @@ interface Creep {
     rally(): boolean;
     hasRallied(): boolean;
     dismantleNearestWall(): void;
-    moveToI(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
+    moveToI(target: RoomPosition | {pos: RoomPosition}): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
         | ERR_NOT_FOUND;
-    moveToS(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
+    moveToS(target: RoomPosition | {pos: RoomPosition}): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
         | ERR_NOT_FOUND;
     harvestEnergy(): boolean;
     runHarvester(): void;
@@ -194,6 +200,7 @@ type CreepTypeConstant = "harvester" | "upgrader" | "builder" | "repairer" |
     "capturer" | "filler" | "transporter" | "transfer" |
     "scout" | "warrior" | "ranger" | "healer" | "tank" | "mineralHarvester";
 type CreepStateConstant = "spawning" | "rally" | "moveToHomeRoom" | "getResource" | "work";
+type RoomStateConstant = "startup" | "normal" | "building" | "reserving" | "claiming";
 type WarlikeCreepTypes = "warrior" | "ranger" | "healer" | "tank";
 type AttackerBodyParts = RANGED_ATTACK | ATTACK | CLAIM;
 type DefenseStructure = StructureWall | StructureRampart;
