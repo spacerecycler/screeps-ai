@@ -143,7 +143,7 @@ interface Creep {
     fillResource(): boolean;
     isCreepWorking2(): boolean | undefined;
     fillEnergy(): boolean;
-    doWork(): void;
+    doWork(): boolean;
     idle(): void;
     rally(): boolean;
     hasRallied(): boolean;
@@ -153,21 +153,21 @@ interface Creep {
     moveToS(target: RoomPosition | {pos: RoomPosition}): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
         | ERR_NOT_FOUND;
     harvestEnergy(): boolean;
-    runHarvester(): void;
+    runHarvester(): boolean;
     harvestMineral(): boolean;
-    runMineralHarvester(): void;
-    runTransfer(): void;
-    runUpgrader(): void;
-    runBuilder(): void;
-    runRepairer(): void;
-    runCapturer(): void;
-    runFiller(): void;
-    runTransporter(): void;
-    runScout(): void;
-    runWarrior(): void;
-    runRanger(): void;
-    runHealer(): void;
-    runTank(): void;
+    runMineralHarvester(): boolean;
+    runTransfer(): boolean;
+    runUpgrader(): boolean;
+    runBuilder(): boolean;
+    runRepairer(): boolean;
+    runCapturer(): boolean;
+    runFiller(): boolean;
+    runTransporter(): boolean;
+    runScout(): boolean;
+    runWarrior(): boolean;
+    runRanger(): boolean;
+    runHealer(): boolean;
+    runTank(): boolean;
 }
 interface StructureTower {
     run(): void;

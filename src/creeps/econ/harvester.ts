@@ -45,20 +45,26 @@ Creep.prototype.runHarvester = function() {
         if (target != null) {
             if (this.pos.isNearTo(target)) {
                 this.transfer(target, RESOURCE_ENERGY);
+                return true;
             } else {
                 this.moveToI(target);
             }
         } else {
             target = _.head(targetSource.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2));
             if (target != null) {
-                if (this.pos.isNearTo(target)) {
+                if (this.pos.inRangeTo(target, 3)) {
                     this.build(target);
+                    if (this.carry[RESOURCE_ENERGY] - this.memory.numWorkParts * BUILD_POWER <= 0) {
+                        return true;
+                    }
                 } else {
                     this.moveToI(target);
                 }
-                return;
             }
             this.say("idle");
         }
+    } else {
+        this.suicide();
     }
+    return false;
 };

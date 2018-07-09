@@ -11,17 +11,19 @@ Creep.prototype.runFiller = function() {
         target = this.pos.findNearestFillTarget(STRUCTURE_TOWER);
     }
     if (target == null && this.room.isStorageNotFull()
-        && (!_.isEmpty(this.room.findNotEmptyContainers()) || !_.isEmpty(this.room.findNotEmptyLinks()))) {
+        && (this.room.findNotEmptyContainers().length > 0 || this.room.findNotEmptyLinks().length > 0)) {
         target = this.room.storage;
     }
     if (target != null) {
         this.say("filling");
         if (this.pos.isNearTo(target)) {
             this.transfer(target, RESOURCE_ENERGY);
+            return true;
         } else {
             this.moveToI(target);
         }
     } else {
         this.idle();
     }
+    return false;
 };

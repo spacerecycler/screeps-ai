@@ -26,10 +26,16 @@ Creep.prototype.runBuilder = function() {
     if (target != null) {
         this.memory.targetId = target.id;
         this.say("building");
-        if (this.build(target) == ERR_NOT_IN_RANGE) {
+        if (this.pos.inRangeTo(target, 3)) {
+            this.build(target);
+            if (this.carry[RESOURCE_ENERGY] - this.memory.numWorkParts * BUILD_POWER <= 0) {
+                return true;
+            }
+        } else {
             this.moveToI(target);
         }
     } else {
         this.idle();
     }
+    return false;
 };

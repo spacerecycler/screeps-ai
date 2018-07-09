@@ -15,11 +15,14 @@ Creep.prototype.runWarrior = function() {
     } else {
         const target = this.pos.findNearestAttacker();
         if (target != null) {
-            if (this.attack(target) == ERR_NOT_IN_RANGE) {
+            if (this.pos.isNearTo(target)) {
+                this.attack(target);
+            } else {
                 this.moveToI(target);
             }
         } else {
             this.idle();
         }
     }
+    return false;
 };

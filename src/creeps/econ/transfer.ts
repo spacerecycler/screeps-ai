@@ -1,7 +1,8 @@
 // Transfer: specialized creep that transferes energy from a storage to a link and a tower next to the storage
 Creep.prototype.runTransfer = function() {
     if (this.room.storage == null) {
-        return;
+        console.log(`Room has no storage ${this.room.name}`);
+        return false;
     }
     const storagePos = this.room.storage.pos;
     const tower = _.head(storagePos.findInRange<StructureTower>(FIND_MY_STRUCTURES, 2,
@@ -16,15 +17,15 @@ Creep.prototype.runTransfer = function() {
         {filter: (t) => t.structureType == STRUCTURE_LINK}));
     if (!this.pos.isNearTo(this.room.storage)) {
         this.moveToI(this.room.storage);
-        return;
+        return false;
     }
     if (!this.pos.isNearTo(tower)) {
         this.moveToI(tower);
-        return;
+        return false;
     }
     if (link != null && !this.pos.isNearTo(link)) {
         this.moveToI(link);
-        return;
+        return false;
     }
     if (link != null) {
         this.withdraw(link, RESOURCE_ENERGY, 25);
@@ -36,4 +37,5 @@ Creep.prototype.runTransfer = function() {
     } else if (link != null) {
         this.transfer(this.room.storage, RESOURCE_ENERGY);
     }
+    return true;
 };

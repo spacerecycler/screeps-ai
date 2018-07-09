@@ -33,9 +33,11 @@ Creep.prototype.runMineralHarvester = function() {
         if (target != null) {
             if (this.pos.isNearTo(target)) {
                 this.transfer(target, targetMineral.mineralType);
+                return true;
             } else {
                 this.moveToI(target);
             }
         }
     }
+    return false;
 };

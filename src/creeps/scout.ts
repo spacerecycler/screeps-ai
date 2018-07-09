@@ -7,4 +7,5 @@ Creep.prototype.runScout = function() {
     } else {
         this.suicide();
     }
+    return false;
 };

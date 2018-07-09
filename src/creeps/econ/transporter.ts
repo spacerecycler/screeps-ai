@@ -44,8 +44,10 @@ Creep.prototype.runTransporter = function() {
     if (target != null) {
         if (this.pos.isNearTo(target)) {
             this.transfer(target, RESOURCE_ENERGY);
+            return true;
         } else {
             this.moveToS(target);
         }
     }
+    return false;
 };

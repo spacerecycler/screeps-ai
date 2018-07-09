@@ -24,4 +24,5 @@ Creep.prototype.runRanger = function() {
             this.idle();
         }
     }
+    return false;
 };

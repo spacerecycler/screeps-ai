@@ -1,7 +1,11 @@
 // Capturer: Reserves or Claims controllers
 Creep.prototype.runCapturer = function() {
     if (this.room.controller == null) {
-        return;
+        console.log(`Room missing controller ${this.room.name}`);
+        return false;
+    }
+    if (this.room.isMine()) {
+        this.suicide();
     }
     if (this.pos.isNearTo(this.room.controller)) {
         if (this.room.shouldClaim()) {
@@ -13,4 +17,5 @@ Creep.prototype.runCapturer = function() {
     } else {
         this.moveToI(this.room.controller);
     }
+    return false;
 };

@@ -21,4 +21,5 @@ Creep.prototype.runHealer = function() {
     } else {
         this.idle();
     }
+    return false;
 };

@@ -16,15 +16,17 @@ import {CREEPS_WARLIKE, CreepState, CreepType, RoomType} from "shared";
 Creep.prototype.run = function() {
     this.setupMem();
     let actionDone = false;
-    while (!actionDone) {
+    let numActions = 0;
+    while (!actionDone && numActions < 2) {
         actionDone = this.performAction();
+        numActions++;
     }
 };
 Creep.prototype.performAction = function() {
     switch (this.memory.state) {
         case CreepState.Spawning:
-            if (CREEPS_WARLIKE.includes(this.memory.role) &&
-                Memory.rooms[this.memory.room].type == RoomType.KEEPER_LAIR) {
+            if (CREEPS_WARLIKE.includes(this.memory.role)
+                && Memory.rooms[this.memory.room].type == RoomType.KEEPER_LAIR) {
                 this.memory.state = CreepState.Rally;
             } else {
                 this.memory.state = CreepState.MoveToHomeRoom;
@@ -56,16 +58,20 @@ Creep.prototype.performAction = function() {
                 return true;
             }
         case CreepState.Work:
-            // todo: remove this section after projecting work energy levels
             if (this.shouldGetResource() && _.sum(this.carry) == 0) {
                 this.memory.state = CreepState.GetResource;
                 return false;
             }
-            this.doWork();
-            // todo: project energy levels after working
-            if (this.shouldGetResource() && _.sum(this.carry) == 0) {
-                this.memory.state = CreepState.GetResource;
-                return false;
+            if (this.doWork()) {
+                if (this.memory.role == CreepType.TRANSPORTER) {
+                    this.memory.state = CreepState.MoveToHomeRoom;
+                    return false;
+                } else if (this.shouldGetResource()) {
+                    this.memory.state = CreepState.GetResource;
+                    return false;
+                } else {
+                    return true;
+                }
             } else {
                 return true;
             }
@@ -89,47 +95,35 @@ Creep.prototype.fillResource = function() {
 Creep.prototype.doWork = function() {
     switch (this.memory.role) {
         case CreepType.HARVESTER:
-            this.runHarvester();
-            return;
+            return this.runHarvester();
         case CreepType.MINERAL_HARVESTER:
-            this.runMineralHarvester();
-            return;
+            return this.runMineralHarvester();
         case CreepType.TRANSFER:
-            this.runTransfer();
-            return;
+            return this.runTransfer();
         case CreepType.UPGRADER:
-            this.runUpgrader();
-            return;
+            return this.runUpgrader();
         case CreepType.BUILDER:
-            this.runBuilder();
-            return;
+            return this.runBuilder();
         case CreepType.REPAIRER:
-            this.runRepairer();
-            return;
+            return this.runRepairer();
         case CreepType.CAPTURER:
-            this.runCapturer();
-            return;
+            return this.runCapturer();
         case CreepType.FILLER:
-            this.runFiller();
-            return;
+            return this.runFiller();
         case CreepType.TRANSPORTER:
-            this.runTransporter();
-            return;
+            return this.runTransporter();
         case CreepType.SCOUT:
-            this.runScout();
-            return;
+            return this.runScout();
         case CreepType.WARRIOR:
-            this.runWarrior();
-            return;
+            return this.runWarrior();
         case CreepType.RANGER:
-            this.runRanger();
-            return;
+            return this.runRanger();
         case CreepType.HEALER:
-            this.runHealer();
-            return;
+            return this.runHealer();
         case CreepType.TANK:
-            this.runTank();
-            return;
+            return this.runTank();
+        default:
+            throw new Error(`Creep type ${this.memory.role} has no work method`);
     }
 };
 Creep.prototype.setupMem = function() {
@@ -216,14 +210,15 @@ Creep.prototype.fillEnergy = function() {
         if (target == null) {
             target = this.pos.findNearestNotEmptyLink();
         }
+        if (this.memory.role != CreepType.FILLER && target == null && this.room.storage != null
+                && this.room.isStorageNotEmpty()) {
+            target = this.room.storage;
+        }
         if (target == null) {
             target = this.pos.findNearestNotEmptyContainer();
         }
-        if (target == null && this.room.storage != null && this.room.isStorageNotEmpty()) {
-            target = this.room.storage;
-        }
         if (target == null && this.room.storage == null && this.room.containerCount() == 0
-            && this.memory.role != CreepType.FILLER && this.memory.role != CreepType.TRANSPORTER) {
+            && this.body.filter((p) => p.type == WORK).length > 0) {
             target = this.pos.findClosestByPath(FIND_SOURCES);
         }
         if (target != null) {
