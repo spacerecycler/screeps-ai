@@ -11,5 +11,6 @@
   },
   "typescript.tsdk": "./node_modules/typescript/lib",
   "typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
   "tslint.ignoreDefinitionFiles": false
 }
