@@ -119,9 +119,9 @@ Room.prototype.buildInfra = function() {
         for (const source of sources) {
             if (!spawn.memory.roadTo[source.id] && source.hasContainer()) {
                 console.log(`building road to source ${source.id}`);
-                const vals = PathFinder.search(spawn.pos, {pos: source.pos, range: 1});
-                for (const val of vals.path) {
-                    val.createConstructionSite(STRUCTURE_ROAD);
+                const path = spawn.pos.findPathTo(source.pos, {range: 1});
+                for (const val of path) {
+                    this.createConstructionSite(val.x, val.y, STRUCTURE_ROAD);
                 }
                 objectBuilt = true;
                 spawn.memory.roadTo[source.id] = true;
@@ -129,9 +129,9 @@ Room.prototype.buildInfra = function() {
         }
         if (this.controller && !spawn.memory.roadTo[this.controller.id]) {
             console.log(`building road to controller`);
-            const vals = PathFinder.search(spawn.pos, {pos: this.controller.pos, range: 1});
-            for (const val of vals.path) {
-                val.createConstructionSite(STRUCTURE_ROAD);
+            const path = spawn.pos.findPathTo(this.controller.pos, {range: 1});
+            for (const val of path) {
+                this.createConstructionSite(val.x, val.y, STRUCTURE_ROAD);
             }
             objectBuilt = true;
             spawn.memory.roadTo[this.controller.id] = true;
