@@ -147,28 +147,24 @@ StructureSpawn.prototype.doSpawnCreep = function(roomName, newRole, count) {
     if (roomCreeps.length < count) {
         const body = this.chooseBody(newRole, roomName);
         const newCreepName = this.getRandomName();
-        const dryRunResult = this.spawnCreep(body, newCreepName, {dryRun: true});
-        if (dryRunResult == OK) {
-            const newMem: CreepMemory = {
-                ignoreRoads: body.length <= body.filter((p) => p == MOVE).length * 2,
-                numWorkParts: body.filter((p) => p == WORK).length,
-                role: newRole,
-                room: roomName,
-                state: CreepState.Spawning
-            };
-            const result = this.spawnCreep(body, newCreepName, {memory: newMem});
-            if (result == OK) {
-                // console.log(`body: ${body}`);
-                console.log(`${this.name} Spawning new ${newRole} for ${roomName}: ${newCreepName}`);
-                return true;
-            } else {
-                console.log(`${this.name} Spawn error: ${result}`);
-            }
-        } else if (Array<ScreepsReturnCode>(ERR_NOT_ENOUGH_RESOURCES, ERR_BUSY).includes(dryRunResult)) {
+        const newMem: CreepMemory = {
+            ignoreRoads: body.length <= body.filter((p) => p == MOVE).length * 2,
+            numWorkParts: body.filter((p) => p == WORK).length,
+            role: newRole,
+            room: roomName,
+            state: CreepState.Spawning
+        };
+        const result = this.spawnCreep(body, newCreepName, {memory: newMem});
+        if (result == OK) {
+            // console.log(`body: ${body}`);
+            console.log(`${this.name} Spawning new ${newRole} for ${roomName}: ${newCreepName}`);
             return true;
+        } else if (result == ERR_NOT_ENOUGH_RESOURCES) {
+            // console.log(`not enough resources, body: ${body}`);
+        } else if (result == ERR_BUSY) {
+            // do nothing
         } else {
-            console.log(dryRunResult);
-            return true;
+            console.log(`Spawn error: ${result}, body: ${body}`);
         }
     }
     return false;
@@ -178,10 +174,12 @@ StructureSpawn.prototype.chooseBody = function(role, roomName) {
     const body = Array<BodyPartConstant>();
     let div = 0;
     let numCarry = 0;
+    let cost = 0;
     const room = Game.rooms[roomName];
     switch (role) {
         case CreepType.CAPTURER:
-            div = Math.min(2, Math.trunc(energyCapAvail / 650));
+            cost = BODYPART_COST[CLAIM] + BODYPART_COST[MOVE];
+            div = Math.min(MAX_CREEP_SIZE / 2, Math.trunc(energyCapAvail / cost));
             if (Memory.rooms[roomName].controllerReserveSpots == 1) {
                 div = 2;
             }
@@ -189,7 +187,8 @@ StructureSpawn.prototype.chooseBody = function(role, roomName) {
             this.addParts(body, div, MOVE);
             return body;
         case CreepType.FILLER:
-            div = Math.min(5, Math.trunc(energyCapAvail / 100));
+            cost = BODYPART_COST[CARRY] + BODYPART_COST[MOVE];
+            div = Math.min(MAX_CREEP_SIZE / 2, Math.trunc(energyCapAvail / cost));
             if (this.room.name == roomName && room.needsRecovery()) {
                 div = 3;
             }
@@ -197,7 +196,8 @@ StructureSpawn.prototype.chooseBody = function(role, roomName) {
             this.addParts(body, div, MOVE);
             return body;
         case CreepType.TRANSPORTER:
-            div = Math.min(10, Math.trunc(energyCapAvail / 100));
+            cost = BODYPART_COST[CARRY] + BODYPART_COST[MOVE];
+            div = Math.min(MAX_CREEP_SIZE / 2, Math.trunc(energyCapAvail / cost));
             this.addParts(body, div, CARRY);
             this.addParts(body, div, MOVE);
             return body;
@@ -234,7 +234,9 @@ StructureSpawn.prototype.chooseBody = function(role, roomName) {
                     this.addParts(body, 2, WORK);
                     this.addParts(body, 1, MOVE);
                 } else {
-                    div = Math.min(5, Math.trunc((energyCapAvail - 100) / 100));
+                    cost = BODYPART_COST[WORK];
+                    const baseCost = BODYPART_COST[CARRY] + BODYPART_COST[MOVE];
+                    div = Math.min(5, Math.trunc((energyCapAvail - baseCost) / cost));
                     this.addParts(body, div, WORK);
                     body.push(MOVE);
                 }
@@ -243,7 +245,9 @@ StructureSpawn.prototype.chooseBody = function(role, roomName) {
                 if (Memory.rooms[roomName].type == RoomType.KEEPER_LAIR) {
                     max = 7;
                 }
-                div = Math.min(max, Math.trunc((energyCapAvail - 50) / 150));
+                cost = BODYPART_COST[WORK] + BODYPART_COST[MOVE];
+                const baseCost = BODYPART_COST[CARRY];
+                div = Math.min(max, Math.trunc((energyCapAvail - baseCost) / cost));
                 this.addParts(body, div, WORK);
                 this.addParts(body, div, MOVE);
             }
@@ -262,11 +266,11 @@ StructureSpawn.prototype.chooseBody = function(role, roomName) {
             }
         case CreepType.UPGRADER:
         case CreepType.REPAIRER:
-            numCarry = 1;
-            if (energyCapAvail >= 500) {
-                numCarry = 2;
-            }
-            div = Math.min(5, Math.trunc((energyCapAvail - numCarry * 100) / 150));
+            cost = BODYPART_COST[WORK] + BODYPART_COST[MOVE];
+            const carryCost = BODYPART_COST[CARRY] + BODYPART_COST[MOVE];
+            numCarry = Math.min(Math.trunc(MAX_CREEP_SIZE / 6), Math.ceil(energyCapAvail / (cost * 2 + carryCost)));
+            div = Math.min(Math.trunc(MAX_CREEP_SIZE / 3),
+                Math.trunc((energyCapAvail - numCarry * carryCost) / cost));
             this.addParts(body, div, WORK);
             this.addParts(body, div, MOVE);
             this.addParts(body, numCarry, CARRY);
