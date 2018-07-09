@@ -4,6 +4,7 @@ Creep.prototype.harvestEnergy = function() {
     if (targetSource != null) {
         if (this.pos.isNearTo(targetSource)) {
             let energyTaken = 0;
+            this.say("harvesting");
             if (this.harvest(targetSource) == OK) {
                 energyTaken = Math.min(this.memory.numWorkParts * HARVEST_POWER, targetSource.energy);
                 // targetSource.energy -= energyTaken;
@@ -23,6 +24,7 @@ Creep.prototype.runHarvester = function() {
     const targetSource = Game.getObjectById<Source>(this.memory.targetSource);
     if (targetSource != null) {
         let target = null;
+        this.say("filling");
         target = targetSource.pos.findNearestNotFullLink();
         if (target != null && !targetSource.pos.inRangeTo(target, 2)) {
             target = null;
@@ -56,7 +58,7 @@ Creep.prototype.runHarvester = function() {
                 }
                 return;
             }
-            this.idle();
+            this.say("idle");
         }
     }
 };

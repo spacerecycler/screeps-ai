@@ -25,6 +25,7 @@ Creep.prototype.runBuilder = function() {
     }
     if (target != null) {
         this.memory.targetId = target.id;
+        this.say("building");
         if (this.build(target) == ERR_NOT_IN_RANGE) {
             this.moveToI(target);
         }

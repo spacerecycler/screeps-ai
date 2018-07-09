@@ -15,6 +15,7 @@ Creep.prototype.runFiller = function() {
         target = this.room.storage;
     }
     if (target != null) {
+        this.say("filling");
         if (this.pos.isNearTo(target)) {
             this.transfer(target, RESOURCE_ENERGY);
         } else {

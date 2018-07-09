@@ -4,6 +4,7 @@ Creep.prototype.runUpgrader = function() {
     if (target == null) {
         return;
     }
+    this.say("upgrading");
     if (this.upgradeController(target) == ERR_NOT_IN_RANGE) {
         this.moveToI(target);
     }
