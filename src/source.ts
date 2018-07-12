@@ -52,6 +52,16 @@ Source.prototype.hasContainer = function() {
     }
     return this._hasContainer;
 };
+Source.prototype.hasLink = function() {
+    if (this._hasLink == null) {
+        const links = this.pos.findInRange<StructureLink>(FIND_MY_STRUCTURES, 1,
+            {filter: (t) => t.structureType == STRUCTURE_LINK});
+        const sites = this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1,
+            {filter: (t: ConstructionSite) => t.structureType == STRUCTURE_LINK});
+        this._hasLink = links.length > 0 || sites.length > 0;
+    }
+    return this._hasLink;
+};
 Source.prototype.getEnergy = function() {
     return this.energy;
 };

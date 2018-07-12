@@ -91,7 +91,11 @@ Room.prototype.setupMem = function() {
 Room.prototype.shouldBuild = function() {
     const sources = this.find(FIND_SOURCES);
     for (const source of sources) {
-        if (!source.hasContainer()) {
+        if (this.controller != null && this.controller.level > 5) {
+            if (!source.hasLink()) {
+                return true;
+            }
+        } else if (!source.hasContainer()) {
             return true;
         }
     }
@@ -123,7 +127,23 @@ Room.prototype.buildInfra = function() {
     // build containers for sources
     const sources = this.find(FIND_SOURCES);
     for (const source of sources) {
-        if (!source.hasContainer()) {
+        if (this.controller != null && this.controller.level > 5) {
+            if (!source.hasLink()) {
+                if (source.hasContainer()) {
+                    const container = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1,
+                        {filter: (s) => s.structureType == STRUCTURE_CONTAINER})[0];
+                    container.destroy();
+                }
+                const result = source.findContainerSpot().createConstructionSite(STRUCTURE_LINK);
+                if (result != OK) {
+                    console.log(`error creating container construction site: ${result}`);
+                } else {
+                    objectBuilt = true;
+                    source._hasContainer = false;
+                    source._hasLink = true;
+                }
+            }
+        } else if (!source.hasContainer()) {
             const result = source.findContainerSpot().createConstructionSite(STRUCTURE_CONTAINER);
             if (result != OK) {
                 console.log(`error creating container construction site: ${result}`);

@@ -130,8 +130,10 @@ interface Room {
 interface Source {
     _harvestSpots?: number;
     _hasContainer?: boolean;
+    _hasLink?: boolean;
     harvestSpots(): number;
     hasContainer(): boolean;
+    hasLink(): boolean;
     needsHarvester(): boolean;
     getEnergy(): number;
     findContainerSpot(): RoomPosition;
