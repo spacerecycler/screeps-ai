@@ -3,8 +3,14 @@ Room.prototype.run = function() {
     this.setupMem();
     switch (this.memory.state) {
         case RoomState.Startup:
-            if (!this.needsRecovery()) {
-                this.memory.state = RoomState.Normal;
+            if (this.isMine()) {
+                if (!this.needsRecovery()) {
+                    this.memory.state = RoomState.Normal;
+                }
+            } else {
+                if (this.memory.type == RoomType.EXPANSION) {
+                    this.memory.state = RoomState.Normal;
+                }
             }
             break;
         case RoomState.Normal:
@@ -28,6 +34,16 @@ Room.prototype.run = function() {
             }
             break;
         // case RoomState.Claiming:
+    }
+    if (this.isMine() && this.storage != null && !this.memory.addedNearbyRooms) {
+        const exits = Game.map.describeExits(this.name);
+        for (const dir of [TOP, RIGHT, BOTTOM, LEFT]) {
+            const exit = exits[dir];
+            if (exit != null) {
+                Memory.config.rooms.push(exit);
+            }
+        }
+        this.memory.addedNearbyRooms = true;
     }
     const spawns = this.find<StructureSpawn>(FIND_MY_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_SPAWN});
     if (!_.isEmpty(spawns) && _.isEmpty(this.findIdleFlags())) {
@@ -64,12 +80,12 @@ Room.prototype.setupMem = function() {
     if (!this.isMine() && this.memory.type == null) {
         if (this.isKeeperLairRoom()) {
             this.memory.type = RoomType.KEEPER_LAIR;
-        } else {
+        } else if (this.isUnowned()) {
             this.memory.type = RoomType.EXPANSION;
         }
     }
-    if (this.controller != null && this.memory.controllerReserveSpots == null) {
-        this.memory.controllerReserveSpots = this.controller.reserveSpots();
+    if (this.controller != null && this.memory.numReserveSpots == null) {
+        this.memory.numReserveSpots = this.controller.reserveSpots();
     }
 };
 Room.prototype.shouldBuild = function() {
@@ -91,6 +107,13 @@ Room.prototype.shouldBuild = function() {
         }
         if (this.controller && !spawn.memory.roadTo[this.controller.id]) {
             return true;
+        }
+        const exits = Game.map.describeExits(this.name);
+        for (const dir of [TOP, RIGHT, BOTTOM, LEFT]) {
+            const exit = exits[dir];
+            if (exit != null && !spawn.memory.roadTo[exit]) {
+                return true;
+            }
         }
     }
     return false;
@@ -144,11 +167,27 @@ Room.prototype.buildInfra = function() {
             objectBuilt = true;
             spawn.memory.initRoad = true;
         }
+        const exits = Game.map.describeExits(this.name);
+        for (const dir of [TOP, RIGHT, BOTTOM, LEFT]) {
+            const exit = exits[dir];
+            if (exit != null && !spawn.memory.roadTo[exit]) {
+                const path = spawn.pos.findPathTo(new RoomPosition(24, 24, exit));
+                for (const val of path) {
+                    this.createConstructionSite(val.x, val.y, STRUCTURE_ROAD);
+                }
+                objectBuilt = true;
+                spawn.memory.roadTo[exit] = true;
+            }
+        }
     }
     if (objectBuilt) {
         return;
     }
     // build extensions
+    const extCount = this.find(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_EXTENSION}).length;
+    if (this.controller && extCount < CONTROLLER_STRUCTURES[STRUCTURE_EXTENSION][this.controller.level]) {
+        // build extension
+    }
 };
 Room.prototype.doneBuilding = function() {
     return this.find(FIND_MY_CONSTRUCTION_SITES).length == 0;
@@ -165,6 +204,9 @@ Room.prototype.needsRecovery = function() {
 };
 Room.prototype.isMine = function() {
     return this.controller != null && this.controller.my;
+};
+Room.prototype.isUnowned = function() {
+    return this.controller != null && this.controller.owner == null;
 };
 Room.prototype.isKeeperLairRoom = function() {
     return this.find(FIND_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_KEEPER_LAIR}).length > 0;
@@ -186,8 +228,8 @@ Room.prototype.hasHurtCreep = function() {
 Room.prototype.containerCount = function() {
     if (this._containerCount == null) {
         this._containerCount = this.find(FIND_STRUCTURES, {
-            filter: (t) => t.structureType == STRUCTURE_CONTAINER &&
-                !_.includes(Memory.config.blacklist[this.name], t.id) && !t.isHostileNearby()
+            filter: (t) => t.structureType == STRUCTURE_CONTAINER
+                && !_.includes(Memory.config.blacklist[this.name], t.id) && !t.isHostileNearby()
         }).length;
     }
     return this._containerCount;

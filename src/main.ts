@@ -78,9 +78,6 @@ export const setupMem = () => {
     if (Memory.config.blacklist[name] == null) {
       Memory.config.blacklist[name] = Array<string>();
     }
-    if (room == null && Memory.rooms[name].type == RoomType.EXPANSION) {
-      Memory.rooms[name].state = RoomState.Reserving;
-    }
   }
   // todo: trigger room claiming
   // Memory.config.canClaim = mine < Game.gcl.level;

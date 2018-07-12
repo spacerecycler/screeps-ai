@@ -9,8 +9,10 @@ StructureSpawn.prototype.run = function() {
             for (const name of nearbyRooms) {
                 const room = Game.rooms[name];
                 if (room != null && room.isMine()) {
-                    spawnedOrMissing = this.spawnMissingCreep(name);
-                    break;
+                    if (this.spawnMissingCreep(name)) {
+                        spawnedOrMissing = true;
+                        break;
+                    }
                 }
             }
         }
@@ -18,8 +20,10 @@ StructureSpawn.prototype.run = function() {
             for (const name of nearbyRooms) {
                 const room = Game.rooms[name];
                 if (room == null || !room.isMine()) {
-                    spawnedOrMissing = this.spawnMissingCreep(name);
-                    break;
+                    if (this.spawnMissingCreep(name)) {
+                        spawnedOrMissing = true;
+                        break;
+                    }
                 }
             }
         }
@@ -118,7 +122,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
     }
     if (Memory.rooms[roomName].type == RoomType.EXPANSION) {
         let num = (3 - Math.min(2, Math.trunc(this.room.energyCapacityAvailable / 650))) % 3;
-        if (Memory.rooms[roomName].controllerReserveSpots == 1) {
+        if (Memory.rooms[roomName].numReserveSpots == 1) {
             num = 1;
         }
         if (Memory.rooms[roomName].state == RoomState.Claiming) {
@@ -180,7 +184,7 @@ StructureSpawn.prototype.chooseBody = function(role, roomName) {
         case CreepType.CAPTURER:
             cost = BODYPART_COST[CLAIM] + BODYPART_COST[MOVE];
             div = Math.min(MAX_CREEP_SIZE / 2, Math.trunc(energyCapAvail / cost));
-            if (Memory.rooms[roomName].controllerReserveSpots == 1) {
+            if (Memory.rooms[roomName].numReserveSpots == 1) {
                 div = 2;
             }
             this.addParts(body, div, CLAIM);

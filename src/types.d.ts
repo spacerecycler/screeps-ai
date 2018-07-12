@@ -48,7 +48,8 @@ interface RoomMemory {
     distance: {[roomName: string]: number};
     state: RoomStateConstant;
     type?: RoomTypeConstant;
-    controllerReserveSpots?: number;
+    numReserveSpots?: number;
+    addedNearbyRooms?: boolean;
 }
 interface SpawnMemory {
     roadTo: {[id: string]: boolean};
@@ -102,6 +103,7 @@ interface Room {
     setupMem(): void;
     needsRecovery(): boolean;
     isMine(): boolean;
+    isUnowned(): boolean;
     isKeeperLairRoom(): boolean;
     hasHostileAttacker(): boolean;
     hasHurtCreep(): boolean;
