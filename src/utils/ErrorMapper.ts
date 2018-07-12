@@ -76,9 +76,9 @@ export class ErrorMapper {
         if (e instanceof Error) {
           if ("sim" in Game.rooms) {
             const message = `Source maps don't work in the simulator - displaying original error`;
-            console.error(`${message}<br>${_.escape(e.stack)}`);
+            console.log(`${message}<br>${_.escape(e.stack)}`);
           } else {
-            console.error(`${_.escape(this.sourceMappedStackTrace(e))}`);
+            console.log(`${_.escape(this.sourceMappedStackTrace(e))}`);
           }
         } else {
           // can't handle it
