@@ -86,7 +86,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
             }
             if (room.storage != null) {
                 if (room.storage.pos.findInRange<OwnedStructure>(FIND_MY_STRUCTURES, 2,
-                    {filter: (t) => t.structureType == STRUCTURE_TOWER}).length == 0) {
+                    {filter: (t) => t.structureType == STRUCTURE_TOWER}).length != 0) {
                     expected.set(CreepType.TRANSFER, 1);
                 }
             }
