@@ -217,6 +217,10 @@ Creep.prototype.fillEnergy = function() {
         if (target == null) {
             target = this.pos.findNearestNotEmptyContainer();
         }
+        if (this.memory.role == CreepType.FILLER && target == null && this.room.storage != null
+                && this.room.isStorageNotEmpty()) {
+            target = this.room.storage;
+        }
         if (target == null && this.room.storage == null && this.room.containerCount() == 0
             && this.body.filter((p) => p.type == WORK).length > 0) {
             target = this.pos.findClosestByPath(FIND_SOURCES);
