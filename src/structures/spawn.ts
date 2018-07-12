@@ -27,7 +27,8 @@ StructureSpawn.prototype.run = function() {
                 }
             }
         }
-    } else {
+    }
+    if (this.spawning) {
         this.room.visual.text(`🛠️ ${Memory.creeps[this.spawning.name].role} ${this.spawning.name}`, this.pos.x + 1,
             this.pos.y, {align: "left"});
     }
