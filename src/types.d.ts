@@ -75,8 +75,7 @@ interface RoomObject {
     isHostileNearby(): boolean;
     getEnergy(): number;
     giveEnergy(creep: Creep): number;
-    doGiveEnergy(creep: Creep): OK | ERR_NOT_OWNER | ERR_BUSY | ERR_NOT_ENOUGH_RESOURCES | ERR_INVALID_TARGET |
-        ERR_FULL | ERR_NOT_IN_RANGE | ERR_INVALID_ARGS | ERR_TIRED | ERR_NO_BODYPART | ERR_NOT_FOUND;
+    doGiveEnergy(creep: Creep): ScreepsReturnCode;
 }
 interface RoomPosition {
     findNearestAttacker(): Creep | null;
@@ -231,11 +230,4 @@ interface RoomPosition {
         OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
     createFlag(name?: string, color?: ColorConstant, secondaryColor?: ColorConstant):
         ERR_NAME_EXISTS | ERR_INVALID_ARGS | string;
-}
-interface Creep {
-    pickup(target: Resource): OK | ERR_NOT_OWNER | ERR_BUSY | ERR_INVALID_TARGET | ERR_FULL | ERR_NOT_IN_RANGE;
-    harvest(target: Source | Mineral): OK | ERR_NOT_OWNER | ERR_BUSY | ERR_NOT_FOUND |
-        ERR_NOT_ENOUGH_RESOURCES | ERR_INVALID_TARGET | ERR_NOT_IN_RANGE | ERR_NO_BODYPART;
-    withdraw(target: Structure | Tombstone, resourceType: ResourceConstant, amount?: number): OK | ERR_NOT_OWNER |
-        ERR_BUSY | ERR_NOT_ENOUGH_RESOURCES | ERR_INVALID_TARGET | ERR_FULL | ERR_NOT_IN_RANGE | ERR_INVALID_ARGS;
 }
