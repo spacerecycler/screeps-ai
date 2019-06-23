@@ -141,7 +141,7 @@ interface Creep {
     run(): void;
     setupMem(): void;
     performAction(): boolean;
-    moveToHomeRoom(): void;
+    moveToHomeRoom(): boolean;
     shouldGetResource(): boolean;
     fillResource(): boolean;
     isCreepWorking2(): boolean | undefined;
@@ -228,6 +228,4 @@ interface RoomPosition {
         OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
     createConstructionSite(structureType: STRUCTURE_SPAWN, name?: string):
         OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
-    createFlag(name?: string, color?: ColorConstant, secondaryColor?: ColorConstant):
-        ERR_NAME_EXISTS | ERR_INVALID_ARGS | string;
 }
