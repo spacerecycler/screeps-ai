@@ -1,3 +1,3 @@
 StructureExtractor.prototype.getMineral = function() {
-    return _.head(this.pos.lookFor(LOOK_MINERALS));
+  return _.head(this.pos.lookFor(LOOK_MINERALS));
 };

@@ -1,10 +1,5 @@
 {
   "compilerOptions": {
-    "plugins": [
-      {
-        "name": "typescript-tslint-plugin"
-      }
-    ],
     "module": "esnext",
     "lib": ["esnext"],
     "target": "es2017",

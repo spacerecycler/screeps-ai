@@ -6,33 +6,12 @@ import "resource";
 import "room";
 import "room-obj";
 import "room-pos";
-import {RoomState, RoomType} from "shared";
+import {RoomState} from "shared";
 import "source";
 import "structures/structure";
 import "tombstone";
 
-// When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
-// This utility uses source maps to get the line numbers and file names of the original, TS source code
-export const loop = ErrorMapper.wrapLoop(() => {
-  setupMem();
-  clearMem();
-  const pct = Game.gcl.progress / Game.gcl.progressTotal * 100;
-  const pctStr = pct.toFixed(1);
-  if (Memory.vars.lastPct != pctStr) {
-    console.log(`GCL Progress: ${pctStr}%`);
-    Memory.vars.lastPct = pctStr;
-  }
-  const rooms = Memory.config.rooms.map((name) => Game.rooms[name]).filter((r) => r != null);
-  rooms.sort((r) => r.energyAvailable).reverse();
-  for (const room of rooms) {
-    room.run();
-  }
-  _.forOwn(Game.creeps, (creep) => {
-    creep.run();
-  });
-});
-
-export const setupMem = () => {
+export const setupMem = (): void => {
   if (Memory.testing == null) {
     Memory.testing = false;
   }
@@ -83,7 +62,7 @@ export const setupMem = () => {
   // Memory.config.canClaim = mine < Game.gcl.level;
 };
 
-export const clearMem = () => {
+export const clearMem = (): void => {
   for (const name in Memory.creeps) {
     if (!Game.creeps[name]) {
       delete Memory.creeps[name];
@@ -106,3 +85,24 @@ export const clearMem = () => {
     }
   }
 };
+
+// When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
+// This utility uses source maps to get the line numbers and file names of the original, TS source code
+export const loop = ErrorMapper.wrapLoop(() => {
+  setupMem();
+  clearMem();
+  const pct = Game.gcl.progress / Game.gcl.progressTotal * 100;
+  const pctStr = pct.toFixed(1);
+  if (Memory.vars.lastPct != pctStr) {
+    console.log(`GCL Progress: ${pctStr}%`);
+    Memory.vars.lastPct = pctStr;
+  }
+  const rooms = Memory.config.rooms.map((name) => Game.rooms[name]).filter((r) => r != null);
+  rooms.sort((r) => r.energyAvailable).reverse();
+  for (const room of rooms) {
+    room.run();
+  }
+  _.forOwn(Game.creeps, (creep) => {
+    creep.run();
+  });
+});

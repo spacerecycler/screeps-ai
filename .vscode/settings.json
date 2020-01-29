@@ -10,7 +10,15 @@
     "typings/**": true
   },
   "typescript.tsdk": "./node_modules/typescript/lib",
+  "[json]": {
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true
+  },
   "typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
   "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
-  "tslint.ignoreDefinitionFiles": false
 }
