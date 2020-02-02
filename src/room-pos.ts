@@ -62,22 +62,22 @@ RoomPosition.prototype.findNearestFillTarget = function(type) {
   return this.findClosestByRange<FillTarget>(FIND_MY_STRUCTURES, {
     filter: (t) => {
       const ft = t as FillTarget;
-      return type == t.structureType && ft.energy < ft.energyCapacity;
+      return type == t.structureType && ft.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
     }
   });
 };
 RoomPosition.prototype.findNearestNotFullLink = function() {
   return this.findClosestByRange<StructureLink>(FIND_MY_STRUCTURES,
-    {filter: (t) => t.structureType == STRUCTURE_LINK && t.energy < t.energyCapacity});
+    {filter: (t) => t.structureType == STRUCTURE_LINK && t.store.getFreeCapacity(RESOURCE_ENERGY) > 0});
 };
 RoomPosition.prototype.findNearestNotEmptyLink = function() {
   return this.findClosestByPath<StructureLink>(FIND_MY_STRUCTURES,
-    {filter: (t) => t.structureType == STRUCTURE_LINK && t.energy > 0 && !Memory.links[t.id].nearSource});
+    {filter: (t) => t.structureType == STRUCTURE_LINK && t.store[RESOURCE_ENERGY] > 0 && !Memory.links[t.id].nearSource});
 };
 RoomPosition.prototype.findNearestNotFullContainer = function() {
   return this.findClosestByRange<StructureContainer>(FIND_STRUCTURES, {
     filter: (t) => {
-      return t.structureType == STRUCTURE_CONTAINER && t.store[RESOURCE_ENERGY] < t.storeCapacity
+      return t.structureType == STRUCTURE_CONTAINER && t.store.getFreeCapacity(RESOURCE_ENERGY) > 0
         && !Memory.config.blacklist[this.roomName].includes(t.id);
     }
   });
@@ -85,7 +85,7 @@ RoomPosition.prototype.findNearestNotFullContainer = function() {
 RoomPosition.prototype.findNearbyNotFullContainer = function() {
   return this.findClosestByRange<StructureContainer>(FIND_STRUCTURES, {
     filter: (t) => {
-      return t.structureType == STRUCTURE_CONTAINER && t.store[RESOURCE_ENERGY] < t.storeCapacity
+      return t.structureType == STRUCTURE_CONTAINER && t.store.getFreeCapacity(RESOURCE_ENERGY) > 0
         && !Memory.config.blacklist[this.roomName].includes(t.id) && this.inRangeTo(t, 3);
     }
   });

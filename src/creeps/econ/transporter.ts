@@ -4,7 +4,7 @@ Creep.prototype.runTransporter = function() {
   if (this.memory.transportTarget !== undefined) {
     target = Game.getObjectById<StructureStorage | StructureContainer>(this.memory.transportTarget);
   }
-  if (target != null && target.store[RESOURCE_ENERGY] == target.storeCapacity) {
+  if (target != null && target.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
     delete this.memory.transportTarget;
     target = null;
   }

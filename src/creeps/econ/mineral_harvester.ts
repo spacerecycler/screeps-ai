@@ -13,9 +13,9 @@ Creep.prototype.harvestMineral = function() {
         mineralTaken = Math.min(this.memory.numWorkParts * HARVEST_POWER, targetMineral.mineralAmount);
         // targetSource.energy -= energyTaken;
       }
-      let curCarry = this.carry[targetMineral.mineralType];
+      let curCarry = this.store[targetMineral.mineralType];
       curCarry = curCarry == null ? 0 : curCarry;
-      if (curCarry + mineralTaken >= this.carryCapacity) {
+      if (curCarry + mineralTaken >= this.store.getCapacity(targetMineral.mineralType)) {
         return true;
       }
     } else {

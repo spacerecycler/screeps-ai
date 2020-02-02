@@ -8,7 +8,7 @@ Creep.prototype.runUpgrader = function() {
   this.say("upgrading");
   if (this.pos.inRangeTo(target.pos, 3)) {
     this.upgradeController(target);
-    if (this.carry[RESOURCE_ENERGY] - this.memory.numWorkParts <= 0) {
+    if (this.store[RESOURCE_ENERGY] - this.memory.numWorkParts <= 0) {
       return true;
     }
   } else {

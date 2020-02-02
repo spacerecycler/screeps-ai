@@ -12,7 +12,7 @@ Creep.prototype.harvestEnergy = function() {
         energyTaken = Math.min(this.memory.numWorkParts * HARVEST_POWER, targetSource.energy);
         // targetSource.energy -= energyTaken;
       }
-      if (this.carry[RESOURCE_ENERGY] + energyTaken >= this.carryCapacity) {
+      if (this.store[RESOURCE_ENERGY] + energyTaken >= this.store.getCapacity(RESOURCE_ENERGY)) {
         return true;
       }
     } else {
@@ -60,7 +60,7 @@ Creep.prototype.runHarvester = function() {
       if (target != null) {
         if (this.pos.inRangeTo(target, 3)) {
           this.build(target);
-          if (this.carry[RESOURCE_ENERGY] - this.memory.numWorkParts * BUILD_POWER <= 0) {
+          if (this.store[RESOURCE_ENERGY] - this.memory.numWorkParts * BUILD_POWER <= 0) {
             return true;
           }
         } else {

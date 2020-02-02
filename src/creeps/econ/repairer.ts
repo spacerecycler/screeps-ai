@@ -2,7 +2,7 @@
 Creep.prototype.runRepairer = function() {
   let target = this.tryRepair(this.memory);
   if (target != null) {
-    if (this.carry[RESOURCE_ENERGY] - this.memory.numWorkParts <= 0) {
+    if (this.store[RESOURCE_ENERGY] - this.memory.numWorkParts <= 0) {
       return true;
     }
   }

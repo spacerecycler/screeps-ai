@@ -6,11 +6,11 @@ StructureLink.prototype.run = function() {
       Memory.links[this.id] = {nearSource: isNearSource};
     }
   }
-  if (this.cooldown <= 0 && this.energy >= this.energyCapacity * 0.9) {
+  if (this.cooldown <= 0 && this.store[RESOURCE_ENERGY] >= this.store.getCapacity(RESOURCE_ENERGY) * 0.9) {
     const links = this.room.find<StructureLink>(FIND_MY_STRUCTURES, {
       filter: (t) => {
         return t.structureType == STRUCTURE_LINK && Memory.links[t.id] != null
-          && !Memory.links[t.id].nearSource && t.energy < t.energyCapacity;
+          && !Memory.links[t.id].nearSource && t.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
       }
     });
     if (!_.isEmpty(links)) {
@@ -20,7 +20,7 @@ StructureLink.prototype.run = function() {
   }
 };
 StructureLink.prototype.getEnergy = function() {
-  return this.energy;
+  return this.store[RESOURCE_ENERGY];
 };
 StructureLink.prototype.doGiveEnergy = function(creep) {
   return creep.withdraw(this, RESOURCE_ENERGY);

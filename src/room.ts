@@ -276,7 +276,7 @@ Room.prototype.findConstructionSites = function(types) {
 };
 Room.prototype.findNotFullContainers = function() {
   return this.find<StructureContainer>(FIND_STRUCTURES,
-    {filter: (t) => t.structureType == STRUCTURE_CONTAINER && t.store[RESOURCE_ENERGY] < t.storeCapacity});
+    {filter: (t) => t.structureType == STRUCTURE_CONTAINER && t.store.getFreeCapacity(RESOURCE_ENERGY) > 0});
 };
 Room.prototype.findNotEmptyContainers = function() {
   return this.find<StructureContainer>(FIND_STRUCTURES,
@@ -284,10 +284,10 @@ Room.prototype.findNotEmptyContainers = function() {
 };
 Room.prototype.findNotEmptyLinks = function() {
   return this.find<StructureLink>(FIND_MY_STRUCTURES,
-    {filter: (t) => t.structureType == STRUCTURE_LINK && t.energy > 0 && !Memory.links[t.id].nearSource});
+    {filter: (t) => t.structureType == STRUCTURE_LINK && t.store[RESOURCE_ENERGY] > 0 && !Memory.links[t.id].nearSource});
 };
 Room.prototype.isStorageNotFull = function() {
-  return this.storage != null && this.storage.store[RESOURCE_ENERGY] < this.storage.storeCapacity;
+  return this.storage != null && this.storage.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
 };
 Room.prototype.isStorageNotEmpty = function() {
   return this.storage != null && this.storage.store[RESOURCE_ENERGY] > 0;

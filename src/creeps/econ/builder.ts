@@ -31,7 +31,7 @@ Creep.prototype.runBuilder = function() {
     this.say("building");
     if (this.pos.inRangeTo(target, 3)) {
       this.build(target);
-      if (this.carry[RESOURCE_ENERGY] - this.memory.numWorkParts * BUILD_POWER <= 0) {
+      if (this.store[RESOURCE_ENERGY] - this.memory.numWorkParts * BUILD_POWER <= 0) {
         return true;
       }
     } else {

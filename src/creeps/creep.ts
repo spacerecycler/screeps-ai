@@ -58,7 +58,7 @@ Creep.prototype.performAction = function() {
         return true;
       }
     case CreepState.Work:
-      if (this.shouldGetResource() && _.sum(this.carry) == 0) {
+      if (this.shouldGetResource() && this.store.getUsedCapacity() == 0) {
         this.memory.state = CreepState.GetResource;
         return false;
       }
@@ -80,7 +80,7 @@ Creep.prototype.performAction = function() {
   }
 };
 Creep.prototype.shouldGetResource = function() {
-  return this.carryCapacity > 0 && this.memory.role != CreepType.TRANSFER;
+  return this.store.getCapacity() > 0 && this.memory.role != CreepType.TRANSFER;
 };
 Creep.prototype.fillResource = function() {
   switch (this.memory.role) {
@@ -235,7 +235,7 @@ Creep.prototype.fillEnergy = function() {
   if (target != null) {
     if (this.pos.isNearTo(target)) {
       const energyTaken = target.giveEnergy(this);
-      if (this.carry[RESOURCE_ENERGY] + energyTaken >= this.carryCapacity) {
+      if (this.store[RESOURCE_ENERGY] + energyTaken >= this.store.getCapacity()) {
         delete this.memory.energyTarget;
         return true;
       }

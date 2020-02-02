@@ -46,7 +46,7 @@ RoomObject.prototype.projectedEnergy = function() {
   return this._projectedEnergy;
 };
 RoomObject.prototype.giveEnergy = function(creep) {
-  let maxPull = creep.carryCapacity - creep.carry[RESOURCE_ENERGY];
+  let maxPull = creep.store.getFreeCapacity(RESOURCE_ENERGY);
   if (this instanceof Source) {
     maxPull = creep.memory.numWorkParts * HARVEST_POWER;
   }

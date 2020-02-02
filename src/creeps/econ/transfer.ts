@@ -7,10 +7,10 @@ Creep.prototype.runTransfer = function() {
   const storagePos = this.room.storage.pos;
   const tower = _.head(storagePos.findInRange<StructureTower>(FIND_MY_STRUCTURES, 2,
     {filter: (t) => t.structureType == STRUCTURE_TOWER}));
-  if (!this.memory.shouldFillTower && tower.energy < tower.energyCapacity * 0.9) {
+  if (!this.memory.shouldFillTower && tower.store[RESOURCE_ENERGY] < tower.store.getCapacity(RESOURCE_ENERGY) * 0.9) {
     this.memory.shouldFillTower = true;
   }
-  if (this.memory.shouldFillTower && tower.energy == tower.energyCapacity) {
+  if (this.memory.shouldFillTower && tower.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
     this.memory.shouldFillTower = false;
   }
   const link = _.head(storagePos.findInRange<StructureLink>(FIND_MY_STRUCTURES, 2,
