@@ -133,7 +133,6 @@ interface Creep {
   moveToHomeRoom(): boolean;
   shouldGetResource(): boolean;
   fillResource(): boolean;
-  isCreepWorking2(): boolean | undefined;
   fillEnergy(): boolean;
   doWork(): boolean;
   idle(): void;
