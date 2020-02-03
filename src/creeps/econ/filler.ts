@@ -20,8 +20,11 @@ Creep.prototype.runFiller = function() {
   if (target != null) {
     this.say("filling");
     if (this.pos.isNearTo(target)) {
+      const availStorage = target.store.getFreeCapacity(RESOURCE_ENERGY);
       this.transfer(target, RESOURCE_ENERGY);
-      return true;
+      if (availStorage >= this.store.getUsedCapacity(RESOURCE_ENERGY)) {
+        return true;
+      }
     } else {
       this.moveToI(target);
     }
