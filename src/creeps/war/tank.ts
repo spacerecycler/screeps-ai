@@ -2,10 +2,10 @@
 Creep.prototype.runTank = function() {
   let source = null;
   if (this.memory.targetSource !== undefined) {
-    source = Game.getObjectById<Source>(this.memory.targetSource);
+    source = Game.getObjectById(this.memory.targetSource);
   }
   if (source != null) {
-    const target = _.head(source.findNearbyHostile());
+    const [target] = source.findNearbyHostile();
     if (target != null) {
       if (this.pos.isNearTo(target)) {
         this.attack(target);

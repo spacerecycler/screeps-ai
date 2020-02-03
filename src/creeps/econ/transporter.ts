@@ -2,7 +2,7 @@
 Creep.prototype.runTransporter = function() {
   let target = null;
   if (this.memory.transportTarget !== undefined) {
-    target = Game.getObjectById<StructureStorage | StructureContainer>(this.memory.transportTarget);
+    target = Game.getObjectById(this.memory.transportTarget);
   }
   if (target != null && target.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
     delete this.memory.transportTarget;
@@ -25,14 +25,16 @@ Creep.prototype.runTransporter = function() {
     }
   }
   if (target == null) {
-    const targets = Memory.config.rooms.map((n) => {
-      const room = Game.rooms[n];
-      if (room != null && room.isMine()) {
-        return room.findNotFullContainers();
-      } else {
-        return Array<StructureContainer>();
-      }
-    }).reduce((a, b) => a.concat(b), []);
+    const targets = Memory.config.rooms
+      .map(n => {
+        const room = Game.rooms[n];
+        if (room != null && room.isMine()) {
+          return room.findNotFullContainers();
+        } else {
+          return [];
+        }
+      })
+      .reduce((a, b) => a.concat(b), []);
     let curEnergy = CONTAINER_CAPACITY;
     for (const t of targets) {
       if (t.store[RESOURCE_ENERGY] < curEnergy) {

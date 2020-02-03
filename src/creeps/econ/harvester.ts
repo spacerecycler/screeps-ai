@@ -2,7 +2,7 @@
 Creep.prototype.harvestEnergy = function() {
   let targetSource = null;
   if (this.memory.targetSource !== undefined) {
-    targetSource = Game.getObjectById<Source>(this.memory.targetSource);
+    targetSource = Game.getObjectById(this.memory.targetSource);
   }
   if (targetSource != null) {
     if (this.pos.isNearTo(targetSource)) {
@@ -26,7 +26,7 @@ Creep.prototype.harvestEnergy = function() {
 Creep.prototype.runHarvester = function() {
   let targetSource = null;
   if (this.memory.targetSource !== undefined) {
-    targetSource = Game.getObjectById<Source>(this.memory.targetSource);
+    targetSource = Game.getObjectById(this.memory.targetSource);
   }
   if (targetSource != null) {
     let target = null;
@@ -35,8 +35,12 @@ Creep.prototype.runHarvester = function() {
     if (target != null && !targetSource.pos.inRangeTo(target, 2)) {
       target = null;
     }
-    if (target == null && this.room.storage != null && this.room.isStorageNotFull()
-      && this.pos.inRangeTo(this.room.storage, 3)) {
+    if (
+      target == null &&
+      this.room.storage != null &&
+      this.room.isStorageNotFull() &&
+      this.pos.inRangeTo(this.room.storage, 3)
+    ) {
       target = this.room.storage;
     }
     if (target == null) {
@@ -56,7 +60,7 @@ Creep.prototype.runHarvester = function() {
         this.moveToI(target);
       }
     } else {
-      target = _.first(targetSource.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2));
+      [target] = targetSource.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2);
       if (target != null) {
         if (this.pos.inRangeTo(target, 3)) {
           this.build(target);

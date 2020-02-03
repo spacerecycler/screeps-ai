@@ -1,7 +1,7 @@
 RoomObject.prototype.tryRepair = function(mem) {
   let target = null;
   if (mem.repairTarget !== undefined) {
-    target = Game.getObjectById<Structure>(mem.repairTarget);
+    target = Game.getObjectById(mem.repairTarget);
   }
   // logic below to only repair things when they are 90% damaged
   // also cap hitpoints for walls since they have so many
@@ -33,7 +33,7 @@ RoomObject.prototype.findNearbyHostile = function() {
   return this.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
 };
 RoomObject.prototype.isHostileNearby = function() {
-  return !_.isEmpty(this.findNearbyHostile());
+  return this.findNearbyHostile().length > 0;
 };
 RoomObject.prototype.getEnergy = () => {
   console.log("get energy not implemented");

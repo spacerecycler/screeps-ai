@@ -2,7 +2,7 @@
 Creep.prototype.runBuilder = function() {
   let target = null;
   if (this.memory.builderTarget !== undefined) {
-    target = Game.getObjectById<ConstructionSite>(this.memory.builderTarget);
+    target = Game.getObjectById(this.memory.builderTarget);
   }
   if (target == null) {
     target = this.pos.findNearestConstructionSite([STRUCTURE_WALL, STRUCTURE_RAMPART]);
@@ -23,7 +23,7 @@ Creep.prototype.runBuilder = function() {
     target = this.pos.findNearestConstructionSite();
   }
   if (target == null && !_.isEmpty(Game.constructionSites)) {
-    target = _.values<ConstructionSite>(Game.constructionSites)[0];
+    [target] = Object.values(Game.constructionSites);
     this.memory.room = target.pos.roomName;
   }
   if (target != null) {

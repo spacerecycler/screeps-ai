@@ -3,18 +3,22 @@ StructureLink.prototype.run = function() {
     const source = this.pos.findClosestByRange(FIND_SOURCES);
     if (source != null) {
       const isNearSource = this.pos.inRangeTo(source, 2);
-      Memory.links[this.id] = {nearSource: isNearSource};
+      Memory.links[this.id] = { nearSource: isNearSource };
     }
   }
   if (this.cooldown <= 0 && this.store[RESOURCE_ENERGY] >= this.store.getCapacity(RESOURCE_ENERGY) * 0.9) {
     const links = this.room.find<StructureLink>(FIND_MY_STRUCTURES, {
-      filter: (t) => {
-        return t.structureType == STRUCTURE_LINK && Memory.links[t.id] != null
-          && !Memory.links[t.id].nearSource && t.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-      }
+      filter: t => {
+        return (
+          t.structureType == STRUCTURE_LINK &&
+          Memory.links[t.id] != null &&
+          !Memory.links[t.id].nearSource &&
+          t.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+        );
+      },
     });
-    if (!_.isEmpty(links)) {
-      const link = links[0];
+    if (links.length > 0) {
+      const [link] = links;
       this.transferEnergy(link);
     }
   }

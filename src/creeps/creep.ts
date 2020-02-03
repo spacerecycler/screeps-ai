@@ -12,7 +12,7 @@ import "creeps/war/healer";
 import "creeps/war/ranger";
 import "creeps/war/tank";
 import "creeps/war/warrior";
-import {CREEPS_WARLIKE, CreepState, CreepType, RoomType} from "shared";
+import { CREEPS_WARLIKE, CreepState, CreepType, RoomType } from "shared";
 Creep.prototype.run = function() {
   this.setupMem();
   let actionDone = false;
@@ -25,8 +25,7 @@ Creep.prototype.run = function() {
 Creep.prototype.performAction = function() {
   switch (this.memory.state) {
     case CreepState.Spawning:
-      if (CREEPS_WARLIKE.includes(this.memory.role)
-        && Memory.rooms[this.memory.room].type == RoomType.KEEPER_LAIR) {
+      if (CREEPS_WARLIKE.includes(this.memory.role) && Memory.rooms[this.memory.room].type == RoomType.KEEPER_LAIR) {
         this.memory.state = CreepState.Rally;
       } else {
         this.memory.state = CreepState.MoveToHomeRoom;
@@ -127,17 +126,23 @@ Creep.prototype.doWork = function() {
   }
 };
 Creep.prototype.setupMem = function() {
-  if (this.memory.role == CreepType.HARVESTER && this.memory.targetSource == null
-    && Game.rooms[this.memory.room] != null) {
+  if (
+    this.memory.role == CreepType.HARVESTER &&
+    this.memory.targetSource == null &&
+    Game.rooms[this.memory.room] != null
+  ) {
     const sources = Game.rooms[this.memory.room].findSourcesForHarvester();
     if (sources.length == 0) {
       this.suicide();
     } else {
-      this.memory.targetSource = _.head(sources).id;
+      this.memory.targetSource = sources[0].id;
     }
   }
-  if (this.memory.role == CreepType.MINERAL_HARVESTER && this.memory.targetExtractor == null
-    && Game.rooms[this.memory.room] != null) {
+  if (
+    this.memory.role == CreepType.MINERAL_HARVESTER &&
+    this.memory.targetExtractor == null &&
+    Game.rooms[this.memory.room] != null
+  ) {
     const extractor = Game.rooms[this.memory.room].findExtractorForHarvester();
     if (extractor == null) {
       this.suicide();
@@ -146,13 +151,15 @@ Creep.prototype.setupMem = function() {
       this.memory.targetMineral = extractor.getMineral().id;
     }
   }
-  if (Array<CreepTypeConstant>(CreepType.TANK, CreepType.WARRIOR,
-    CreepType.RANGER).includes(this.memory.role)
-    && Memory.rooms[this.memory.room].type == RoomType.KEEPER_LAIR && this.memory.targetSource == null
-    && Game.rooms[this.memory.room] != null) {
-    const sources = Game.rooms[this.memory.room].findSourcesForTank();
-    if (sources.length > 0) {
-      this.memory.targetSource = _.head(sources).id;
+  if (
+    Array<CreepTypeConstant>(CreepType.TANK, CreepType.WARRIOR, CreepType.RANGER).includes(this.memory.role) &&
+    Memory.rooms[this.memory.room].type == RoomType.KEEPER_LAIR &&
+    this.memory.targetSource == null &&
+    Game.rooms[this.memory.room] != null
+  ) {
+    const [source] = Game.rooms[this.memory.room].findSourcesForTank();
+    if (source) {
+      this.memory.targetSource = source.id;
     }
   }
 };
@@ -174,10 +181,10 @@ Creep.prototype.hasRallied = function() {
   return this.memory.state != CreepState.Spawning && this.memory.state != CreepState.Rally;
 };
 Creep.prototype.rally = function() {
-  if (_.filter(Game.creeps, (c) => c.memory.room == this.memory.room && c.hasRallied()).length > 0) {
+  if (Object.values(Game.creeps).filter(c => c.memory.room == this.memory.room && c.hasRallied()).length > 0) {
     return true;
   }
-  const flag = _.head(_.filter(Game.flags, (f) => f.isRally(this.memory.room)));
+  const [flag] = Object.values(Game.flags).filter(f => f.isRally(this.memory.room));
   if (flag != null) {
     if (this.pos.isNearTo(flag)) {
       if (flag.hasRallyGroup()) {
@@ -193,7 +200,7 @@ Creep.prototype.fillEnergy = function() {
   // most creeps must harvest
   let target = null;
   if (this.memory.energyTarget !== undefined) {
-    target = Game.getObjectById<EnergyTarget>(this.memory.energyTarget);
+    target = Game.getObjectById(this.memory.energyTarget);
   }
   if (target != null) {
     const energyLeft = target.projectedEnergy();
@@ -204,28 +211,39 @@ Creep.prototype.fillEnergy = function() {
   }
   if (target == null) {
     if (!this.room.hasHostileAttacker()) {
-      target = this.pos.findClosestByPath(FIND_DROPPED_RESOURCES,
-        {filter: (r) => r.resourceType == RESOURCE_ENERGY});
+      target = this.pos.findClosestByPath(FIND_DROPPED_RESOURCES, { filter: r => r.resourceType == RESOURCE_ENERGY });
       if (target == null) {
-        target = this.pos.findClosestByPath(FIND_TOMBSTONES, {filter: (t) => t.getEnergy() > 0});
+        target = this.pos.findClosestByPath(FIND_TOMBSTONES, { filter: t => t.getEnergy() > 0 });
       }
     }
     if (target == null) {
       target = this.pos.findNearestNotEmptyLink();
     }
-    if (this.memory.role != CreepType.FILLER && target == null && this.room.storage != null
-      && this.room.isStorageNotEmpty()) {
+    if (
+      this.memory.role != CreepType.FILLER &&
+      target == null &&
+      this.room.storage != null &&
+      this.room.isStorageNotEmpty()
+    ) {
       target = this.room.storage;
     }
     if (target == null) {
       target = this.pos.findNearestNotEmptyContainer();
     }
-    if (this.memory.role == CreepType.FILLER && target == null && this.room.storage != null
-      && this.room.isStorageNotEmpty()) {
+    if (
+      this.memory.role == CreepType.FILLER &&
+      target == null &&
+      this.room.storage != null &&
+      this.room.isStorageNotEmpty()
+    ) {
       target = this.room.storage;
     }
-    if (target == null && this.room.storage == null && this.room.containerCount() == 0
-      && this.body.filter((p) => p.type == WORK).length > 0) {
+    if (
+      target == null &&
+      this.room.storage == null &&
+      this.room.containerCount() == 0 &&
+      this.body.filter(p => p.type == WORK).length > 0
+    ) {
       target = this.pos.findClosestByPath(FIND_SOURCES);
     }
     if (target != null) {
@@ -249,12 +267,14 @@ Creep.prototype.fillEnergy = function() {
 };
 Creep.prototype.moveToI = function(target) {
   return this.moveTo(target, {
-    ignoreRoads: this.memory.ignoreRoads, maxRooms: 1, reusePath: 5,
-    visualizePathStyle: {}
+    ignoreRoads: this.memory.ignoreRoads,
+    maxRooms: 1,
+    reusePath: 5,
+    visualizePathStyle: {},
   });
 };
 Creep.prototype.moveToS = function(target) {
-  return this.moveTo(target, {ignoreRoads: this.memory.ignoreRoads, reusePath: 5, visualizePathStyle: {}});
+  return this.moveTo(target, { ignoreRoads: this.memory.ignoreRoads, reusePath: 5, visualizePathStyle: {} });
 };
 Creep.prototype.doRepair = function(target) {
   if (this.repair(target) == ERR_NOT_IN_RANGE) {

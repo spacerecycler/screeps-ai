@@ -1,13 +1,13 @@
 interface Memory {
   testing: boolean;
   config: ConfigMemory;
-  towers: {[name: string]: TowerMemory};
-  links: {[name: string]: LinkMemory};
+  towers: { [name: string]: TowerMemory };
+  links: { [name: string]: LinkMemory };
   vars: VarsMemory;
 }
 interface ConfigMemory {
   rooms: string[];
-  blacklist: {[roomName: string]: string[]};
+  blacklist: { [roomName: string]: string[] };
 }
 interface VarsMemory {
   lastPct?: string;
@@ -34,14 +34,14 @@ interface FlagMemory {
 }
 interface RoomMemory {
   wallsMax: number;
-  distance: {[roomName: string]: number};
+  distance: { [roomName: string]: number };
   state: RoomStateConstant;
   type?: RoomTypeConstant;
   numReserveSpots?: number;
   addedNearbyRooms?: boolean;
 }
 interface SpawnMemory {
-  roadTo: {[id: string]: boolean};
+  roadTo: { [id: string]: boolean };
   initRoad?: boolean;
 }
 interface TowerMemory {
@@ -140,10 +140,12 @@ interface Creep {
   rally(): boolean;
   hasRallied(): boolean;
   dismantleNearestWall(): void;
-  moveToI(target: RoomPosition | {pos: RoomPosition}): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
-    | ERR_NOT_FOUND;
-  moveToS(target: RoomPosition | {pos: RoomPosition}): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET
-    | ERR_NOT_FOUND;
+  moveToI(
+    target: RoomPosition | { pos: RoomPosition }
+  ): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND;
+  moveToS(
+    target: RoomPosition | { pos: RoomPosition }
+  ): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND;
   harvestEnergy(): boolean;
   runHarvester(): boolean;
   harvestMineral(): boolean;
@@ -189,9 +191,21 @@ interface StructureSpawn {
 }
 type RoomTypeConstant = "expansion" | "keeperLair";
 type FlagTypeConstant = "idle" | "rally";
-type CreepTypeConstant = "harvester" | "upgrader" | "builder" | "repairer" |
-  "capturer" | "filler" | "transporter" | "transfer" |
-  "scout" | "warrior" | "ranger" | "healer" | "tank" | "mineralHarvester";
+type CreepTypeConstant =
+  | "harvester"
+  | "upgrader"
+  | "builder"
+  | "repairer"
+  | "capturer"
+  | "filler"
+  | "transporter"
+  | "transfer"
+  | "scout"
+  | "warrior"
+  | "ranger"
+  | "healer"
+  | "tank"
+  | "mineralHarvester";
 type CreepStateConstant = "spawning" | "rally" | "moveToHomeRoom" | "getResource" | "work";
 type RoomStateConstant = "startup" | "normal" | "building" | "reserving" | "claiming";
 type WarlikeCreepTypes = "warrior" | "ranger" | "healer" | "tank";
@@ -203,18 +217,33 @@ type EnergyTarget = Resource | StructureLink | StructureContainer | StructureSto
 
 // FIXES TO BE MERGED
 interface Room {
-  createConstructionSite(x: number, y: number, structureType: BuildableStructureConstant):
-    OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
-  createConstructionSite(pos: RoomPosition | _HasRoomPosition, structureType: BuildableStructureConstant):
-    OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
-  createConstructionSite(x: number, y: number, structureType: STRUCTURE_SPAWN, name?: string):
-    OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
-  createConstructionSite(pos: RoomPosition | _HasRoomPosition, structureType: STRUCTURE_SPAWN, name?: string):
-    OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
+  createConstructionSite(
+    x: number,
+    y: number,
+    structureType: BuildableStructureConstant
+  ): OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
+  createConstructionSite(
+    pos: RoomPosition | _HasRoomPosition,
+    structureType: BuildableStructureConstant
+  ): OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
+  createConstructionSite(
+    x: number,
+    y: number,
+    structureType: STRUCTURE_SPAWN,
+    name?: string
+  ): OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
+  createConstructionSite(
+    pos: RoomPosition | _HasRoomPosition,
+    structureType: STRUCTURE_SPAWN,
+    name?: string
+  ): OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
 }
 interface RoomPosition {
-  createConstructionSite(structureType: BuildableStructureConstant):
-    OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
-  createConstructionSite(structureType: STRUCTURE_SPAWN, name?: string):
-    OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
+  createConstructionSite(
+    structureType: BuildableStructureConstant
+  ): OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
+  createConstructionSite(
+    structureType: STRUCTURE_SPAWN,
+    name?: string
+  ): OK | ERR_INVALID_TARGET | ERR_FULL | ERR_INVALID_ARGS | ERR_RCL_NOT_ENOUGH;
 }

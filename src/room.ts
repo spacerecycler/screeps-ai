@@ -1,4 +1,4 @@
-import {ATTACKER_PARTS, CreepType, FlagType, RESERVATION_MAX, RESERVATION_MIN, RoomState, RoomType} from "shared";
+import { ATTACKER_PARTS, CreepType, FlagType, RESERVATION_MAX, RESERVATION_MIN, RoomState, RoomType } from "shared";
 Room.prototype.run = function() {
   this.setupMem();
   switch (this.memory.state) {
@@ -17,8 +17,11 @@ Room.prototype.run = function() {
       if (this.shouldBuild()) {
         this.buildInfra();
         this.memory.state = RoomState.Building;
-      } else if (this.memory.type == RoomType.EXPANSION && this.controller != null
-        && (this.controller.reservation == null || this.controller.reservation.ticksToEnd < RESERVATION_MIN)) {
+      } else if (
+        this.memory.type == RoomType.EXPANSION &&
+        this.controller != null &&
+        (this.controller.reservation == null || this.controller.reservation.ticksToEnd < RESERVATION_MIN)
+      ) {
         this.memory.state = RoomState.Reserving;
       }
       break;
@@ -28,8 +31,11 @@ Room.prototype.run = function() {
       }
       break;
     case RoomState.Reserving:
-      if (this.controller != null && this.controller.reservation != null
-        && this.controller.reservation.ticksToEnd > RESERVATION_MAX) {
+      if (
+        this.controller != null &&
+        this.controller.reservation != null &&
+        this.controller.reservation.ticksToEnd > RESERVATION_MAX
+      ) {
         this.memory.state = RoomState.Normal;
       }
       break;
@@ -45,11 +51,12 @@ Room.prototype.run = function() {
     }
     this.memory.addedNearbyRooms = true;
   }
-  const spawns = this.find<StructureSpawn>(FIND_MY_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_SPAWN});
-  if (!_.isEmpty(spawns) && _.isEmpty(this.findIdleFlags())) {
-    const result = this.createFlag(spawns[0].pos.x, spawns[0].pos.y - 3, "Idle" + this.name);
+  const spawns = this.find<StructureSpawn>(FIND_MY_STRUCTURES, { filter: t => t.structureType == STRUCTURE_SPAWN });
+  if (spawns.length > 0 && this.findIdleFlags().length == 0) {
+    const [spawn] = spawns;
+    const result = this.createFlag(spawn.pos.x, spawn.pos.y - 3, "Idle" + this.name);
     if (_.isString(result)) {
-      Memory.flags[result] = {type: FlagType.IDLE};
+      Memory.flags[result] = { type: FlagType.IDLE };
     } else {
       console.log("error creating flag");
     }
@@ -58,11 +65,11 @@ Room.prototype.run = function() {
     spawn.setupMem();
     spawn.run();
   }
-  const towers = this.find<StructureTower>(FIND_MY_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_TOWER});
+  const towers = this.find<StructureTower>(FIND_MY_STRUCTURES, { filter: t => t.structureType == STRUCTURE_TOWER });
   for (const tower of towers) {
     tower.run();
   }
-  const links = this.find<StructureLink>(FIND_MY_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_LINK});
+  const links = this.find<StructureLink>(FIND_MY_STRUCTURES, { filter: t => t.structureType == STRUCTURE_LINK });
   for (const link of links) {
     link.run();
   }
@@ -99,7 +106,7 @@ Room.prototype.shouldBuild = function() {
       return true;
     }
   }
-  const spawns = this.find<StructureSpawn>(FIND_MY_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_SPAWN});
+  const spawns = this.find<StructureSpawn>(FIND_MY_STRUCTURES, { filter: t => t.structureType == STRUCTURE_SPAWN });
   for (const spawn of spawns) {
     if (!spawn.memory.initRoad) {
       return true;
@@ -130,8 +137,9 @@ Room.prototype.buildInfra = function() {
     if (this.controller != null && this.controller.level > 5) {
       if (!source.hasLink()) {
         if (source.hasContainer()) {
-          const container = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1,
-            {filter: (s) => s.structureType == STRUCTURE_CONTAINER})[0];
+          const [container] = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1, {
+            filter: s => s.structureType == STRUCTURE_CONTAINER,
+          });
           container.destroy();
         }
         const result = source.findContainerSpot().createConstructionSite(STRUCTURE_LINK);
@@ -157,12 +165,12 @@ Room.prototype.buildInfra = function() {
     return;
   }
   // build roads
-  const spawns = this.find<StructureSpawn>(FIND_MY_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_SPAWN});
+  const spawns = this.find<StructureSpawn>(FIND_MY_STRUCTURES, { filter: t => t.structureType == STRUCTURE_SPAWN });
   for (const spawn of spawns) {
     for (const source of sources) {
       if (!spawn.memory.roadTo[source.id] && source.hasContainer()) {
         console.log(`building road to source ${source.id}`);
-        const path = spawn.pos.findPathTo(source.pos, {range: 1});
+        const path = spawn.pos.findPathTo(source.pos, { range: 1 });
         for (const val of path) {
           this.createConstructionSite(val.x, val.y, STRUCTURE_ROAD);
         }
@@ -172,7 +180,7 @@ Room.prototype.buildInfra = function() {
     }
     if (this.controller && !spawn.memory.roadTo[this.controller.id]) {
       console.log(`building road to controller`);
-      const path = spawn.pos.findPathTo(this.controller.pos, {range: 1});
+      const path = spawn.pos.findPathTo(this.controller.pos, { range: 1 });
       for (const val of path) {
         this.createConstructionSite(val.x, val.y, STRUCTURE_ROAD);
       }
@@ -204,7 +212,7 @@ Room.prototype.buildInfra = function() {
     return;
   }
   // build extensions
-  const extCount = this.find(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_EXTENSION}).length;
+  const extCount = this.find(FIND_MY_STRUCTURES, { filter: s => s.structureType == STRUCTURE_EXTENSION }).length;
   if (this.controller && extCount < CONTROLLER_STRUCTURES[STRUCTURE_EXTENSION][this.controller.level]) {
     // build extension
   }
@@ -216,10 +224,12 @@ Room.prototype.shouldClaim = function() {
   return this.memory.state == RoomState.Claiming;
 };
 Room.prototype.needsRecovery = function() {
-  const harvesters = _.filter(Game.creeps, (c) => c.memory.role == CreepType.HARVESTER && c.memory.room == this.name)
-    .length;
-  const fillers = _.filter(Game.creeps, (c) => c.memory.role == CreepType.FILLER && c.memory.room == this.name)
-    .length;
+  const harvesters = Object.values(Game.creeps).filter(
+    c => c.memory.role == CreepType.HARVESTER && c.memory.room == this.name
+  ).length;
+  const fillers = Object.values(Game.creeps).filter(
+    c => c.memory.role == CreepType.FILLER && c.memory.room == this.name
+  ).length;
   return harvesters == 0 || fillers == 0;
 };
 Room.prototype.isMine = function() {
@@ -229,62 +239,69 @@ Room.prototype.isUnowned = function() {
   return this.controller != null && this.controller.owner == null;
 };
 Room.prototype.isKeeperLairRoom = function() {
-  return this.find(FIND_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_KEEPER_LAIR}).length > 0;
+  return this.find(FIND_STRUCTURES, { filter: t => t.structureType == STRUCTURE_KEEPER_LAIR }).length > 0;
 };
 Room.prototype.hasHostileAttacker = function() {
   if (this._hostileAttacker == null) {
-    const targets = this.find(FIND_HOSTILE_CREEPS,
-      {filter: (t) => t.body.filter((p) => ATTACKER_PARTS.has(p.type)).length > 0});
-    this._hostileAttacker = !_.isEmpty(targets);
+    const targets = this.find(FIND_HOSTILE_CREEPS, {
+      filter: t => t.body.filter(p => ATTACKER_PARTS.has(p.type)).length > 0,
+    });
+    this._hostileAttacker = targets.length > 0;
   }
   return this._hostileAttacker;
 };
 Room.prototype.hasHurtCreep = function() {
   if (this._hurtCreep == null) {
-    this._hurtCreep = this.find(FIND_MY_CREEPS, {filter: (t) => t.hits < t.hitsMax}).length > 0;
+    this._hurtCreep = this.find(FIND_MY_CREEPS, { filter: t => t.hits < t.hitsMax }).length > 0;
   }
   return this._hurtCreep;
 };
 Room.prototype.containerCount = function() {
   if (this._containerCount == null) {
     this._containerCount = this.find(FIND_STRUCTURES, {
-      filter: (t) => t.structureType == STRUCTURE_CONTAINER
-        && !_.includes(Memory.config.blacklist[this.name], t.id) && !t.isHostileNearby()
+      filter: t =>
+        t.structureType == STRUCTURE_CONTAINER &&
+        !Memory.config.blacklist[this.name].includes(t.id) &&
+        !t.isHostileNearby(),
     }).length;
   }
   return this._containerCount;
 };
 Room.prototype.hasTower = function() {
   if (this._hasTower == null) {
-    this._hasTower = this.find(FIND_MY_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_TOWER}).length > 0;
+    this._hasTower = this.find(FIND_MY_STRUCTURES, { filter: t => t.structureType == STRUCTURE_TOWER }).length > 0;
   }
   return this._hasTower;
 };
 Room.prototype.hasSpawn = function() {
   if (this._hasSpawn == null) {
-    this._hasSpawn = this.find(FIND_MY_STRUCTURES, {filter: (t) => t.structureType == STRUCTURE_SPAWN}).length > 0;
+    this._hasSpawn = this.find(FIND_MY_STRUCTURES, { filter: t => t.structureType == STRUCTURE_SPAWN }).length > 0;
   }
   return this._hasSpawn;
 };
 Room.prototype.findConstructionSites = function(types) {
   if (types == null) {
-    return this.find(FIND_MY_CONSTRUCTION_SITES, {filter: (t) => !t.isHostileNearby()});
+    return this.find(FIND_MY_CONSTRUCTION_SITES, { filter: t => !t.isHostileNearby() });
   } else {
-    return this.find(FIND_MY_CONSTRUCTION_SITES,
-      {filter: (t) => _.includes(types, t.structureType) && !t.isHostileNearby()});
+    return this.find(FIND_MY_CONSTRUCTION_SITES, {
+      filter: t => types.includes(t.structureType) && !t.isHostileNearby(),
+    });
   }
 };
 Room.prototype.findNotFullContainers = function() {
-  return this.find<StructureContainer>(FIND_STRUCTURES,
-    {filter: (t) => t.structureType == STRUCTURE_CONTAINER && t.store.getFreeCapacity(RESOURCE_ENERGY) > 0});
+  return this.find<StructureContainer>(FIND_STRUCTURES, {
+    filter: t => t.structureType == STRUCTURE_CONTAINER && t.store.getFreeCapacity(RESOURCE_ENERGY) > 0,
+  });
 };
 Room.prototype.findNotEmptyContainers = function() {
-  return this.find<StructureContainer>(FIND_STRUCTURES,
-    {filter: (t) => t.structureType == STRUCTURE_CONTAINER && t.store[RESOURCE_ENERGY] > 0});
+  return this.find<StructureContainer>(FIND_STRUCTURES, {
+    filter: t => t.structureType == STRUCTURE_CONTAINER && t.store[RESOURCE_ENERGY] > 0,
+  });
 };
 Room.prototype.findNotEmptyLinks = function() {
-  return this.find<StructureLink>(FIND_MY_STRUCTURES,
-    {filter: (t) => t.structureType == STRUCTURE_LINK && t.store[RESOURCE_ENERGY] > 0 && !Memory.links[t.id].nearSource});
+  return this.find<StructureLink>(FIND_MY_STRUCTURES, {
+    filter: t => t.structureType == STRUCTURE_LINK && t.store[RESOURCE_ENERGY] > 0 && !Memory.links[t.id].nearSource,
+  });
 };
 Room.prototype.isStorageNotFull = function() {
   return this.storage != null && this.storage.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
@@ -293,21 +310,24 @@ Room.prototype.isStorageNotEmpty = function() {
   return this.storage != null && this.storage.store[RESOURCE_ENERGY] > 0;
 };
 Room.prototype.findSourcesForTank = function() {
-  return this.find(FIND_SOURCES, {filter: (t) => !_.includes(Memory.config.blacklist[this.name], t.id)});
+  return this.find(FIND_SOURCES, { filter: t => !Memory.config.blacklist[this.name].includes(t.id) });
 };
 Room.prototype.findSourcesForHarvester = function() {
-  return this.find(FIND_SOURCES,
-    {filter: (t) => t.needsHarvester() && !_.includes(Memory.config.blacklist[this.name], t.id)});
+  return this.find(FIND_SOURCES, {
+    filter: t => t.needsHarvester() && !Memory.config.blacklist[this.name].includes(t.id),
+  });
 };
 Room.prototype.findExtractorForHarvester = function() {
-  return _.head(this.find<StructureExtractor>(FIND_MY_STRUCTURES,
-    {filter: (t) => t.structureType == STRUCTURE_EXTRACTOR}));
+  const [ext] = this.find<StructureExtractor>(FIND_MY_STRUCTURES, {
+    filter: t => t.structureType == STRUCTURE_EXTRACTOR,
+  });
+  return ext;
 };
 Room.prototype.checkNeedHarvester = function() {
   return this.findSourcesForHarvester().length > 0;
 };
 Room.prototype.findIdleFlags = function() {
-  return this.find(FIND_FLAGS, {filter: (f) => f.isIdle()});
+  return this.find(FIND_FLAGS, { filter: f => f.isIdle() });
 };
 Room.prototype.getDistanceToRoom = function(otherRoom) {
   let name = null;

@@ -1,26 +1,27 @@
-import {CreepType} from "shared";
+import { CreepType } from "shared";
 Source.prototype.harvestSpots = function() {
   if (this._harvestSpots == null) {
-    const tiles = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y - 1, this.pos.x - 1,
-      this.pos.y + 1, this.pos.x + 1, true).filter((tile) => tile.terrain != "wall");
+    const tiles = this.room
+      .lookForAtArea(LOOK_TERRAIN, this.pos.y - 1, this.pos.x - 1, this.pos.y + 1, this.pos.x + 1, true)
+      .filter(tile => tile.terrain != "wall");
     this._harvestSpots = tiles.length;
   }
   return this._harvestSpots;
 };
 Source.prototype.needsHarvester = function() {
-  const creeps = _.filter(Game.creeps, (creep) => {
-    return creep.memory != null && creep.memory.role == CreepType.HARVESTER
-      && creep.memory.targetSource == this.id;
+  const creeps = Object.values(Game.creeps).filter(creep => {
+    return creep.memory != null && creep.memory.role == CreepType.HARVESTER && creep.memory.targetSource == this.id;
   });
   let workParts = 0;
   for (const creep of creeps) {
     workParts += creep.memory.numWorkParts;
   }
-  return !this.isHostileNearby() && workParts < 5 && _.size(creeps) < this.harvestSpots();
+  return !this.isHostileNearby() && workParts < 5 && creeps.length < this.harvestSpots();
 };
 Source.prototype.findContainerSpot = function() {
-  const tiles = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y - 1, this.pos.x - 1,
-    this.pos.y + 1, this.pos.x + 1, true).filter((tile) => tile.terrain != "wall");
+  const tiles = this.room
+    .lookForAtArea(LOOK_TERRAIN, this.pos.y - 1, this.pos.x - 1, this.pos.y + 1, this.pos.x + 1, true)
+    .filter(tile => tile.terrain != "wall");
   if (tiles.length == 1) {
     return new RoomPosition(tiles[0].x, tiles[0].y, this.room.name);
   } else {
@@ -44,20 +45,24 @@ Source.prototype.findContainerSpot = function() {
 };
 Source.prototype.hasContainer = function() {
   if (this._hasContainer == null) {
-    const containers = this.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1,
-      {filter: (t) => t.structureType == STRUCTURE_CONTAINER});
-    const sites = this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1,
-      {filter: (t: ConstructionSite) => t.structureType == STRUCTURE_CONTAINER});
+    const containers = this.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1, {
+      filter: t => t.structureType == STRUCTURE_CONTAINER,
+    });
+    const sites = this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1, {
+      filter: (t: ConstructionSite) => t.structureType == STRUCTURE_CONTAINER,
+    });
     this._hasContainer = containers.length > 0 || sites.length > 0;
   }
   return this._hasContainer;
 };
 Source.prototype.hasLink = function() {
   if (this._hasLink == null) {
-    const links = this.pos.findInRange<StructureLink>(FIND_MY_STRUCTURES, 1,
-      {filter: (t) => t.structureType == STRUCTURE_LINK});
-    const sites = this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1,
-      {filter: (t: ConstructionSite) => t.structureType == STRUCTURE_LINK});
+    const links = this.pos.findInRange<StructureLink>(FIND_MY_STRUCTURES, 1, {
+      filter: t => t.structureType == STRUCTURE_LINK,
+    });
+    const sites = this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1, {
+      filter: (t: ConstructionSite) => t.structureType == STRUCTURE_LINK,
+    });
     this._hasLink = links.length > 0 || sites.length > 0;
   }
   return this._hasLink;

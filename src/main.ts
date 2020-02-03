@@ -1,4 +1,4 @@
-import {ErrorMapper} from "utils/ErrorMapper";
+import { ErrorMapper } from "utils/ErrorMapper";
 
 import "creeps/creep";
 import "flag";
@@ -6,7 +6,7 @@ import "resource";
 import "room";
 import "room-obj";
 import "room-pos";
-import {RoomState} from "shared";
+import { RoomState } from "shared";
 import "source";
 import "structures/structure";
 import "tombstone";
@@ -27,7 +27,7 @@ export const setupMem = (): void => {
   if (Memory.config == null) {
     Memory.config = {
       blacklist: {},
-      rooms: []
+      rooms: [],
     };
   }
   if (Memory.rooms == null) {
@@ -36,8 +36,8 @@ export const setupMem = (): void => {
   if (Memory.flags == null) {
     Memory.flags = {};
   }
-  if (_.isEmpty(Memory.config.rooms)) {
-    _.forOwn(Game.spawns, (spawn) => {
+  if (Memory.config.rooms.length == 0) {
+    Object.values(Game.spawns).forEach(spawn => {
       Memory.config.rooms.push(spawn.room.name);
     });
   }
@@ -47,7 +47,7 @@ export const setupMem = (): void => {
       Memory.rooms[name] = {
         distance: {},
         state: RoomState.Startup,
-        wallsMax: 5000
+        wallsMax: 5000,
       };
     }
     const room = Game.rooms[name];
@@ -55,7 +55,7 @@ export const setupMem = (): void => {
       mine++;
     }
     if (Memory.config.blacklist[name] == null) {
-      Memory.config.blacklist[name] = Array<string>();
+      Memory.config.blacklist[name] = [];
     }
   }
   // todo: trigger room claiming
@@ -81,7 +81,7 @@ export const clearMem = (): void => {
   for (const name in Memory.config.blacklist) {
     if (!Game.rooms[name]) {
       const ids = Memory.config.blacklist[name];
-      ids.filter((id) => Game.getObjectById(id) != null);
+      ids.filter(id => Game.getObjectById(id) != null);
     }
   }
 };
@@ -91,18 +91,16 @@ export const clearMem = (): void => {
 export const loop = ErrorMapper.wrapLoop(() => {
   setupMem();
   clearMem();
-  const pct = Game.gcl.progress / Game.gcl.progressTotal * 100;
+  const pct = (Game.gcl.progress / Game.gcl.progressTotal) * 100;
   const pctStr = pct.toFixed(1);
   if (Memory.vars.lastPct != pctStr) {
     console.log(`GCL Progress: ${pctStr}%`);
     Memory.vars.lastPct = pctStr;
   }
-  const rooms = Memory.config.rooms.map((name) => Game.rooms[name]).filter((r) => r != null);
-  rooms.sort((r) => r.energyAvailable).reverse();
+  const rooms = Memory.config.rooms.map(name => Game.rooms[name]).filter(r => r != null);
+  rooms.sort(r => r.energyAvailable).reverse();
   for (const room of rooms) {
     room.run();
   }
-  _.forOwn(Game.creeps, (creep) => {
-    creep.run();
-  });
+  Object.values(Game.creeps).forEach(creep => creep.run());
 });

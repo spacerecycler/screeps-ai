@@ -3,8 +3,8 @@ Creep.prototype.harvestMineral = function() {
   let targetExtractor = null;
   let targetMineral = null;
   if (this.memory.targetExtractor !== undefined && this.memory.targetMineral !== undefined) {
-    targetExtractor = Game.getObjectById<StructureExtractor>(this.memory.targetExtractor);
-    targetMineral = Game.getObjectById<Mineral>(this.memory.targetMineral);
+    targetExtractor = Game.getObjectById(this.memory.targetExtractor);
+    targetMineral = Game.getObjectById(this.memory.targetMineral);
   }
   if (targetExtractor != null && targetMineral != null) {
     if (this.pos.isNearTo(targetMineral)) {
@@ -32,8 +32,8 @@ Creep.prototype.runMineralHarvester = function() {
   let targetExtractor = null;
   let targetMineral = null;
   if (this.memory.targetExtractor !== undefined && this.memory.targetMineral !== undefined) {
-    targetExtractor = Game.getObjectById<StructureExtractor>(this.memory.targetExtractor);
-    targetMineral = Game.getObjectById<Mineral>(this.memory.targetMineral);
+    targetExtractor = Game.getObjectById(this.memory.targetExtractor);
+    targetMineral = Game.getObjectById(this.memory.targetMineral);
   }
   if (targetExtractor != null && targetMineral != null) {
     let target = null;

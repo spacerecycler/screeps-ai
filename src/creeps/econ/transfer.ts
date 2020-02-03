@@ -5,16 +5,18 @@ Creep.prototype.runTransfer = function() {
     return false;
   }
   const storagePos = this.room.storage.pos;
-  const tower = _.head(storagePos.findInRange<StructureTower>(FIND_MY_STRUCTURES, 2,
-    {filter: (t) => t.structureType == STRUCTURE_TOWER}));
+  const [tower] = storagePos.findInRange<StructureTower>(FIND_MY_STRUCTURES, 2, {
+    filter: t => t.structureType == STRUCTURE_TOWER,
+  });
   if (!this.memory.shouldFillTower && tower.store[RESOURCE_ENERGY] < tower.store.getCapacity(RESOURCE_ENERGY) * 0.9) {
     this.memory.shouldFillTower = true;
   }
   if (this.memory.shouldFillTower && tower.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
     this.memory.shouldFillTower = false;
   }
-  const link = _.head(storagePos.findInRange<StructureLink>(FIND_MY_STRUCTURES, 2,
-    {filter: (t) => t.structureType == STRUCTURE_LINK}));
+  const [link] = storagePos.findInRange<StructureLink>(FIND_MY_STRUCTURES, 2, {
+    filter: t => t.structureType == STRUCTURE_LINK,
+  });
   if (!this.pos.isNearTo(this.room.storage)) {
     this.moveToI(this.room.storage);
     return false;

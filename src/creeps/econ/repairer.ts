@@ -7,8 +7,8 @@ Creep.prototype.runRepairer = function() {
     }
   }
   if (target == null) {
-    const objects = Memory.config.blacklist[this.room.name].map((id) => Game.getObjectById(id));
-    target = _.head(objects.map((t) => t instanceof Structure ? t : null).filter((t) => t != null));
+    const objects = Memory.config.blacklist[this.room.name].map(id => Game.getObjectById(id));
+    [target] = objects.map(t => (t instanceof Structure ? t : null)).filter(t => t != null);
     if (target != null) {
       if (this.pos.isNearTo(target)) {
         this.dismantle(target);
