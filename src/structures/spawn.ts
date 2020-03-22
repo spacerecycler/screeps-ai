@@ -194,6 +194,7 @@ StructureSpawn.prototype.chooseBody = function (role, roomName) {
   let div = 0;
   let numCarry = 0;
   let cost = 0;
+  let carryCost = 0;
   const room = Game.rooms[roomName];
   switch (role) {
     case CreepType.CAPTURER:
@@ -286,7 +287,7 @@ StructureSpawn.prototype.chooseBody = function (role, roomName) {
     case CreepType.UPGRADER:
     case CreepType.REPAIRER:
       cost = BODYPART_COST[WORK] + BODYPART_COST[MOVE];
-      const carryCost = BODYPART_COST[CARRY] + BODYPART_COST[MOVE];
+      carryCost = BODYPART_COST[CARRY] + BODYPART_COST[MOVE];
       numCarry = Math.min(Math.trunc(MAX_CREEP_SIZE / 6), Math.ceil(energyCapAvail / (cost * 2 + carryCost)));
       div = Math.min(Math.trunc(MAX_CREEP_SIZE / 3), Math.trunc((energyCapAvail - numCarry * carryCost) / cost));
       this.addParts(body, div, WORK);
