@@ -1,5 +1,5 @@
 // Upgrader: Upgrades the controller in it's home room
-Creep.prototype.runUpgrader = function() {
+Creep.prototype.runUpgrader = function () {
   const target = this.room.controller;
   if (target == null) {
     console.log(`Room missing controller ${this.room.name}`);

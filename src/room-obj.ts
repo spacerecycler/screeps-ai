@@ -1,4 +1,4 @@
-RoomObject.prototype.tryRepair = function(mem) {
+RoomObject.prototype.tryRepair = function (mem) {
   let target = null;
   if (mem.repairTarget !== undefined) {
     target = Game.getObjectById(mem.repairTarget);
@@ -29,23 +29,23 @@ RoomObject.prototype.tryRepair = function(mem) {
   }
   return target;
 };
-RoomObject.prototype.findNearbyHostile = function() {
+RoomObject.prototype.findNearbyHostile = function () {
   return this.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
 };
-RoomObject.prototype.isHostileNearby = function() {
+RoomObject.prototype.isHostileNearby = function () {
   return this.findNearbyHostile().length > 0;
 };
 RoomObject.prototype.getEnergy = () => {
   console.log("get energy not implemented");
   return 0;
 };
-RoomObject.prototype.projectedEnergy = function() {
+RoomObject.prototype.projectedEnergy = function () {
   if (this._projectedEnergy == null) {
     this._projectedEnergy = this.getEnergy();
   }
   return this._projectedEnergy;
 };
-RoomObject.prototype.giveEnergy = function(creep) {
+RoomObject.prototype.giveEnergy = function (creep) {
   let maxPull = creep.store.getFreeCapacity(RESOURCE_ENERGY);
   if (this instanceof Source) {
     maxPull = creep.memory.numWorkParts * HARVEST_POWER;

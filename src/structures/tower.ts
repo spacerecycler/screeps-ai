@@ -1,4 +1,4 @@
-StructureTower.prototype.run = function() {
+StructureTower.prototype.run = function () {
   let target = this.pos.findNearestAttacker();
   if (target != null) {
     if (this.attack(target) == OK) {
@@ -16,6 +16,6 @@ StructureTower.prototype.run = function() {
   }
   this.tryRepair(Memory.towers[this.id]);
 };
-StructureTower.prototype.doRepair = function(target) {
+StructureTower.prototype.doRepair = function (target) {
   this.repair(target);
 };

@@ -1,5 +1,5 @@
 // Filler: Fills objects in room that need energy from containers
-Creep.prototype.runFiller = function() {
+Creep.prototype.runFiller = function () {
   let target = null;
   if (!this.room.hasHostileAttacker()) {
     target = this.pos.findNearestFillTarget(STRUCTURE_EXTENSION);

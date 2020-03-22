@@ -1,5 +1,5 @@
 // Harvester: Harvests energy from pre-determined source
-Creep.prototype.harvestEnergy = function() {
+Creep.prototype.harvestEnergy = function () {
   let targetSource = null;
   if (this.memory.targetSource !== undefined) {
     targetSource = Game.getObjectById(this.memory.targetSource);
@@ -23,7 +23,7 @@ Creep.prototype.harvestEnergy = function() {
   }
   return false;
 };
-Creep.prototype.runHarvester = function() {
+Creep.prototype.runHarvester = function () {
   let targetSource = null;
   if (this.memory.targetSource !== undefined) {
     targetSource = Game.getObjectById(this.memory.targetSource);

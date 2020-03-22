@@ -1,10 +1,10 @@
 import Haikunator from "haikunator";
 import { CreepState, CreepType, RoomState, RoomType } from "shared";
-StructureSpawn.prototype.run = function() {
+StructureSpawn.prototype.run = function () {
   if (!this.spawning) {
     let spawnedOrMissing = false;
     spawnedOrMissing = this.spawnMissingCreep(this.room.name);
-    const nearbyRooms = Memory.config.rooms.filter(name => name != this.room.name && this.room.isNearTo(name));
+    const nearbyRooms = Memory.config.rooms.filter((name) => name != this.room.name && this.room.isNearTo(name));
     if (!spawnedOrMissing) {
       for (const name of nearbyRooms) {
         const room = Game.rooms[name];
@@ -37,12 +37,12 @@ StructureSpawn.prototype.run = function() {
     );
   }
 };
-StructureSpawn.prototype.setupMem = function() {
+StructureSpawn.prototype.setupMem = function () {
   if (this.memory.roadTo == null) {
     this.memory.roadTo = {};
   }
 };
-StructureSpawn.prototype.spawnMissingCreep = function(roomName) {
+StructureSpawn.prototype.spawnMissingCreep = function (roomName) {
   const expected = this.getExpectedCreeps(roomName);
   const room = Game.rooms[roomName];
   if (room != null && room.isMine() && this.doSpawnCreep(roomName, CreepType.HARVESTER, 1)) {
@@ -58,18 +58,18 @@ StructureSpawn.prototype.spawnMissingCreep = function(roomName) {
   }
   return false;
 };
-StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
+StructureSpawn.prototype.getExpectedCreeps = function (roomName) {
   const expected = new Map<CreepTypeConstant, number>();
   const room = Game.rooms[roomName];
   if (room != null) {
     if (
       Object.values(Game.creeps).filter(
-        creep =>
+        (creep) =>
           creep.memory.role == CreepType.HARVESTER && creep.memory.room == roomName && creep.memory.targetSource == null
       ).length == 0
     ) {
       let harvesters = Object.values(Game.creeps).filter(
-        creep => creep.memory.role == CreepType.HARVESTER && creep.memory.room == roomName
+        (creep) => creep.memory.role == CreepType.HARVESTER && creep.memory.room == roomName
       ).length;
       if (room.checkNeedHarvester()) {
         harvesters++;
@@ -97,7 +97,7 @@ StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
       if (room.storage != null) {
         if (
           room.storage.pos.findInRange<OwnedStructure>(FIND_MY_STRUCTURES, 2, {
-            filter: t => t.structureType == STRUCTURE_TOWER,
+            filter: (t) => t.structureType == STRUCTURE_TOWER,
           }).length != 0
         ) {
           expected.set(CreepType.TRANSFER, 1);
@@ -159,16 +159,16 @@ StructureSpawn.prototype.getExpectedCreeps = function(roomName) {
   }
   return expected;
 };
-StructureSpawn.prototype.doSpawnCreep = function(roomName, newRole, count) {
+StructureSpawn.prototype.doSpawnCreep = function (roomName, newRole, count) {
   const roomCreeps = Object.values(Game.creeps).filter(
-    creep => creep.memory.role == newRole && creep.memory.room == roomName
+    (creep) => creep.memory.role == newRole && creep.memory.room == roomName
   );
   if (roomCreeps.length < count) {
     const body = this.chooseBody(newRole, roomName);
     const newCreepName = this.getRandomName();
     const newMem: CreepMemory = {
-      ignoreRoads: body.length <= body.filter(p => p == MOVE).length * 2,
-      numWorkParts: body.filter(p => p == WORK).length,
+      ignoreRoads: body.length <= body.filter((p) => p == MOVE).length * 2,
+      numWorkParts: body.filter((p) => p == WORK).length,
       role: newRole,
       room: roomName,
       state: CreepState.Spawning,
@@ -188,7 +188,7 @@ StructureSpawn.prototype.doSpawnCreep = function(roomName, newRole, count) {
   }
   return false;
 };
-StructureSpawn.prototype.chooseBody = function(role, roomName) {
+StructureSpawn.prototype.chooseBody = function (role, roomName) {
   const energyCapAvail = this.room.energyCapacityAvailable;
   const body = Array<BodyPartConstant>();
   let div = 0;

@@ -1,5 +1,5 @@
 // Transporter: Transports energy from expansions to owned rooms
-Creep.prototype.runTransporter = function() {
+Creep.prototype.runTransporter = function () {
   let target = null;
   if (this.memory.transportTarget !== undefined) {
     target = Game.getObjectById(this.memory.transportTarget);
@@ -26,7 +26,7 @@ Creep.prototype.runTransporter = function() {
   }
   if (target == null) {
     const targets = Memory.config.rooms
-      .map(n => {
+      .map((n) => {
         const room = Game.rooms[n];
         if (room != null && room.isMine()) {
           return room.findNotFullContainers();

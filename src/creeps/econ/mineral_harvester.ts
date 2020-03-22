@@ -1,5 +1,5 @@
 // Mineral Harvester: Harvests minerals from pre-determined Extractor
-Creep.prototype.harvestMineral = function() {
+Creep.prototype.harvestMineral = function () {
   let targetExtractor = null;
   let targetMineral = null;
   if (this.memory.targetExtractor !== undefined && this.memory.targetMineral !== undefined) {
@@ -28,7 +28,7 @@ Creep.prototype.harvestMineral = function() {
   }
   return false;
 };
-Creep.prototype.runMineralHarvester = function() {
+Creep.prototype.runMineralHarvester = function () {
   let targetExtractor = null;
   let targetMineral = null;
   if (this.memory.targetExtractor !== undefined && this.memory.targetMineral !== undefined) {

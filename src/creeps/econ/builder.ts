@@ -1,5 +1,5 @@
 // Builder: Builds any objects
-Creep.prototype.runBuilder = function() {
+Creep.prototype.runBuilder = function () {
   let target = null;
   if (this.memory.builderTarget !== undefined) {
     target = Game.getObjectById(this.memory.builderTarget);

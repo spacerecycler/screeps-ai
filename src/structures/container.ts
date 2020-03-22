@@ -1,6 +1,6 @@
-StructureContainer.prototype.getEnergy = function() {
+StructureContainer.prototype.getEnergy = function () {
   return this.store[RESOURCE_ENERGY];
 };
-StructureContainer.prototype.doGiveEnergy = function(creep) {
+StructureContainer.prototype.doGiveEnergy = function (creep) {
   return creep.withdraw(this, RESOURCE_ENERGY);
 };

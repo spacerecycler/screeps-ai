@@ -37,7 +37,7 @@ export const setupMem = (): void => {
     Memory.flags = {};
   }
   if (Memory.config.rooms.length == 0) {
-    Object.values(Game.spawns).forEach(spawn => {
+    Object.values(Game.spawns).forEach((spawn) => {
       Memory.config.rooms.push(spawn.room.name);
     });
   }
@@ -81,7 +81,7 @@ export const clearMem = (): void => {
   for (const name in Memory.config.blacklist) {
     if (!Game.rooms[name]) {
       const ids = Memory.config.blacklist[name];
-      ids.filter(id => Game.getObjectById(id) != null);
+      ids.filter((id) => Game.getObjectById(id) != null);
     }
   }
 };
@@ -97,10 +97,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
     console.log(`GCL Progress: ${pctStr}%`);
     Memory.vars.lastPct = pctStr;
   }
-  const rooms = Memory.config.rooms.map(name => Game.rooms[name]).filter(r => r != null);
-  rooms.sort(r => r.energyAvailable).reverse();
+  const rooms = Memory.config.rooms.map((name) => Game.rooms[name]).filter((r) => r != null);
+  rooms.sort((r) => r.energyAvailable).reverse();
   for (const room of rooms) {
     room.run();
   }
-  Object.values(Game.creeps).forEach(creep => creep.run());
+  Object.values(Game.creeps).forEach((creep) => creep.run());
 });

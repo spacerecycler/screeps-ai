@@ -1,5 +1,5 @@
 // Warrior: Melee attack unit
-Creep.prototype.runWarrior = function() {
+Creep.prototype.runWarrior = function () {
   let source = null;
   if (this.memory.targetSource !== undefined) {
     source = Game.getObjectById(this.memory.targetSource);

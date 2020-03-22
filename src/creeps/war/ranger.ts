@@ -1,5 +1,5 @@
 // Ranger: Ranged attack unit
-Creep.prototype.runRanger = function() {
+Creep.prototype.runRanger = function () {
   let source = null;
   if (this.memory.targetSource !== undefined) {
     source = Game.getObjectById(this.memory.targetSource);

@@ -1,5 +1,5 @@
 // Capturer: Reserves or Claims controllers
-Creep.prototype.runCapturer = function() {
+Creep.prototype.runCapturer = function () {
   if (this.room.controller == null) {
     console.log(`Room missing controller ${this.room.name}`);
     return false;
