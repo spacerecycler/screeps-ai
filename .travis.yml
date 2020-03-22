@@ -1,5 +1,4 @@
 language: node_js
-dist: trusty
-sudo: false
+dist: bionic
 node_js:
     - node
